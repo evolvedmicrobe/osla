@@ -12,9 +12,15 @@ namespace Growth_Curve_Software
     [Serializable]
     public abstract class BaseInstrumentClass
     {
-         public bool StatusOK = false;
-        //This value must be set by any inherited class, and should be a unique name
-        //for that instrument 
+        /// <summary>
+        /// This variable indicates whether the instrument is able to 
+        /// perform commands
+        /// </summary>
+        public bool StatusOK = false;
+
+        /// <summary>
+        /// The name of the instrument, should be unique
+        /// </summary>
         public virtual string Name
         {
             get{return this.GetType().Name;} 
@@ -23,6 +29,12 @@ namespace Growth_Curve_Software
         {
             return Name;
         }
+        /// <summary>
+        /// This is an optional method that allows for some instruments to try
+        /// and self-diagnos and correct a mistake based on the error produced.
+        /// </summary>
+        /// <param name="Error"></param>
+        /// <returns></returns>
         public abstract bool AttemptRecovery(InstrumentError Error);
         //this method should absolutely attempt to resolve the issue, if it cannot, then it should return a value indicating as much
         public virtual void Initialize()
@@ -39,7 +51,11 @@ namespace Growth_Curve_Software
         }
         //this method should initialize the instrument and return a status okay
         public abstract bool CloseAndFreeUpResources();
-        //This method should close the instrument and free up its resources
+        /// <summary>
+        /// This is a method called to force certain instruments to free up resources that they
+        /// are connecting to in a seperate process
+        /// </summary>
+        /// <param name="ProcessNameWithoutExeEnding">The name of the instrument to kill</param>
         public static void KillProcessAttempt(string ProcessNameWithoutExeEnding)
         {
             try
@@ -47,9 +63,6 @@ namespace Growth_Curve_Software
                 Process[] processList = Process.GetProcesses();
                 var x = from p in processList select p.ProcessName;
                 if (x.Contains(ProcessNameWithoutExeEnding))
-                //foreach (Process p in processList)
-                //{
-                //    if (p.ProcessName==ProcessNameWithoutExeEnding)
                 {
                     string output = String.Empty;
                     System.Diagnostics.Process proc = new Process();
