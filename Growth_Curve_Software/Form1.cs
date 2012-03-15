@@ -1722,7 +1722,14 @@ namespace Growth_Curve_Software
             UpdateLoadedProtocols();
         }
 
-      
+
+
+        public Twister GiveTwister()
+        {
+            throw new NotImplementedException();
+        }
+
+        
     }
 }
 
