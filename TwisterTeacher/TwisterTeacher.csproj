@@ -37,9 +37,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.ZyRobot_ICP, Version=12.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\RoboticInstruments\bin\Release\Interop.ZyRobot_ICP.dll</HintPath>
+    <Reference Include="Interop.ZyRobot_ICP">
+      <HintPath>..\lib\Interop.ZyRobot_ICP.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -91,13 +91,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Electronic Arts.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\RoboticInstruments\RoboticInstruments.csproj">
       <Project>{999BD960-00C5-4429-82EE-9F5C25DA8410}</Project>
       <Name>RoboticInstruments</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Electronic Arts.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

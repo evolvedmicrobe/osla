@@ -30,8 +30,8 @@ namespace Growth_Curve_Software
     /// A delegate that takes an returns to arguments
     /// </summary>
     
-    public delegate void delVoidVoid(); 
-    public partial class Form1 : Form
+     
+    public partial class Form1 : Form, InstrumentGiver
     {
         //public const string AppDataDirectory = @"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
         public string RecoveryProtocolFile;
@@ -53,9 +53,7 @@ namespace Growth_Curve_Software
         static public Twister Robot;
         static public TransferStation TransStation;
         static public VictorManager PlateReader;
-        static public Sciclone LiquidHandler;
         static public Macros ScriptsLibrary;
-        static public EvoInstructs EvolutionInstructions;
         static public ProtocolManager LoadedProtocols;
         static public ProtocolEventCaller ProtocolEvents;
         public Alarm Clarity_Alarm;

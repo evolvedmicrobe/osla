@@ -54,25 +54,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AxInterop.MlrCtls, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\VictorManager\AxInterop.MlrCtls.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="AxInterop.MlrCtls">
+      <HintPath>..\lib\AxInterop.MlrCtls.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.AssayListCtl, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\VictorManager\Interop.AssayListCtl.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Interop.MlrCtls">
+      <HintPath>..\lib\Interop.MlrCtls.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Interop.MlrCtls, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\VictorManager\Interop.MlrCtls.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Interop.MlrServ, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\VictorManager\Interop.MlrServ.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Interop.MlrServ">
+      <HintPath>..\lib\Interop.MlrServ.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualBasic.Compatibility" />
     <Reference Include="System" />
