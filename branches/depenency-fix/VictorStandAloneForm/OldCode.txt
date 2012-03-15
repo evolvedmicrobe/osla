@@ -1,0 +1,3 @@
+﻿public bool ResultOfLastMethod;//Used in place of method return, to communicate across threads, true if it worked okay, false otherwise
+private bool ErrorReportedDuringOperation;//in order to tell the other computer
+        
