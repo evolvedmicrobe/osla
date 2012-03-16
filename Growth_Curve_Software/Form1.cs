@@ -25,23 +25,17 @@ using System.Net;
 using Growth_Curve_Software;
 
 namespace Growth_Curve_Software
-{
-    /// <summary>
-    /// A delegate that takes an returns to arguments
-    /// </summary>
-    
-     
+{    
     public partial class Form1 : Form, InstrumentGiver
     {
-        //public const string AppDataDirectory = @"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
         public string RecoveryProtocolFile;
+        // TODO: should be a relative path
         private string pAppDataDirectory = @"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
         public string AppDataDirectory
         {
             get { return pAppDataDirectory; }
             set { pAppDataDirectory = value; }
         }
-        
         
         static bool Debugging = false;
         //might use this later to kill a processs
@@ -63,6 +57,7 @@ namespace Growth_Curve_Software
             get { return pUseAlarm; }
             set { pUseAlarm = value; }
         }
+        // TODO: get rid of this, or set some null default
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
         public string NSFErrorEmails
         {
@@ -84,6 +79,7 @@ namespace Growth_Curve_Software
             get { return pGBO_PLATE_PROTOCOL_ID; }
             set { pGBO_PLATE_PROTOCOL_ID = value; }
         }
+        // TODO: This should live in a configuration file somewhere
         int[] ExcludedIncubatorPositions =  { 19,38 };
 
         public Form1()
@@ -98,7 +94,7 @@ namespace Growth_Curve_Software
         {
             try
             {
-                //Make a collection to hold everythin
+                //Make a collection to hold everything
                 InstrumentCollection = new List<BaseInstrumentClass>();
                 LoadedProtocols = new ProtocolManager();
                 ProtocolEvents = new ProtocolEventCaller();
@@ -126,17 +122,18 @@ namespace Growth_Curve_Software
                 //present in the xml, in essence this replaces code like 
                 //Incubator = new IncubatorServ();
                 //Robot = new Twister(); etc. etc.
+                // I don't understand the value of this, you're using
+                // the fields that you statically declared anyway...
                 Type BICType = typeof(BaseInstrumentClass);            
                 foreach (FieldInfo FI in this.GetType().GetFields())
                 {
                     if(FI.FieldType.IsSubclassOf(BICType))
                     {   
-                       var InstanceToSet=TypesToInstruments[FI.FieldType.Name];
-                        FI.SetValue(this,InstanceToSet);
+                       var InstanceToSet = TypesToInstruments[FI.FieldType.Name];
+                       FI.SetValue(this,InstanceToSet);
                     }
                 }
                 //Now to load and initialize the instruments from XML
-                //string Filename = @"C:\Users\Nigel_Administrator\Desktop\ConfigurationFile.xml";
                 string Filename = BaseInstrumentClass.GetXMLSettingsFile();
                 XmlDocument XmlDoc = new XmlDocument();
                 XmlTextReader XReader = new XmlTextReader(Filename);
@@ -153,14 +150,14 @@ namespace Growth_Curve_Software
                     if(NamesToBICs.ContainsKey(instName))
                     {
 
-                    BaseInstrumentClass instrument = NamesToBICs[instName];
-                    //now to check if it has a no load flag
-                    var Skip=instNode.Attributes.GetNamedItem("SkipLoad");
-                    if (Skip == null || Skip.Value.ToUpper().Trim() != "TRUE")
-                    {
-                        //if not load it
-                        instrument.InitializeFromParsedXML(instNode);                        
-                    }
+                        BaseInstrumentClass instrument = NamesToBICs[instName];
+                        //now to check if it has a no load flag
+                        var Skip=instNode.Attributes.GetNamedItem("SkipLoad");
+                        if (Skip == null || Skip.Value.ToUpper().Trim() != "TRUE")
+                        {
+                            //if not load it
+                            instrument.InitializeFromParsedXML(instNode);                        
+                        }
                     }
                 }
                 //Incubator = new IncubatorServ();
@@ -240,7 +237,7 @@ namespace Growth_Curve_Software
             {
                 Clarity_Alarm = new Alarm();
             }
-                Thread LoadingThread = new Thread(ShowWelcomeForm);
+            Thread LoadingThread = new Thread(ShowWelcomeForm);
             LoadingThread.SetApartmentState(ApartmentState.STA);
             LoadingThread.IsBackground = true;
             LoadingThread.Start();
@@ -269,6 +266,7 @@ namespace Growth_Curve_Software
             try
             {
                 string CurDirec=System.Environment.CurrentDirectory;
+                // TODO: aren't these relative?
                 Uri recovAdd = new Uri(CurDirec+@"\AttemptRecoveryDocument.htm",UriKind.Absolute);
                 Uri growthinst = new Uri(CurDirec + @"\GrowthRateInstructionsl.htm",UriKind.Absolute);
                 wBrowRecovInstructions.Url = recovAdd;
@@ -284,6 +282,7 @@ namespace Growth_Curve_Software
             try{LoadedProtocols.EmailErrorMessageToAllUsers("The Robot Software Has Been Closed");}catch{}
             try { if (UseAlarm) { Clarity_Alarm.TurnOnAlarm("The software was closed"); } }
             catch { }
+                // TODO: Is the WaitCursor the best way to tell if the application is hungup?
                 this.Cursor = Cursors.WaitCursor;
                 try
                 {
@@ -306,6 +305,7 @@ namespace Growth_Curve_Software
         private void KillOldProcesses()
         {
             //really not the best here, but out with the old so the new can load
+            // TODO: Maybe this should be dynamic too
             string[] ToKill = { "Device Control Unit", "TwisterII Robot ICP", "DCU", "CommDispatcher","ZymarkRobotICP","ScicloneICP","SciPEM","SciRabbitVexta","CavroDeviceController","Consumables" };
             foreach (string str in ToKill)
             {
@@ -314,6 +314,7 @@ namespace Growth_Curve_Software
 
             }
         }
+
         public static void KillProcessAttempt(string ProcessNameWithoutExeEnding)
         {
             try
@@ -340,7 +341,6 @@ namespace Growth_Curve_Software
             }
             catch (Exception thrown) { }
         } 
-
 
         // Incubator Controls    
         private void btnStartShaking_Click(object sender, EventArgs e)
@@ -1642,7 +1642,8 @@ namespace Growth_Curve_Software
         {
             try
             {
-                int tranNum;                 string Name;
+                int tranNum;
+                string Name;
                 List<Protocol> ProtsToAdd = new List<Protocol>();
                 //this will create and start a protocol, first to check for errors
                 if (txtNSFTransferNumber.Text == "" | txtNSFName.Text == "")
