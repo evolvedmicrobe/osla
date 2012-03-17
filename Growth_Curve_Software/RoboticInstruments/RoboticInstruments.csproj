@@ -118,14 +118,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="RequiredDlls\AxInterop.MlrCtls.dll" />
-    <Content Include="RequiredDlls\Interop.DCU.dll" />
-    <Content Include="RequiredDlls\Interop.MlrCtls.dll" />
-    <Content Include="RequiredDlls\Interop.MlrServ.dll" />
-    <Content Include="RequiredDlls\Interop.ZyRobotAdapter.dll" />
-    <Content Include="RequiredDlls\Interop.ZyRobot_ICP.dll" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
