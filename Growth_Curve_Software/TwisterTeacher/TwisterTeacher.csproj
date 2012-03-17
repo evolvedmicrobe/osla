@@ -37,9 +37,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.ZyRobot_ICP, Version=12.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\RoboticInstruments\bin\Release\Interop.ZyRobot_ICP.dll</HintPath>
+    <Reference Include="Interop.ZyRobot_ICP">
+      <HintPath>..\RoboticInstruments\RequiredDLLs\Interop.ZyRobot_ICP.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
