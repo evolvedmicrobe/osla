@@ -13,13 +13,7 @@ namespace Growth_Curve_Software
     {
         BaseInstrumentClass ReturnInstrument(string InstrumentName);
         T ReturnInstrumentType<T>() where T : BaseInstrumentClass ; 
-        /// <summary>
-        /// Run the method of an instrument
-        /// </summary>
-        /// <param name="instrumentName">name of instrument</param>
-        /// <param name="methodName">name of method</param>
-        /// <param name="args">arguments to method, default is none</param>
-        void RunMethod(string instrumentName, string methodName, object[] args = null);
+
         
     }
 }
