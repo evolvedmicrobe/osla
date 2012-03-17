@@ -55,14 +55,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AxInterop.MlrCtls">
-      <HintPath>..\..\..\..\..\..\..\..\Network_Data\Software\Growth_Curve_Software\Growth_Curve_Software\bin\Release\AxInterop.MlrCtls.dll</HintPath>
+      <HintPath>..\RoboticInstruments\RequiredDLLs\AxInterop.MlrCtls.dll</HintPath>
     </Reference>
     <Reference Include="Interop.MlrCtls">
-      <HintPath>..\RoboticInstruments\bin\Debug\Interop.MlrCtls.dll</HintPath>
+      <HintPath>..\RoboticInstruments\RequiredDLLs\Interop.MlrCtls.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Interop.MlrServ">
-      <HintPath>..\RoboticInstruments\bin\Debug\Interop.MlrServ.dll</HintPath>
+      <HintPath>..\RoboticInstruments\RequiredDLLs\Interop.MlrServ.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualBasic.Compatibility" />
