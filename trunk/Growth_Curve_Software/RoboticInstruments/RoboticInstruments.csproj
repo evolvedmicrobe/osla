@@ -51,6 +51,10 @@
       <HintPath>bin\Debug\Interop.MlrServ.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Interop.ZyRobotAdapter">
+      <HintPath>..\..\..\..\..\..\..\..\Network_Data\Software\Growth_Curve_Software\RoboticInstruments\bin\Release\Interop.ZyRobotAdapter.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Interop.ZyRobot_ICP">
       <HintPath>bin\Debug\Interop.ZyRobot_ICP.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -60,7 +64,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>C:\Program Files\Microsoft Visual Studio 10.0\Visual Studio Tools for Office\PIA\Office12\Microsoft.Office.Interop.Excel.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Vbe.Interop, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+    <Reference Include="Microsoft.Vbe.Interop, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
@@ -86,14 +90,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalMethodArguments.cs" />
     <Compile Include="BaseInstrumentClass.cs" />
+    <Compile Include="DelegatesAndAttributes.cs" />
     <Compile Include="Incubator.cs" />
     <Compile Include="InstrumentError.cs" />
     <Compile Include="InstrumentFinder.cs" />
+    <Compile Include="InstrumentManager.cs" />
     <Compile Include="Macros.cs" />
     <Compile Include="NSFExperiment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol.cs" />
+    <Compile Include="ProtocolExecutor.cs" />
     <Compile Include="TestInstrument.cs" />
     <Compile Include="TransferStation.cs" />
     <Compile Include="Twister.cs" />

@@ -34,23 +34,27 @@ namespace Growth_Curve_Software
             { MethodNamesToIgnore.Add(MI.Name); }
             foreach (BaseInstrumentClass Instr in InstrumentCollection)
             {
-                //BaseInstrumentClass Instr = (BaseInstrumentClass)o;
                 TreeNode InstrNode = new TreeNode(Instr.Name);
                 Type InstType = Instr.GetType();
+                Type T = typeof(UserCallableMethod);
                 foreach (MethodInfo MI in InstType.GetMethods())
                 {
-                    if (!MethodNamesToIgnore.Contains(MI.Name))
+                    if (MI.GetCustomAttributes(T,false).Count() > 0)
                     {
-                        string NodeName = MI.Name + "(";
-                        foreach (ParameterInfo PI in MI.GetParameters())
+                        if (!MethodNamesToIgnore.Contains(MI.Name))
                         {
-                            NodeName += PI.Name + ",";
+                            string NodeName = MI.Name + "(";
+                            foreach (ParameterInfo PI in MI.GetParameters())
+                            {
+                                if(PI.ParameterType!=typeof(AdditionalMethodArguments))
+                                NodeName += PI.Name + ",";
+                            }
+                            NodeName = NodeName.TrimEnd(',') + ")";
+                            InstrNode.Nodes.Add(new TreeNode(NodeName));
                         }
-                        NodeName = NodeName.TrimEnd(',') + ")";
-                        InstrNode.Nodes.Add(new TreeNode(NodeName));
-                    }
+                    }                    
                 }
-                if (InstrNode.Nodes.Count != 0)
+                if (InstrNode.Nodes.Count >0)
                 { MethodsView.Nodes.Add(InstrNode); }
             }
         }
@@ -108,6 +112,10 @@ namespace Growth_Curve_Software
             DataTable DT = new DataTable();
             foreach (ParameterInfo PI in MI.GetParameters())
             {
+                if(PI.ParameterType==typeof(AdditionalMethodArguments))
+                {
+                    break;
+                }
                 //DataColumn DC = new DataColumn(PI.Name, PI.ParameterType);
                 DataColumn DC = new DataColumn(PI.Name, System.Type.GetType("System.String"));
                 DT.Columns.Add(DC);
@@ -148,19 +156,18 @@ namespace Growth_Curve_Software
                     var Meth = ReturnMethodInfoFromObject(MethodName, Instrument);
 
                     ParameterInfo[] ParametersinMeth=Meth.GetParameters();
-                    Type[] ParameterTypes = new Type[ParametersinMeth.Length];
-                    for (int j = 0; j < ParametersinMeth.Length; j++)
-                    {
-                        ParameterTypes[j]=ParametersinMeth[j].ParameterType;
-                    }
-
+                    bool RequiresDynamicParameter = false;
+                    if (ParametersinMeth[ParametersinMeth.Length - 1].ParameterType == typeof(AdditionalMethodArguments))
+                        RequiresDynamicParameter = true;
+                    int pCount = RequiresDynamicParameter ? ParametersinMeth.Length - 1 : ParametersinMeth.Length;
+                    Type[] ParameterTypes = new Type[pCount];
+                    for (int j = 0; j < pCount; j++)
+                    {ParameterTypes[j]=ParametersinMeth[j].ParameterType;}
                     if (ParameterTypes.Length != DR.ItemArray.Length)
                     { MessageBox.Show("Inputted parameters and expected parameters do not have an equal count, contact Nigel"); return; }
-
                     for (int i = 0; i < ParameterTypes.Length;i++ )
                     {
-                        object o = Parameters[i];//actual inputted value, currently as a string
-                        
+                        object o = Parameters[i];//actual inputted value, currently as a string                        
                         if (o.ToString() == "")
                         {
                             MessageBox.Show("You need to supply more parameters before this method can be added", "Parameters Not Supplied", MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -172,7 +179,6 @@ namespace Growth_Curve_Software
                             if (!ProtocolManager.CheckStringForValidVariables((string)Parameters[i], (IList)lstCurrentVariables.Items))
                             {
                                 MessageBox.Show("You have entered a variable that does not exist","Bad Data Entry",MessageBoxButtons.OK,MessageBoxIcon.Error);
-
                             }
                             continue;//string types always get cleared
                         }                      

@@ -149,10 +149,19 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AttemptRecoveryDocument.htm" />
+    <Content Include="AttemptRecoveryDocument.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ConfigurationFile.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Electronic Arts.ico" />
-    <Content Include="GrowthRateInstructionsl.htm" />
-    <Content Include="WelcomeInstructions.htm" />
+    <Content Include="GrowthRateInstructionsl.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WelcomeInstructions.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

@@ -42,7 +42,7 @@ namespace Growth_Curve_Software
             this.ArgumentsTakeProtocol = true;
             this.StatusOK = true;
         }
-
+        
         private void CreateProtocolItems(string ExpName,int Slot)
         {
             ExpSlot = Slot;
@@ -80,10 +80,11 @@ namespace Growth_Curve_Software
             ReturnInstruction.Parameters = new object[3] { ExpName, Slot, null };
             
         }
-        public bool CreateProtocol(string ExpName, int Slot,Protocol toModify)
+        [UserCallableMethod(RequiresCurrentProtocol=true)]
+        public bool CreateProtocol(string ExpName, int Slot,AdditionalMethodArguments eargs)
         {
 
-
+            Protocol toModify = eargs.CallingProtocol;
             CreateProtocolItems(ExpName, Slot);
             toModify.ProtocolName = OD_OutDirec;
             toModify.Instructions.Clear();
@@ -95,12 +96,12 @@ namespace Growth_Curve_Software
             toModify.NextItemToRun = 0;
             return true;
         }
-
-        public bool ModifyGrowthProtocol(string ExpName, int Slot, Protocol toModify)
+        [UserCallableMethod(RequiresCurrentProtocol = true)]
+        public bool ModifyGrowthProtocol(string ExpName, int Slot, AdditionalMethodArguments eargs)
         {
             try
             {
-
+                Protocol toModify = eargs.CallingProtocol;
                 CreateProtocolItems(ExpName, Slot);
                 toModify.Instructions.Clear();
                 toModify.Instructions.Add(DT);

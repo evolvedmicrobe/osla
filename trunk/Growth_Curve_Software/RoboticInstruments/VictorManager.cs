@@ -29,6 +29,7 @@ namespace Growth_Curve_Software
             static Thread ThreadToRunForm;
             string ThreadName = "VictorFormThread";
             public bool StatusOKVictor;
+           
             public VictorManager()
             { StatusChange += ChangeStatusOKVictor; }
             public override string Name
@@ -56,7 +57,7 @@ namespace Growth_Curve_Software
             {
                 StatusOK = NewStatus;
             }
-          
+            [UserCallableMethod()]
             public void ReadPlate2(string PlateName, int ProtocolID)
             {
                 try
@@ -162,6 +163,7 @@ namespace Growth_Curve_Software
                 //with its own message queue
                 Application.Run(PlateReader = new VictorForm());
             }
+            [UserCallableMethod()]
             public bool ReadPlateLocal(string DirectoryName, int ProtocolID)
             {
                 //This is a cut and paste of exactly what was below, with one change to alter the protocol, 
@@ -220,7 +222,7 @@ namespace Growth_Curve_Software
                 }
 
             }
-           
+            [UserCallableMethod()]
             public void KillForm()
             {
                 StatusChange(false);
@@ -249,6 +251,7 @@ namespace Growth_Curve_Software
                 }
                 catch { PlateReader = null; GC.Collect(); }
             }
+            [UserCallableMethod()]
             public void ForceablyKillServer()
             {
                 //This method is designed to forceably kill the mlrserver in preparation for a 

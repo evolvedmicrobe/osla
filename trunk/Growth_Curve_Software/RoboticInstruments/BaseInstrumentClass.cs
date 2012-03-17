@@ -8,7 +8,7 @@ using System.IO;
 using System.Reflection;
 namespace Growth_Curve_Software
 {
-    public delegate void del_InstrumentError(BaseInstrumentClass BEC,string Error);
+    
     [Serializable]
     public abstract class BaseInstrumentClass
     {
@@ -45,6 +45,7 @@ namespace Growth_Curve_Software
         {
             return;
         }
+        [UserCallableMethod()]
         public virtual bool AttemptRecovery()
         {
             return AttemptRecovery(new InstrumentError("none", false, this));

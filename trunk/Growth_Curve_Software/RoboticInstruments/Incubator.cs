@@ -104,6 +104,7 @@ namespace Growth_Curve_Software
             }
             return toReturn;
         }
+        [UserCallableMethod()]
         public override void Initialize(int ShakerSpeed)
         {
             if (ShakerSpeed > 1200 | ShakerSpeed < 0)
@@ -220,6 +221,7 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("System could not be made ready", false, this);
             }
         }
+        [UserCallableMethod()]
         public void ResetIncubator()
         {
             //This command is for resetting the incubator 
@@ -293,11 +295,13 @@ namespace Growth_Curve_Software
             
  
         }
+        [UserCallableMethod()]
         public bool CheckIfSomethingOnTransferOutStation()
         {
             //this checks the sensor on the 
             return ReadSensor("RD 1813");
         }
+        [UserCallableMethod()]
         public bool CheckIfSomethingOnPlateMover()
         {
             return ReadSensor("RD 1812");
@@ -334,6 +338,7 @@ namespace Growth_Curve_Software
             }
             return false;
         }
+        [UserCallableMethod()]
         public string PerformCommand(string Command)
         {
             string response="";
@@ -352,6 +357,12 @@ namespace Growth_Curve_Software
             }
             return response;
         }
+        /// <summary>
+        /// Same as perform command but for those that return 1 or 0.
+        /// </summary>
+        /// <param name="Command">Command to perform</param>
+        /// <returns>"1" or "0"</returns>
+        [UserCallableMethod()]
         public string PerformBinaryCommand(string Command)
         {
             //same as above but for commands that return 1 or zero
@@ -369,6 +380,7 @@ namespace Growth_Curve_Software
             }
             return response;
         }
+        [UserCallableMethod()]
         public string PerformCommandUnsafe(string Command, string password)
         {
             if (password == Password)
@@ -382,6 +394,7 @@ namespace Growth_Curve_Software
             }
             else { return "No Password Entered"; }
         }
+        [UserCallableMethod()]
         public void StartShaking()
         {
             PerformCommand("ST 1913");
@@ -389,6 +402,7 @@ namespace Growth_Curve_Software
             //still seem to be errors at 1500 so I uppped it
             Thread.Sleep(3000);
         }
+        [UserCallableMethod()]
         public void ChangeShakingSpeed(int ShakerSpeed)
         {
             try
@@ -417,6 +431,7 @@ namespace Growth_Curve_Software
             }     
             
         }
+        [UserCallableMethod()]
         public void StopShaking()
         {
             PerformCommand("RS 1913");
@@ -424,6 +439,7 @@ namespace Growth_Curve_Software
             //I am hoping adding the delay below will fix this, so that the command is definitely processed
             Thread.Sleep(1500);
         }
+        [UserCallableMethod()]
         public bool CheckCommErrorAndResetAndFixError()
         {
             //this is in case of an error where the thing simply cannot communicate, it is 
@@ -556,6 +572,7 @@ namespace Growth_Curve_Software
                 StatusOK = false;
                 throw new InstrumentError("Not appropriate to give a command, instrument not initialized or not accepting communications", false, this); }
         }
+        [UserCallableMethod()]
         public void LoadPlate(int Position)
         {
             //This method will load a plate in, plates are 0 to 44
@@ -615,6 +632,7 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("You tried to load a plate into a spot that does not exist", true, this);
             }
         }
+        [UserCallableMethod()]
         public void UnloadPlate(int Position )
         {
             //This method will load a plate in, plates are 0 to 44
@@ -707,6 +725,7 @@ namespace Growth_Curve_Software
             string IsShaking = PerformBinaryCommand("RD 1913");
             return IsShaking == "1" ? true : false;
         }
+        [UserCallableMethod()]
         public void StopIncubatorShakingWhenNothingElseWill(string password)
         {
             //for whatever reason it appears that the incubator occasionally will not stop shaking
@@ -761,6 +780,7 @@ namespace Growth_Curve_Software
             }
             else { return false; }//could not recover from the error in question
         }
+        [UserCallableMethod()]
         public void ReleaseComPort(string PassWord)
         {
             try
