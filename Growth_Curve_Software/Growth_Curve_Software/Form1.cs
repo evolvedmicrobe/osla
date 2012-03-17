@@ -1719,10 +1719,6 @@ namespace Growth_Curve_Software
             }
             throw new ArgumentException("Could not find requested instrument type: " + toGet.ToString());
         }
-        public void RunMethod(string instrumentName, string methodName, object[] args = null)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
     }
 }
