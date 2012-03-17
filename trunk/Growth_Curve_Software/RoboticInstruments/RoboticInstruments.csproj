@@ -208,7 +208,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseInstrumentClass.cs" />
-    <Compile Include="EvoInstructs.cs" />
     <Compile Include="Incubator.cs" />
     <Compile Include="InstrumentError.cs" />
     <Compile Include="InstrumentFinder.cs" />
@@ -216,7 +215,6 @@
     <Compile Include="NSFExperiment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol.cs" />
-    <Compile Include="SciClone.cs" />
     <Compile Include="TestInstrument.cs" />
     <Compile Include="TransferStation.cs" />
     <Compile Include="Twister.cs" />
