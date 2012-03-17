@@ -71,15 +71,15 @@
             this.tabOfProtocols = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabVariables = new System.Windows.Forms.TabPage();
+            this.label15 = new System.Windows.Forms.Label();
+            this.lstCurrentVariables = new System.Windows.Forms.ListBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.lstVariableTypes = new System.Windows.Forms.ListBox();
             this.pnlVariables = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.btrnAddVariable = new System.Windows.Forms.Button();
             this.dataViewVariable = new System.Windows.Forms.DataGridView();
             this.label14 = new System.Windows.Forms.Label();
-            this.lstVariableTypes = new System.Windows.Forms.ListBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.lstCurrentVariables = new System.Windows.Forms.ListBox();
-            this.label15 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tblMethodParameterView)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -122,10 +122,10 @@
             this.tblMethodParameterView.AllowUserToDeleteRows = false;
             this.tblMethodParameterView.BackgroundColor = System.Drawing.Color.Navy;
             this.tblMethodParameterView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.tblMethodParameterView.Location = new System.Drawing.Point(10, 98);
+            this.tblMethodParameterView.Location = new System.Drawing.Point(10, 76);
             this.tblMethodParameterView.Margin = new System.Windows.Forms.Padding(4);
             this.tblMethodParameterView.Name = "tblMethodParameterView";
-            this.tblMethodParameterView.Size = new System.Drawing.Size(284, 55);
+            this.tblMethodParameterView.Size = new System.Drawing.Size(309, 90);
             this.tblMethodParameterView.TabIndex = 3;
             this.tblMethodParameterView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.tblMethodParameterView_DataError);
             // 
@@ -134,7 +134,7 @@
             this.lblProtocol.AutoSize = true;
             this.lblProtocol.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblProtocol.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblProtocol.Location = new System.Drawing.Point(45, 7);
+            this.lblProtocol.Location = new System.Drawing.Point(14, 7);
             this.lblProtocol.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblProtocol.Name = "lblProtocol";
             this.lblProtocol.Size = new System.Drawing.Size(182, 36);
@@ -230,9 +230,9 @@
             this.panel1.Controls.Add(this.btnAddMethod);
             this.panel1.Controls.Add(this.tblMethodParameterView);
             this.panel1.Controls.Add(this.lblClickButtonProtocol);
-            this.panel1.Location = new System.Drawing.Point(440, 25);
+            this.panel1.Location = new System.Drawing.Point(423, 25);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(302, 235);
+            this.panel1.Size = new System.Drawing.Size(319, 235);
             this.panel1.TabIndex = 9;
             // 
             // lblParametersRequired
@@ -240,7 +240,7 @@
             this.lblParametersRequired.AutoSize = true;
             this.lblParametersRequired.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblParametersRequired.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblParametersRequired.Location = new System.Drawing.Point(48, 54);
+            this.lblParametersRequired.Location = new System.Drawing.Point(131, 43);
             this.lblParametersRequired.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblParametersRequired.Name = "lblParametersRequired";
             this.lblParametersRequired.Size = new System.Drawing.Size(179, 30);
@@ -253,7 +253,7 @@
             this.lblClickButtonProtocol.AutoSize = true;
             this.lblClickButtonProtocol.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblClickButtonProtocol.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblClickButtonProtocol.Location = new System.Drawing.Point(36, 166);
+            this.lblClickButtonProtocol.Location = new System.Drawing.Point(36, 170);
             this.lblClickButtonProtocol.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblClickButtonProtocol.Name = "lblClickButtonProtocol";
             this.lblClickButtonProtocol.Size = new System.Drawing.Size(248, 15);
@@ -272,7 +272,7 @@
             this.label2.Size = new System.Drawing.Size(254, 54);
             this.label2.TabIndex = 10;
             this.label2.Text = "List of Machines and Possible Tasks \r\nSelect one to customize it so you \r\ncan add" +
-                " it to your protocol";
+    " it to your protocol";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel2
@@ -354,7 +354,7 @@
             this.label1.Size = new System.Drawing.Size(754, 48);
             this.label1.TabIndex = 12;
             this.label1.Text = "To Create A Protocol, Add Methods And Fill Out The Required Information Here\r\nThe" +
-                "n Save it to a File And Load That File In Clarity";
+    "n Save it to a File And Load That File In Clarity";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // panel3
@@ -436,7 +436,7 @@
             this.label11.Size = new System.Drawing.Size(288, 45);
             this.label11.TabIndex = 5;
             this.label11.Text = "Email Address of User(s):\r\n(to have error messages sent to multiple addresses \r\ni" +
-                "nsert a semicolon between them)";
+    "nsert a semicolon between them)";
             // 
             // txtProtocolName
             // 
@@ -542,6 +542,55 @@
             this.tabVariables.Text = "Make Variables";
             this.tabVariables.UseVisualStyleBackColor = true;
             // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label15.Location = new System.Drawing.Point(821, 42);
+            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(138, 18);
+            this.label15.TabIndex = 13;
+            this.label15.Text = "Current Variables";
+            // 
+            // lstCurrentVariables
+            // 
+            this.lstCurrentVariables.FormattingEnabled = true;
+            this.lstCurrentVariables.ItemHeight = 18;
+            this.lstCurrentVariables.Location = new System.Drawing.Point(795, 79);
+            this.lstCurrentVariables.Name = "lstCurrentVariables";
+            this.lstCurrentVariables.Size = new System.Drawing.Size(248, 436);
+            this.lstCurrentVariables.TabIndex = 12;
+            this.lstCurrentVariables.SelectedIndexChanged += new System.EventHandler(this.lstCurrentVariables_SelectedIndexChanged);
+            this.lstCurrentVariables.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstCurrentVariables_KeyDown);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label12.Location = new System.Drawing.Point(16, 42);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(256, 18);
+            this.label12.TabIndex = 11;
+            this.label12.Text = "Select A Variable Type To Create";
+            // 
+            // lstVariableTypes
+            // 
+            this.lstVariableTypes.FormattingEnabled = true;
+            this.lstVariableTypes.ItemHeight = 18;
+            this.lstVariableTypes.Items.AddRange(new object[] {
+            "String",
+            "Integer",
+            "Floating Point"});
+            this.lstVariableTypes.Location = new System.Drawing.Point(24, 115);
+            this.lstVariableTypes.Name = "lstVariableTypes";
+            this.lstVariableTypes.Size = new System.Drawing.Size(248, 76);
+            this.lstVariableTypes.TabIndex = 11;
+            this.lstVariableTypes.SelectedIndexChanged += new System.EventHandler(this.lstVariableTypes_SelectedIndexChanged);
+            // 
             // pnlVariables
             // 
             this.pnlVariables.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -599,55 +648,6 @@
             this.label14.TabIndex = 10;
             this.label14.Text = "After Adding a Name and Value Click Here To Add It";
             this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lstVariableTypes
-            // 
-            this.lstVariableTypes.FormattingEnabled = true;
-            this.lstVariableTypes.ItemHeight = 18;
-            this.lstVariableTypes.Items.AddRange(new object[] {
-            "String",
-            "Integer",
-            "Floating Point"});
-            this.lstVariableTypes.Location = new System.Drawing.Point(24, 115);
-            this.lstVariableTypes.Name = "lstVariableTypes";
-            this.lstVariableTypes.Size = new System.Drawing.Size(248, 76);
-            this.lstVariableTypes.TabIndex = 11;
-            this.lstVariableTypes.SelectedIndexChanged += new System.EventHandler(this.lstVariableTypes_SelectedIndexChanged);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label12.Location = new System.Drawing.Point(16, 42);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(256, 18);
-            this.label12.TabIndex = 11;
-            this.label12.Text = "Select A Variable Type To Create";
-            // 
-            // lstCurrentVariables
-            // 
-            this.lstCurrentVariables.FormattingEnabled = true;
-            this.lstCurrentVariables.ItemHeight = 18;
-            this.lstCurrentVariables.Location = new System.Drawing.Point(795, 79);
-            this.lstCurrentVariables.Name = "lstCurrentVariables";
-            this.lstCurrentVariables.Size = new System.Drawing.Size(248, 436);
-            this.lstCurrentVariables.TabIndex = 12;
-            this.lstCurrentVariables.SelectedIndexChanged += new System.EventHandler(this.lstCurrentVariables_SelectedIndexChanged);
-            this.lstCurrentVariables.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lstCurrentVariables_KeyDown);
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label15.Location = new System.Drawing.Point(821, 42);
-            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(138, 18);
-            this.label15.TabIndex = 13;
-            this.label15.Text = "Current Variables";
             // 
             // MakeProtocols
             // 

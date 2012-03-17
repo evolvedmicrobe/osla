@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Growth_Curve_Software
 {
-    public class VirtualInstrument : BaseInstrumentClass
+    public abstract class VirtualInstrument : BaseInstrumentClass
     {
         /// <summary>
         /// This is a variable to indicate whether the arguments for this virtual class

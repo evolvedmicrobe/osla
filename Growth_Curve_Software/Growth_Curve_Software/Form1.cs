@@ -24,14 +24,14 @@ using System.Net.Mail;
 using System.Net;
 using Growth_Curve_Software;
 
-namespace Growth_Curve_Software
+namespace Growth_Curve_Software 
 {
     /// <summary>
     /// A delegate that takes an returns to arguments
     /// </summary>
     
-    public delegate void delVoidVoid(); 
-    public partial class Form1 : Form
+     
+    public partial class Form1 : Form, InstrumentManager
     {
         //public const string AppDataDirectory = @"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
         public string RecoveryProtocolFile;
@@ -49,13 +49,12 @@ namespace Growth_Curve_Software
         static extern int TerminateProcess(int hProcess, int uExitCode);
         //supposedly another way to terminate
         static public List<BaseInstrumentClass> InstrumentCollection;
+        Dictionary<string, BaseInstrumentClass> NamesToBICs;
         static public IncubatorServ Incubator;
         static public Twister Robot;
         static public TransferStation TransStation;
         static public VictorManager PlateReader;
-        static public Sciclone LiquidHandler;
         static public Macros ScriptsLibrary;
-        static public EvoInstructs EvolutionInstructions;
         static public ProtocolManager LoadedProtocols;
         static public ProtocolEventCaller ProtocolEvents;
         public Alarm Clarity_Alarm;
@@ -113,7 +112,7 @@ namespace Growth_Curve_Software
                 //First get an instance of every possible base instrument class
                 List<BaseInstrumentClass> BICs = InstrumentFinder.GetAllInstrumentClasses();
                 //now make a dictionary of it
-                Dictionary<string, BaseInstrumentClass> NamesToBICs = new Dictionary<string, BaseInstrumentClass>();
+                NamesToBICs = new Dictionary<string, BaseInstrumentClass>();
                 Dictionary<string, BaseInstrumentClass> TypesToInstruments = new Dictionary<string, BaseInstrumentClass>();
                 //now make them searchable
                 foreach (BaseInstrumentClass bic in BICs)
@@ -165,46 +164,6 @@ namespace Growth_Curve_Software
                     }
                     }
                 }
-                //Incubator = new IncubatorServ();
-                //if (!Debugging)
-                //{
-                //    Incubator.Initialize();
-                //   // Incubator.Initialize(.STARTING_SPEED);
-                //}
-                 
-                //InstrumentCollection.Add(Incubator);                        
-                //Robot = new Twister();
-                //InstrumentCollection.Add(Robot);
-                //if (!Debugging)
-                //{
-                //    Robot.Initialize();
-                //}
-                //Robot.SetIncubator(Incubator);
-                //TransStation = new TransferStation();
-                //InstrumentCollection.Add(TransStation);
-                //if (!Debugging)
-                //{
-                //    TransStation.Initialize();
-                //}
-                //PlateReader = new VictorManager();
-                //InstrumentCollection.Add(PlateReader);
-                //if (!Debugging)
-                //{
-                //    PlateReader.Initialize();
-                //}
-                //LiquidHandler = new Sciclone();
-                //InstrumentCollection.Add(LiquidHandler);
-                //if (!Debugging)
-                //{
-                //    LiquidHandler.Initialize();
-                //    LiquidHandler.FinishInitialization();
-                //}
-
-                //ScriptsLibrary = new Macros();
-                //InstrumentCollection.Add(ScriptsLibrary);
-                //EvolutionInstructions = new EvoInstructs();
-                //InstrumentCollection.Add(EvolutionInstructions);
-                HackToInitializeRobot();
             }
             catch (Exception thrown)
             {
@@ -224,16 +183,6 @@ namespace Growth_Curve_Software
         public void ShowWelcomeForm()
         {
             Application.Run(WF = new WelcomeForm());
-        }
-        private void HackToInitializeRobot()
-        {
-            //var Robot= from x in InstrumentCollection where x.Name=="Twister" select x;
-            //var Incubator = from x in InstrumentCollection where x.Name == "IncubatorServ" select x;
-            //var inc = Incubator.First();
-            //var rob = Robot.First() as Twister;
-            //rob.SetIncubator(inc as IncubatorServ);
-            Robot.SetIncubator(Incubator);
-            //if(InstrumentCollection.cont
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -887,7 +836,7 @@ namespace Growth_Curve_Software
             {
                 if (LastFailedInstruction != null)
                 {
-                    RunInstrumentMethod(LastFailedInstruction.InstrumentName, LastFailedInstruction.MethodName, LastFailedInstruction.Parameters, true);
+                    RunInstrumentMethod(LastFailedInstruction.InstrumentName, LastFailedInstruction.MethodName, LastFailedInstruction.Parameters, true,LastFailedInstruction.ContainingProtocol);
                 }
             }
             catch { MessageBox.Show("Last instruction failed"); }
@@ -1254,18 +1203,15 @@ namespace Growth_Curve_Software
                 WorkerToRunRobots.RunWorkerAsync();
             }
         }
-        private bool RunInstrumentMethod(string InstrumentName, string MethodName, object[] Parameters, bool RequireStatusOK)
+        private bool RunInstrumentMethod(string InstrumentName, string MethodName, object[] Parameters, bool RequireStatusOK,Protocol curProtocol=null)
         {
             //flips through the instruments, until it finds the appropriate method/name, then invokes it
             //all failed instrument methods should throw an instrument error
             //returns true if method worked, false otherwise
-            ///this is a temporary hack, really needs to be fixed properly
-            if (InstrumentName == "Plate_Reader" || InstrumentName == "Plate Reader")
-            {
-                InstrumentName = "PlateReader";
-            }
             try
             {
+                object[] ParametersToPass = Parameters;
+                Type T = typeof(UserCallableMethod);                
                 foreach (object c in InstrumentCollection)
                 {
                     BaseInstrumentClass Instr = (BaseInstrumentClass)c;
@@ -1280,12 +1226,38 @@ namespace Growth_Curve_Software
                                 if (MI.Name == MethodName)
                                 {
                                     //need to worry more about overloaded methods here
-                                    if (MI.GetParameters().Length == 0 && Parameters == null)
-                                    { MI.Invoke(c, null); return true; }
-                                    else if (Parameters != null && MI.GetParameters().Length == Parameters.Length)
-                                    {
 
-                                        MI.Invoke(c, Parameters); return true;
+                                    //Some methods might need access to other instruments
+                                    //or to the protocol that is calling them
+                                    //we check the attributes and add another argument to the object array if this is the 
+                                    //case
+                                    object[] attrs=MI.GetCustomAttributes(T, false);
+                                    if (attrs.Length > 0)
+                                    {
+                                        UserCallableMethod attr = (UserCallableMethod)attrs[0];
+                                        AdditionalMethodArguments extraArgs = new AdditionalMethodArguments();
+                                        if (attr.RequiresCurrentProtocol)
+                                        {
+                                            //Protocol curProtocol = LoadedProtocols.CurrentProtocolInUse;
+                                            if (curProtocol == null)
+                                            {throw new ArgumentNullException("Method requires a protocol but one isn't set as the current one");}
+                                            extraArgs.CallingProtocol = curProtocol;
+                                        }
+                                        if (attr.RequiresInstrumentManager)
+                                        {
+                                            extraArgs.InstrumentCollection = this;
+                                        }
+                                        //Add addtional arguments
+                                        int currentLength = ParametersToPass == null ? 0 : ParametersToPass.Length;
+                                        ParametersToPass = new object[currentLength + 1];
+                                        if(ParametersToPass!=null) Parameters.CopyTo(ParametersToPass, 0);
+                                        ParametersToPass[ParametersToPass.Length - 1] = extraArgs;
+                                    }                                    
+                                    if (MI.GetParameters().Length == 0 && ParametersToPass == null)
+                                    { MI.Invoke(c, null); return true; }
+                                    else if (ParametersToPass != null && MI.GetParameters().Length == ParametersToPass.Length)
+                                    {
+                                        MI.Invoke(c, ParametersToPass); return true;
                                     }
                                 }
                             }
@@ -1487,7 +1459,7 @@ namespace Growth_Curve_Software
                             Worker.ReportProgress(0);
                             StaticProtocolItem Instruction = (StaticProtocolItem)NextInstruction;
                             //then we run the protocol item
-                            bool result=RunInstrumentMethod(Instruction.InstrumentName, Instruction.MethodName, Instruction.Parameters, true);
+                            bool result=RunInstrumentMethod(Instruction.InstrumentName, Instruction.MethodName, Instruction.Parameters, true, Instruction.ContainingProtocol);
                             if (result == false)
                             {                          
                                 LastFailedInstruction = Instruction;
@@ -1578,6 +1550,8 @@ namespace Growth_Curve_Software
         {
             MessageBox.Show("Version : 4.0");
         }
+
+
         //Backup and Recovery Stuff
         private void OutputRecoveryFile(string FileNameToWrite)
         {
@@ -1724,7 +1698,32 @@ namespace Growth_Curve_Software
             UpdateLoadedProtocols();
         }
 
-      
+
+
+        #region InstrumentManager Members
+
+        public BaseInstrumentClass ReturnInstrument(string InstrumentName)
+        {
+            if (NamesToBICs.ContainsKey(InstrumentName))
+                return NamesToBICs[InstrumentName];
+            else throw new ArgumentException("Instrument " + InstrumentName + " not in the collection of instruments");
+        }
+        public T ReturnInstrumentType<T>() where T : BaseInstrumentClass
+        {
+            //Linear search, get type and return
+            Type toGet = typeof(T);
+            foreach (BaseInstrumentClass bc in InstrumentCollection)
+            {
+                if (bc.GetType() == toGet)
+                    return (T)bc;
+            }
+            throw new ArgumentException("Could not find requested instrument type: " + toGet.ToString());
+        }
+        public void RunMethod(string instrumentName, string methodName, object[] args = null)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }
 

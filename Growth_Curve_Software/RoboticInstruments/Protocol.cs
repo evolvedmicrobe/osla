@@ -91,6 +91,7 @@ namespace Growth_Curve_Software
         //are determined at the start of the run
         public string InstrumentName, MethodName;
         public object[] Parameters;
+        public Protocol ContainingProtocol;
         public StaticProtocolItem()
         {
             Parameters = new object[0];
@@ -112,6 +113,7 @@ namespace Growth_Curve_Software
             SP.MethodName=this.MethodName;
             SP.Parameters = this.Parameters;
             SP.InstrumentName=this.InstrumentName;
+            SP.ContainingProtocol = this.ContainingProtocol;
             return SP;
         }
 
@@ -213,11 +215,10 @@ namespace Growth_Curve_Software
         }
         public StaticProtocolItem ReplaceVariablesWithValues(StaticProtocolItem ToRun)
         {
-            if (ToRun.InstrumentName == "NSFExperiment")
-            { ToRun.Parameters[ToRun.Parameters.Length - 1] = this; }
             //This method will take a protocol item that has variables, and replace it with actual values,
             //It should be called before the method is run
             StaticProtocolItem NewProtocolItem=ToRun.Clone();
+            NewProtocolItem.ContainingProtocol = this;
             for (int i = 0; i < NewProtocolItem.Parameters.Length; i++)
             {
                 object o = ToRun.Parameters[i];

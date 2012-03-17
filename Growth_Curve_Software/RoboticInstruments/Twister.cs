@@ -48,7 +48,6 @@ namespace Growth_Curve_Software
         TwisterPosition ScicloneSafe;
         TwisterPosition RestSafe;
         TwisterPosition RestLocation;
-        IncubatorServ Incubator;
 
         //public const string IncubatorPositionsFile = @"C:\Clarity\TwistPos.nfd";
         private string pIncubatorPostionsFile = @"C:\Clarity\TwistPos.nfd";
@@ -186,11 +185,7 @@ namespace Growth_Curve_Software
                  throw new InstrumentError("Could not initialize Twister: "+thrown.Message, false, this);    
             }
         }
-        public void SetIncubator(IncubatorServ incubator)
-        {
-            //For methods that require the incubator, this must be set
-            Incubator=incubator;
-        }
+        [UserCallableMethod()]
         public void HomeAllAxes()
         {
             try
@@ -202,7 +197,8 @@ namespace Growth_Curve_Software
                 StatusOK=false;
                 throw new InstrumentError("Unable to Home Twister Axes",false,this);
             }
-        }        
+        }
+        [UserCallableMethod()]
         public void MovePlateFromPlateReaderToIncubator()
         {
             //first to move to the incubator an pick up the plate
@@ -294,6 +290,7 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("Could not place material", false, this);
             }
         }
+        [UserCallableMethod()]
         public void MoveTwisterToSafePosition()
         {
             try
@@ -320,6 +317,7 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("Could Not Drop Item\n\n" + thrown.Message, false, this);
             }
         }
+        [UserCallableMethod()]
         public void EnableVerticalMotor()
         {
             try
@@ -333,6 +331,7 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("Could not initialize vertical motor", this,thrown);
             }
         }
+        [UserCallableMethod()]
         public void DisableVerticalMotor()
         {
             try
@@ -348,6 +347,7 @@ namespace Growth_Curve_Software
             }
         }
         //Private methods
+
         private void MoveToPosition(TwisterPosition Position)
         {
             MoveToPosition(Position, Position.SpeedToMoveAt);
@@ -372,12 +372,19 @@ namespace Growth_Curve_Software
             RobotServ.FindMaterial((object)14, (object)0, (object)0);//settings from twister macros
             RobotServ.GripOpen();
         }
+        [UserCallableMethod()]
         public void MoveToGlobalSafe()
         {
             MoveToPosition(GlobalSafe);
         }
-        public void MovePlateFromTransferStationToPlateReader()
+        private IncubatorServ GetIncubator(AdditionalMethodArguments eargs)
         {
+            return eargs.InstrumentCollection.ReturnInstrumentType<IncubatorServ>();
+        }
+        [UserCallableMethod(RequiresInstrumentManager=true)]
+        public void MovePlateFromTransferStationToPlateReader(AdditionalMethodArguments eargs)
+        {
+            IncubatorServ Incubator = GetIncubator(eargs);
             //first to move to the incubator an pick up the plate
             if (!Incubator.CheckIfSomethingOnTransferOutStation())
             {
@@ -449,8 +456,10 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("Could not get item\n\n" + thrown.Message, this,thrown);
             }            
         }
-        public void GrabItemOnTransferStation()
+        [UserCallableMethod(RequiresInstrumentManager=true)]
+        public void GrabItemOnTransferStation(AdditionalMethodArguments eargs)
         {
+            IncubatorServ Incubator = GetIncubator(eargs);
             //This method assumes that a plate with a lid on it is outside the transfer station
             if (!Incubator.CheckIfSomethingOnTransferOutStation())
             {
@@ -472,8 +481,10 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("Failed to put item on plate\n\n" + thrown.Message, false, this);
             }           
         }
-        public void PlaceItemOnTransferStation()
+        [UserCallableMethod(RequiresInstrumentManager=true)]
+        public void PlaceItemOnTransferStation(AdditionalMethodArguments eargs)
         {
+            IncubatorServ Incubator = GetIncubator(eargs);
             //This method assumes that a plate with a lid on it is outside the transfer station
             if (Incubator.CheckIfSomethingOnTransferOutStation())
             {
@@ -481,11 +492,9 @@ namespace Growth_Curve_Software
             }
             try
             {
-
                 MoveToPosition(IncubatorSafe);
                 MoveToPosition(IncubatorOverPlate);
                 FindMaterialAndReleaseGrip();
-                
                 MoveToPosition(IncubatorOverPlate);
                 MoveToPosition(IncubatorSafe);
             }
@@ -526,7 +535,8 @@ namespace Growth_Curve_Software
                 RobotServ.Abort();
                 throw new InstrumentError("Could not place item in rack\n\n" + thrown.Message, false, this);
             }
-        }        
+        }
+        [UserCallableMethod()]
         public override bool AttemptRecovery(InstrumentError Error)
         {
             //ditch the old stuff
@@ -580,177 +590,5 @@ namespace Growth_Curve_Software
             return true;         
         }
 
-
-        //public void GetLidInSciclonePosition(int BayNumber)
-        //{
-        //    This method is a hold over from before when the grip was replaced
-        //    It should not be used anymore
-        //    //Same as below except with a more nuance move
-        //    try
-        //    {
-        //        //First move to a safe location, otherwise the extended arm can crash into the
-        //        //plate reader and incubator as it moves around
-        //        MoveToPosition(ScicloneSafe);
-        //        //now go to the spot
-        //        MoveToPosition(SciCloneSpots[BayNumber - 1, 0]);
-        //        RobotServ.FindMaterial((object)5, (object)10, (object)0);//no idea what grip offset does, its in user units (microns??)
-        //        GripPlateLid();
-        //        MoveToPosition(SciCloneSpots[BayNumber - 1, 0]);
-        //        MoveToPosition(ScicloneSafe);
-        //    }
-        //    catch (Exception thrown)
-        //    {
-        //        throw new InstrumentError("Could not place material", false, this);
-        //    }
-        //}
-        //public void GetLidInSciclonePosition(int BayNumber)
-        //{
-        //    This method is a hold over from before when the grip was replaced
-        //    It should not be used anymore
-        //    //Same as below except with a more nuance move
-        //    try
-        //    {
-        //        //First move to a safe location, otherwise the extended arm can crash into the
-        //        //plate reader and incubator as it moves around
-        //        MoveToPosition(ScicloneSafe);
-        //        //now go to the spot
-        //        MoveToPosition(SciCloneSpots[BayNumber - 1, 0]);
-        //        RobotServ.FindMaterial((object)5, (object)10, (object)0);//no idea what grip offset does, its in user units (microns??)
-        //        GripPlateLid();
-        //        MoveToPosition(SciCloneSpots[BayNumber - 1, 0]);
-        //        MoveToPosition(ScicloneSafe);
-        //    }
-        //    catch (Exception thrown)
-        //    {
-        //        throw new InstrumentError("Could not place material", false, this);
-        //    }
-        //}
-        //public void PlaceLidOnTransferStation()
-        //{
-        //    //Old method from previous gripper style, is no more
-
-        //    //same as other method, with no check for a lid
-        //    ArrayList PositionsToMoveTo = new ArrayList();
-        //    try
-        //    {
-
-        //        PositionsToMoveTo.Add(IncubatorSafe);
-        //        PositionsToMoveTo.Add(IncubatorOverPlate);
-        //        PositionsToMoveTo.Add(IncubatorPlate);
-        //        foreach (TwisterPosition Position in PositionsToMoveTo)
-        //        {
-        //            RobotServ.SpeedAsPercentMax = Position.SpeedToMoveAt;
-        //            RobotServ.MoveAbsolute(Position.Rotary, Position.Reach, Position.Vertical, Position.Wrist, Position.Track);
-        //        }
-        //        ResetGrip();
-        //        PositionsToMoveTo.Clear();
-        //        MoveToPosition(IncubatorOverPlate);
-        //        MoveToPosition(IncubatorSafe);
-
-        //    }
-        //    catch (Exception thrown)
-        //    {
-        //        //if it fails, try to move the arm back to a safe position
-        //        RobotServ.Abort();
-        //        RobotServ.SpeedAsPercentMax = (short)5;
-        //        RobotServ.MoveAbsolute(IncubatorSafe.Rotary, IncubatorSafe.Reach, IncubatorSafe.Vertical, IncubatorSafe.Wrist, IncubatorSafe.Track);
-        //        throw new InstrumentError("Failed to put item on plate\n\n" + thrown.Message, false, this);
-        //    }  
-        //}
-        //public void GripPlateLid()
-        //{
-        //    //Old method used with busted reader
-        //    //This method is used because if I just invoke "Grip Plate" 
-        //    //then the thing will occasionally squeeze so hard that it lifts both the lid and the plate
-        //    //by specifying the grip, I avoid this problem
-        //    float LidGripValue = -5000;//got this by testing in twister software
-        //    ZyRobot_ICP.Axis AC = RobotServ.Grip;
-        //    AC.set_TargetPosition(ref LidGripValue);
-        //    RobotServ.TriggerMoveAndWait(20000);            
-        //    //please reset hand after this!!!
-        //}
-
-        //public void ResetGrip()
-        //{
-        //    //Old method that was a workaround for a broken grip, should never ever be called.
-        //    RobotServ.GripOpen();
-
-        //    while (RobotServ.Busy)
-        //    {
-        //        Thread.Sleep(300);
-        //    }
-        //    ZyRobot_ICP.Axis AC = RobotServ.Grip;
-        //    float Target = -3000;
-        //    AC.set_TargetPosition(ref Target);
-        //    RobotServ.TriggerMoveAndWait(50000);
-        //    RobotServ.Grip.HomeAxis();
-        //    int counter = 0;
-        //    while (RobotServ.Busy & counter<200)
-        //    {
-        //        counter++;
-        //        Thread.Sleep(300);
-        //    }
-        //    if (counter >= 200) { throw new InstrumentError("Grip axis did not reset quickly enough", false, this); }
-        //}  
-      
-        //private void OLD_OLD_OLD_initializeTwisterPositions()
-        //{
-
-        //    //These positions will change in the new location, you can find them by using the twister software from caliper
-        //    //that software trains a position, and by typing them here you are a-ok, trying to get them programmatically was a pain
-        //    ReaderSafe = new TwisterPosition("Safe", "Absolute", 2955, -1938, 76960, 137482, 80);
-        //    ReaderOverPlate = new TwisterPosition("PlaceClearance1", "Absolute", 2825, 97301, 76954, 137781, 60);
-        //    ReaderPlate = new TwisterPosition("Place1", "Absolute", -86579, 97301, 76954, 137781, 15);
-        //    //now for the incubator, actually the process incubator in Clara
-        //    IncubatorSafe = new TwisterPosition("Safe", "Absolute", 2818, -1938, 118087, -23783, 80);
-        //    IncubatorOverPlate = new TwisterPosition("PlaceClearance1", "Absolute", 2825, 84559, 117459, -21274, 60);
-        //    //IncubatorOverPlate = new TwisterPosition("PlaceClearance1", "Absolute", 2825, 85560, 117905, -21274, 60);
-        //    IncubatorPlate = new TwisterPosition("Place1", "Absolute", -70000, 84559, 117459, -21274, 15);
-        //    //IncubatorPlate = new TwisterPosition("Place1", "Absolute", -70000, 85560, 117905, -21274, 15);
-
-        //    //Now for the Garbage Location
-        //    GarbageLocation = new TwisterPosition("GarbageSafe", "Absolute", 2900,49999, 209223, -5121, 20);
-
-        //    //Now for a safe spot 
-        //    GlobalSafe = new TwisterPosition("GlobalSafe", "Absolute", 2900, -5732, 179861, -5121, 45);
-        //    //Now to give all the coordinates of the rack positions
-        //    RackPositions = new TwisterPosition[6, 2];
-        //    short RackMoveSpeed=30;
-        //    RackPositions[0, 0] = new TwisterPosition("PickClearance1", "Absolute", 3000, -2435, 150443, -4285, RackMoveSpeed);
-        //    RackPositions[0, 1] = new TwisterPosition("Pick1", "Absolute", -54329, -2435, 150443, -4285, RackMoveSpeed);
-        //    RackPositions[1, 0] = new TwisterPosition("PickClearance2", "Absolute", 3000, 61010, 176446, -4076, RackMoveSpeed);
-        //    RackPositions[1, 1] = new TwisterPosition("Pick2", "Absolute", -49473, 61010, 176446, -4076, RackMoveSpeed);
-        //    RackPositions[2, 0] = new TwisterPosition("PickClear3", "Absolute", 3000, -1582, 202995, -5644, RackMoveSpeed);
-        //    RackPositions[2,1]= new TwisterPosition("Pick3","Absolute",-54628,-1582,202995,-5644,RackMoveSpeed);
-        //    //fourth positions are on the other side
-        //    RackPositions[3, 0] = new TwisterPosition("PickClear4", "Absolute", 3000, -2939, 22129, -3137, RackMoveSpeed);
-        //    RackPositions[3, 1] = new TwisterPosition("Pick4", "Absolute", -54171, -2939, 22129, -3137, RackMoveSpeed);
-        //    RackPositions[4, 0] = new TwisterPosition("PickClear5", "Absolute", 3000, 61478, -3754, -4289, RackMoveSpeed);
-        //    RackPositions[4, 1] = new TwisterPosition("Pick5", "Absolute", -54361, 61478, -3754, -4289, RackMoveSpeed);
-        //    RackPositions[5, 0] = new TwisterPosition("PickClear6", "Absolute", 3000, -1856, -29650, -2875, RackMoveSpeed);
-        //    RackPositions[5, 1] = new TwisterPosition("Pick6", "Absolute", -54107, -1856, -29650, -2875, RackMoveSpeed);
-
-        //    //Now for the SciClonePositions
-        //    //Very important!!! This will hold the positions labelled 1-5, with 1 being closest 
-        //    //to the computer.  Position 1 is for the pippette tips, and so will have a special location,
-        //    //while position 4 holdsthe shaker.
-        //    //only position one will have the move absolute rule enforced
-        //    //Note that the first spot is the "safe" position, and the second is the "down" position
-
-        //    //also note that I am defining one "safety position" for all sciclone moves" 
-        //    ScicloneSafe = new TwisterPosition("SciSafe", "Absolute", 2825, -1938, 274934, -23783, 30);
-
-        //    SciCloneSpots = new TwisterPosition[4, 2];
-        //    SciCloneSpots[0, 0] = new TwisterPosition("OverPippetteSafe", "Absolute", 2759, 210403, 239658, -93685, 20);
-        //    SciCloneSpots[1, 1] = new TwisterPosition("InPipetteSpot", "Absolute", -85132, 210403, 239658, -93685, 5);
-        //    SciCloneSpots[1, 0] = new TwisterPosition("OverTwoSafe", "Absolute", -48051, 160782, 255749, -115764, 20);
-        //    SciCloneSpots[1, 1] = new TwisterPosition("OverTwoPlace", "Absolute", -125830, 1160782, 255749, -115764, 20);
-        //    SciCloneSpots[2, 0] = new TwisterPosition("OverThreeSafe", "Absolute", -53682, 153407, 273898, -142338, 20);
-        //    SciCloneSpots[2, 1] = new TwisterPosition("OverThreePlace", "Absolute", -128136, 153407, 273898, -142338, 5);
-        //    //Now the shaker
-        //    SciCloneSpots[3, 0] = new TwisterPosition("SafeOverShaker", "Absolute", -48057, 192265, 290704, -166918, 20);
-        //    SciCloneSpots[3, 1] = new TwisterPosition("InShaker", "Absolute", -95143, 192265, 290704, -166918, 5);
-
-        //}
     }
 }

@@ -24,128 +24,68 @@ namespace Growth_Curve_Software
         {
             get { return "Macros"; }
         }
-
-        public bool MovePlateFromIncubatorToVictor(int PlateSlot)
+        [UserCallableMethod(RequiresInstrumentManager = true)]
+        public bool MovePlateFromIncubatorToVictor(int PlateSlot, AdditionalMethodArguments eargs)
         {
+
+            IncubatorServ Incubator = eargs.InstrumentCollection.ReturnInstrumentType<IncubatorServ>();
+            TransferStation TransStation = eargs.InstrumentCollection.ReturnInstrumentType<TransferStation>();
+            Twister Robot = eargs.InstrumentCollection.ReturnInstrumentType<Twister>();
             //First to unload the plate
-            Form1.Incubator.UnloadPlate(PlateSlot);
-            Form1.TransStation.TurnOnVacuumAndLiftLid();
-            Form1.TransStation.MoveStationOut();
-            Form1.Robot.MovePlateFromTransferStationToPlateReader();
-            Form1.TransStation.MoveStationIn();
-            Form1.TransStation.TurnOffVacuumAndReturnLid();
+            Incubator.UnloadPlate(PlateSlot);
+            TransStation.TurnOnVacuumAndLiftLid();
+            TransStation.MoveStationOut();
+            Robot.MovePlateFromTransferStationToPlateReader(eargs);
+            TransStation.MoveStationIn();
+            TransStation.TurnOffVacuumAndReturnLid();
             return true;
         }
-        public bool AttemptToReseatLid()
+        [UserCallableMethod(RequiresInstrumentManager=true)]
+        public bool AttemptToReseatLid(Protocol toModify, AdditionalMethodArguments eargs)
         {
-            Form1.TransStation.TurnOnVacuumAndLiftLid();
-            Form1.TransStation.MoveStationOut();
-            Form1.Robot.MovePlateFromTransferStationToPlateReader();
-            Form1.TransStation.MoveStationIn();
-            Form1.TransStation.TurnOffVacuumAndReturnLid();
-            
-            Form1.TransStation.TurnOnVacuumAndLiftLid();
-            Form1.TransStation.MoveStationOut();
-            Form1.Robot.MovePlateFromPlateReaderToIncubator();
-            Form1.TransStation.MoveStationIn();
-            Form1.TransStation.TurnOffVacuumAndReturnLid();
-            return true;
-        }
-        public bool RackToSciclone(int RackPosition,int SciClonePosition)
-        {
-            //this method will take a new plate out of the rack, and place its lid in the 3rd 
-            //Sciclone spot and the plate in the second
-            Form1.Robot.MoveTwisterToSafePosition();
-            Form1.Robot.GrabItemFromRack(RackPosition);
-            Form1.Robot.PlaceItemInSciclonePosition(SciClonePosition);
-            return true;
-        }
-        public bool IncPlateToSciClone(int IncPosition,int SciClonePos)
-        {
-            //this method unloads a plate, and moves it to the sciclone shaker, discarding the lid as it goes
-            Form1.Incubator.UnloadPlate(IncPosition);
-            Form1.TransStation.MoveStationOut();
-            Form1.Robot.GrabItemOnTransferStation();
-            Form1.Robot.PlaceItemInSciclonePosition(SciClonePos);
-            Form1.TransStation.MoveStationIn();
-            Form1.Robot.MoveTwisterToSafePosition();
-            return true;
-        }
-        public bool ScicloneToIncubator(int IncPos,int SciPos)
-        {
-            //This method will move a plate from position 2, with its lid in position 3, to the incubator
-            if (Form1.Incubator.CheckIfSomethingOnTransferOutStation())
-            {
-                throw new InstrumentError("Their is something on the transfer out station", true, this);
-            }
-            //otherwise move ahead
-            Form1.TransStation.MoveStationOut();
-            Form1.Robot.GetItemInSciclonePosition(SciPos);
-            Form1.Robot.PlaceItemOnTransferStation();
-            Form1.TransStation.MoveStationIn();
-            Form1.Incubator.LoadPlate(IncPos);
-            return true;
-        }
-        public bool SciCloneToRack(int SciClonePosition, int RackNumber)
-        {
-            Form1.Robot.GetItemInSciclonePosition(SciClonePosition);
-            Form1.Robot.PlaceItemInRack(RackNumber);
-            return true;
-        }
-        public bool PlaceNewTipsInSciclone(int RackWiTips)
-        {
-            Form1.Robot.HomeAllAxes();
-            Form1.Robot.GrabItemFromRack(RackWiTips);
-            Form1.TransStation.MoveStationOut();
-            if (Form1.Incubator.CheckIfSomethingOnTransferOutStation())
-            {
-                throw new InstrumentError("Something is already on the transfer out station, cannot place tip lid there", true, this);
-            }
-            Form1.Robot.PlaceItemOnTransferStation();
-            Form1.Robot.GrabItemFromRack(RackWiTips);
-            Form1.Robot.PlaceItemInSciclonePosition(1);
-            Form1.Robot.GrabItemOnTransferStation();
-            Form1.Robot.PlaceItemInRack(RackWiTips);
-            Form1.TransStation.MoveStationIn();
-            return true;
-        }
-        public bool PlaceTwoSetsOfNewTipsInSciclone(int RackWiTips)
-        {
-            PlaceNewTipsInSciclone(RackWiTips);
-            Form1.LiquidHandler.RunMethod("MoveTipsToBox2", "none");
-            PlaceNewTipsInSciclone(RackWiTips);
-            return true;
-        }
-        public bool RemoveTwoSetsOfTipLidsFromSciclone(int DumpRack)
-        {
-            Form1.Robot.GetItemInSciclonePosition(1);
-            Form1.Robot.PlaceItemInRack(DumpRack);
-            Form1.LiquidHandler.RunMethod("MoveTipLid2ToBox1", "none");
-            Form1.Robot.GetItemInSciclonePosition(1);
-            Form1.Robot.PlaceItemInRack(DumpRack);
-            return true;
+            IncubatorServ Incubator = eargs.InstrumentCollection.ReturnInstrumentType<IncubatorServ>();
+            TransferStation TransStation = eargs.InstrumentCollection.ReturnInstrumentType<TransferStation>();
+            Twister Robot = eargs.InstrumentCollection.ReturnInstrumentType<Twister>();
 
+            TransStation.TurnOnVacuumAndLiftLid();
+            TransStation.MoveStationOut();
+            Robot.MovePlateFromTransferStationToPlateReader(eargs);
+            TransStation.MoveStationIn();
+            TransStation.TurnOffVacuumAndReturnLid();
+            
+            TransStation.TurnOnVacuumAndLiftLid();
+            TransStation.MoveStationOut();
+            Robot.MovePlateFromPlateReaderToIncubator();
+            TransStation.MoveStationIn();
+            TransStation.TurnOffVacuumAndReturnLid();
+            return true;
         }
-        public bool MovePlateFromVictorToIncubatorWithLidOnTransferStation(int PlateSlot)
+        [UserCallableMethod(RequiresInstrumentManager = true)]
+        public bool MovePlateFromVictorToIncubatorWithLidOnTransferStation(int PlateSlot,AdditionalMethodArguments eargs)
         {
+
+            IncubatorServ Incubator = eargs.InstrumentCollection.ReturnInstrumentType<IncubatorServ>();
+            TransferStation TransStation = eargs.InstrumentCollection.ReturnInstrumentType<TransferStation>();
+            Twister Robot = eargs.InstrumentCollection.ReturnInstrumentType<Twister>();
+            //First to unload the plate
             //first to make sure something is on the dang slider thing
             bool HASLID = false;
-            if (Form1.Incubator.CheckIfSomethingOnTransferOutStation())
+            if (Incubator.CheckIfSomethingOnTransferOutStation())
             {
                 HASLID = true;
-                Form1.TransStation.TurnOnVacuumAndLiftLid();
+                TransStation.TurnOnVacuumAndLiftLid();
             }
-            Form1.TransStation.MoveStationOut();
-            Form1.Robot.MovePlateFromPlateReaderToIncubator();
-            Form1.TransStation.MoveStationIn();
+            TransStation.MoveStationOut();
+            Robot.MovePlateFromPlateReaderToIncubator();
+            TransStation.MoveStationIn();
             if (HASLID)
             {
-                Form1.TransStation.TurnOffVacuumAndReturnLid();
+                TransStation.TurnOffVacuumAndReturnLid();
             }
-            Form1.Incubator.LoadPlate(PlateSlot);
+            Incubator.LoadPlate(PlateSlot);
             return true;
         }
-        
+        [UserCallableMethod()]
         public override bool AttemptRecovery(InstrumentError Error)
         {
             return true;

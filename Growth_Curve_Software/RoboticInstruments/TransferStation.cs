@@ -149,6 +149,7 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("Could not fulfill transfer station request in time for method: "+methName, false, this); 
             }
         }
+        [UserCallableMethod()]
         public override bool AttemptRecovery(InstrumentError Error)
         {
             StatusOK = false;
@@ -160,6 +161,7 @@ namespace Growth_Curve_Software
             }
             catch { return false; }           
         }
+        [UserCallableMethod()]
         public void MoveStationIn()
         {
             try
@@ -183,6 +185,7 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("Transfer Station Could Not Move Plate Towards Incubator", false, this);
             }
         }
+        [UserCallableMethod()]
         public void MoveStationOut()
         {
             try
@@ -206,6 +209,7 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("Transfer Station Could Not Move Plate Away From Incubator", false, this);
             }
         }
+        [UserCallableMethod()]
         public void TurnOnVacuumAndLiftLid()
         {
             try
@@ -249,6 +253,7 @@ namespace Growth_Curve_Software
                 }
             }
         }
+        [UserCallableMethod()]
         public void TurnOffVacuumAndReturnLid()
         {
             try
