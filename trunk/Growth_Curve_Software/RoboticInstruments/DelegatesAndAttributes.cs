@@ -17,7 +17,6 @@ namespace Growth_Curve_Software
     {
         public bool RequiresInstrumentManager=false;
         public bool RequiresCurrentProtocol=false;
- 
     }
     
 }
