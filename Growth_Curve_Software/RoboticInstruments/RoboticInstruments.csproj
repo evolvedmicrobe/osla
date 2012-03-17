@@ -119,11 +119,24 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="RequiredDlls\AxInterop.MlrCtls.dll" />
-    <Content Include="RequiredDlls\Interop.DCU.dll" />
-    <Content Include="RequiredDlls\Interop.MlrCtls.dll" />
-    <Content Include="RequiredDlls\Interop.MlrServ.dll" />
-    <Content Include="RequiredDlls\Interop.ZyRobot_ICP.dll" />
+    <Content Include="RequiredDlls\AxInterop.MlrCtls.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RequiredDlls\Interop.DCU.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RequiredDlls\Interop.MlrCtls.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RequiredDlls\Interop.MlrServ.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RequiredDlls\Interop.ZyRobotAdapter.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RequiredDlls\Interop.ZyRobot_ICP.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
