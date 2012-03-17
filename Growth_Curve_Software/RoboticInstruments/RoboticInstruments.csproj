@@ -117,15 +117,6 @@
       <Name>VictorStandAloneForm</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="AxInterop.MlrCtls.dll" />
-    <Content Include="Interop.DCU.dll" />
-    <Content Include="Interop.MlrCtls.dll" />
-    <Content Include="Interop.MlrServ.dll" />
-    <Content Include="Interop.ZyRobotAdapter.dll" />
-    <Content Include="Interop.ZyRobot_ICP.dll" />
-    <Content Include="Microsoft.Office.Interop.Excel.dll" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
