@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AxInterop.MlrCtls">
-      <HintPath>bin\Debug\AxInterop.MlrCtls.dll</HintPath>
+      <HintPath>RequiredDLLs\AxInterop.MlrCtls.dll</HintPath>
     </Reference>
     <Reference Include="Interop.DCU">
       <HintPath>RequiredDLLs\Interop.DCU.dll</HintPath>
@@ -52,7 +52,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Interop.ZyRobotAdapter">
-      <HintPath>..\..\..\..\..\..\..\..\Network_Data\Software\Growth_Curve_Software\RoboticInstruments\bin\Release\Interop.ZyRobotAdapter.dll</HintPath>
+      <HintPath>RequiredDLLs\Interop.ZyRobotAdapter.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Interop.ZyRobot_ICP">
