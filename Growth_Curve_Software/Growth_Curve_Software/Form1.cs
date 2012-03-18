@@ -1163,10 +1163,17 @@ namespace Growth_Curve_Software
         }
         private void reconnectToAlarmServerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(UseAlarm)
-                Clarity_Alarm = new Alarm();
-            else
-                MessageBox.Show("Alarm disabled at startup");
+            try
+            {
+                if (UseAlarm)
+                {
+                    Clarity_Alarm = new Alarm();
+                    if (Clarity_Alarm.Connected) { LoadedProtocols.UpdateAlarmProtocols(); }
+                }
+                else
+                    MessageBox.Show("Alarm disabled at startup");
+            }
+            catch (Exception thrown) { MessageBox.Show(thrown.Message); }
         }
         private void btnResetLid_Click(object sender, EventArgs e)
         {

@@ -368,7 +368,7 @@ namespace Growth_Curve_Software
             
             UpdateAlarmProtocols();
         }
-        private void UpdateAlarmProtocols()
+        public void UpdateAlarmProtocols()
         {
             List<string> newNames = Protocols.Select(x => x.ProtocolName).ToList();
               Alarm a = manager.GiveAlarmReference();
@@ -721,6 +721,7 @@ namespace Growth_Curve_Software
                              }
                             StaticProtocolItem ProtocolItem = (StaticProtocolItem)ProtocolInstruction;
                             ProtocolItem.Parameters = ParameterArray;
+                            ProtocolItem.ContainingProtocol = NewProtocol;
                         }
                         else
                         {
@@ -759,7 +760,7 @@ namespace Growth_Curve_Software
                 ProtocolVariable PV = curProtocol.Variables[varName];
                 XWriter.WriteStartElement("Variable");
                     XWriter.WriteStartElement("Name");
-                        XWriter.WriteString(PV.Name);
+                   XWriter.WriteString(PV.Name);
                     XWriter.WriteEndElement();
                     XWriter.WriteStartElement("Value");
                     XWriter.WriteStartAttribute("Type");
@@ -783,8 +784,8 @@ namespace Growth_Curve_Software
                 //System.Windows.Forms.MessageBox.Show(o.GetType().GetProperties().Length.ToString());
                 var toTest = Type.GetType("System.Object[]");
                 foreach (FieldInfo PI in o.GetType().GetFields())
-                {                    
-                    if (PI.FieldType.ToString()=="System.Object[]") //the parameters are always passed as an object array, this is kind of silly now since all my methods only take one argument, but in the future who knows.
+                {
+                    if (PI.FieldType.ToString() == "System.Object[]") //the parameters are always passed as an object array, this is kind of silly now since all my methods only take one argument, but in the future who knows.
                     {
                         object[] Params = (object[])PI.GetValue(o);
                         XWriter.WriteStartElement("Parameters");
@@ -798,10 +799,11 @@ namespace Growth_Curve_Software
                             //switched to accomodate new types
                             XWriter.WriteString(Param.ToString());
                             XWriter.WriteEndElement();
-                            
+
                         }
                         XWriter.WriteEndElement();
                     }
+                    else if (PI.FieldType == typeof(Protocol)) continue;//Ignore the containing protocol bit
                     else
                     {
                         XWriter.WriteStartElement(PI.Name);
