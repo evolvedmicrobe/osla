@@ -17,6 +17,9 @@ namespace Robot_Alarm
     delegate void del_Button();
    
     delegate void del_BitMap(System.Drawing.Bitmap bmp,string up1, System.Drawing.Bitmap bmp2,string up2);
+    /// <summary>
+    /// WCF Client
+    /// </summary>
     public partial class Form1 : Form
     {
         bool ClientSideAlarmActivation;
@@ -41,7 +44,7 @@ namespace Robot_Alarm
             InitializeComponent();
             UpdatelblIdleTXT = new del_String(UpdatelblIdel);
         }
-        private void UpdateImages(System.Drawing.Bitmap Image1,string updateTime1, System.Drawing.Bitmap Image2,string updateTime2)
+        private void UpdateImages(Bitmap Image1,string updateTime1, System.Drawing.Bitmap Image2,string updateTime2)
         {
             pictureBox1.Image = Image1;
             lblTime1.Text = updateTime1;
@@ -278,6 +281,27 @@ namespace Robot_Alarm
                 int Minutes = Convert.ToInt32(time.Split(' ')[0]);
                 MaxTimeAllowed = new TimeSpan(0, Minutes, 0);
 
+            }
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            lstProtocols.SelectedItems.Clear();
+            foreach (string str in InstrumentMonitor.GetCurrentlyLoadedProtocolNames())
+            {
+                lstProtocols.Items.Add(str);
+            }
+        }
+
+        private void btnValidateProtocols_Click(object sender, EventArgs e)
+        {
+            if (lstProtocols.SelectedIndex > -1)
+            {
+                foreach (object o in lstProtocols.SelectedItems)
+                {
+                    string os = (string)o;
+                    InstrumentMonitor.ValidateProtocol(os);
+                }
             }
         }
 

@@ -1,0 +1,4 @@
+﻿Te file AlarmNotifier.cs was made with a utility that automatically generated the necessary files to use the 
+WCF service that is the alarm server, the command should be run in this directory and is:
+
+svcutil.exe /r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /language:cs /config:app.config http://localhost:8001/AlarmNotifier

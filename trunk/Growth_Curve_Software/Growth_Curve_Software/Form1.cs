@@ -9,9 +9,9 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
+//using System.Runtime.Remoting;
+//using System.Runtime.Remoting.Channels;
+//using System.Runtime.Remoting.Channels.Tcp;
 using System.Collections;
 using System.Reflection;
 using System.IO;
@@ -31,7 +31,7 @@ namespace Growth_Curve_Software
     /// </summary>
     
      
-    public partial class Form1 : Form, InstrumentManager
+    public partial class ClarityForm : Form, InstrumentManager
     {
         //public const string AppDataDirectory = @"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
         public string RecoveryProtocolFile;
@@ -50,20 +50,24 @@ namespace Growth_Curve_Software
         //supposedly another way to terminate
         static public List<BaseInstrumentClass> InstrumentCollection;
         Dictionary<string, BaseInstrumentClass> NamesToBICs;
-        static public IncubatorServ Incubator;
-        static public Twister Robot;
-        static public TransferStation TransStation;
-        static public VictorManager PlateReader;
-        static public Macros ScriptsLibrary;
+        private IncubatorServ Incubator;
+        private Twister Robot;
+        private TransferStation TransStation;
+        private VictorManager PlateReader;
+        
         static public ProtocolManager LoadedProtocols;
         static public ProtocolEventCaller ProtocolEvents;
-        public Alarm Clarity_Alarm;
+        //This should not be static in the future
+        static public Alarm Clarity_Alarm;
         private bool pUseAlarm=true;
         public bool UseAlarm
         {
             get { return pUseAlarm; }
             set { pUseAlarm = value; }
         }
+        private bool pRequireProtocolValidation;
+        public bool RequireProtocolValidation
+        { get; set; }
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
         public string NSFErrorEmails
         {
@@ -87,7 +91,7 @@ namespace Growth_Curve_Software
         }
         int[] ExcludedIncubatorPositions =  { 19,38 };
 
-        public Form1()
+        public ClarityForm()
         {
             
             RecoveryProtocolFile = AppDataDirectory + "Last_Protocol.nfd";
@@ -101,7 +105,7 @@ namespace Growth_Curve_Software
             {
                 //Make a collection to hold everythin
                 InstrumentCollection = new List<BaseInstrumentClass>();
-                LoadedProtocols = new ProtocolManager();
+                LoadedProtocols = new ProtocolManager(this);
                 ProtocolEvents = new ProtocolEventCaller();
                 //out with the old
                 if (!Debugging)
@@ -1548,7 +1552,7 @@ namespace Growth_Curve_Software
         public delegate void StringErrorDel(string arg1, Exception arg2);
         private void versionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Version : 4.0");
+            MessageBox.Show("Version : 5.0");
         }
 
 
@@ -1718,6 +1722,10 @@ namespace Growth_Curve_Software
                     return (T)bc;
             }
             throw new ArgumentException("Could not find requested instrument type: " + toGet.ToString());
+        }
+        public Alarm GiveAlarmReference()
+        {
+            return Clarity_Alarm;
         }
         #endregion
     }

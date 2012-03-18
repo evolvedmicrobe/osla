@@ -78,8 +78,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Alarm.cs" />
-    <Compile Include="AlarmNotifier.cs" />
     <Compile Include="ConfigurationLoader.cs" />
     <Compile Include="CountDownTimer.cs">
       <SubType>Component</SubType>
@@ -120,7 +118,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

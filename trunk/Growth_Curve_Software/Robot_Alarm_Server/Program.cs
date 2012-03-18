@@ -12,7 +12,10 @@ using System.ServiceModel.Description;
 
 namespace Robot_Alarm
 {
-    
+ /// <summary>
+ /// Run a WCF service 
+ /// </summary>
+   
     static class Program
     {
         
@@ -39,8 +42,8 @@ namespace Robot_Alarm
         [STAThread]
         static void Main()
         {
-            Uri httpAddress = new Uri("http://140.247.92.83:8001/AlarmNotifier");
-            //Uri httpAddress = new Uri("http://localhost:8000/AlarmNotifier");
+            //Uri httpAddress = new Uri("http://140.247.92.83:8001/AlarmNotifier");
+            Uri httpAddress = new Uri("http://localhost:8001/AlarmNotifier");
             ServiceHost selfHost = new ServiceHost(typeof(AlarmNotifier), httpAddress);
             //WSHttpBinding myBinding = new WSHttpBinding();
             BasicHttpBinding myBinding = new BasicHttpBinding();

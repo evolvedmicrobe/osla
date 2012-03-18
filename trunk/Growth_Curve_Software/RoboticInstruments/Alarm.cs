@@ -8,7 +8,7 @@ namespace Growth_Curve_Software
     public class Alarm
     {
         //Class for turning on and off the remote alarm
-        AlarmClient AC;
+        AlarmServer.AlarmClient AC;
         public enum AlarmState{On,Off,Disconnected};
         public bool Connected;
         public Alarm()
@@ -41,6 +41,14 @@ namespace Growth_Curve_Software
             try { AC.TurnOffAlarm(); AC.UpdateStatus(StatusUpdate); }
             catch { Connected = false; }
         }
+        public DateTime getValidationTimeForProtocol(string ProtocolName)
+        {
+            if (Connected && AC != null)
+            {
+                return AC.GetValidationTimeOfProtocol(ProtocolName);
+            }
+            else { return DateTime.Now; }//not the best here, assuming is working
+        }
         public void TurnOffAlarm()
         {
             TurnOffAlarm("Alarm off");
@@ -49,6 +57,10 @@ namespace Growth_Curve_Software
         {
             try { AC.UpdateStatus(StatusMessage); }
             catch { Connected = false; }
+        }
+        public void SetProtocolNames(List<string> Names)
+        {
+            AC.SetCurrentlyLoadedProtocolNames(Names);
         }
         public AlarmState IsAlarmOn()
         {
@@ -62,6 +74,19 @@ namespace Growth_Curve_Software
             {
                 return AlarmState.Disconnected;
             }
+        }
+        public DateTime GetProtocolTime(string ProtocolName)
+        {
+            try
+            {
+                if (AC != null && Connected)
+                {
+                    return AC.GetValidationTimeOfProtocol(ProtocolName);
+                }
+                else { return DateTime.Now; }
+            }
+            catch (Exception thrown)
+            { return DateTime.Now; }
         }
     }
 }

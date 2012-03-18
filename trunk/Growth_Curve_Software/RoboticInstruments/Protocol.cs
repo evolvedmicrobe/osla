@@ -262,6 +262,8 @@ namespace Growth_Curve_Software
     [Serializable]
     public class ProtocolManager
     {
+        int SuspensionHourStart=23;
+        int SuspensionHourEnd=8;
         //Static methods
         public static bool IsVariableInList(string VariableName, IList ListOfVariables)
         {
@@ -347,12 +349,13 @@ namespace Growth_Curve_Software
         }
 
         //instance goodies
-        public ArrayList Protocols;//This will be the collection of all protocols that are in use,it should not be altered outside of this class
+        public List<Protocol> Protocols;//This will be the collection of all protocols that are in use,it should not be altered outside of this class
         public Protocol CurrentProtocolInUse;//
-        
-        public ProtocolManager()
+        private InstrumentManager manager;
+        public ProtocolManager(InstrumentManager manager)
         {
-            Protocols = new ArrayList();
+            this.manager = manager;
+            Protocols = new List<Protocol>();
         }
         public void AddProtocol(Protocol ProtocolToAdd)
         {
@@ -362,6 +365,15 @@ namespace Growth_Curve_Software
                 CurrentProtocolInUse = ProtocolToAdd;
             }            
             Protocols.Add(ProtocolToAdd);
+            
+            UpdateAlarmProtocols();
+        }
+        private void UpdateAlarmProtocols()
+        {
+            List<string> newNames = Protocols.Select(x => x.ProtocolName).ToList();
+              Alarm a = manager.GiveAlarmReference();
+              if (a != null && a.Connected) a.SetProtocolNames(newNames);
+
         }
         public void RemoveProtocol(Protocol ProtocolToRemove)
         {            
@@ -382,7 +394,8 @@ namespace Growth_Curve_Software
                 {
                     Protocols.Remove(ProtocolToRemove);
                 }
-            }            
+            }
+            UpdateAlarmProtocols();
         }
         private double FindMilliSecondsUntilNextRunAndChangeCurrentProtocol()
         {
@@ -426,7 +439,9 @@ namespace Growth_Curve_Software
                 double MS=FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();
                 if (MS > 0) { return MS; } //this should always return a positive ms value
             }
-            int IndexOfNextProtInst=CurrentProtocolInUse.NextItemToRun++;//move up one instruction index
+            bool valid = ValidateProtocol(CurrentProtocolInUse);
+            if (!valid) return GetNextProtocolObject();
+            int IndexOfNextProtInst=CurrentProtocolInUse.NextItemToRun++;//move up one instruction index           
             //now to make sure there is another instruction
             if(CurrentProtocolInUse.Instructions.Count<=IndexOfNextProtInst)
             {
@@ -554,8 +569,73 @@ namespace Growth_Curve_Software
                 }
             }
         }
+        private void EmailSuspensionToUser(Protocol ProtocolForEmails)
+        {
+            try
+                    {
+                //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
+                //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
+                if (ProtocolForEmails.ErrorEmailAddress != null && ProtocolForEmails.ErrorEmailAddress != "")
+                {
+                    string[] emails = ProtocolForEmails.ErrorEmailAddress.Split(';');
+                    foreach (string emailaddress in emails)
+                    {
+                        MailMessage email = new MailMessage("cjmarxlab@gmail.com", emailaddress, "Protocol Suspended", "Your protocol was not being monitored and is now suspended for 9 hours");
+                        SmtpClient ToSend = createSmtpClient();
+                        ToSend.Send(email);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                            
+            }
+        }
+        private bool DetermineIfCurrentInstructionIsDelay(Protocol toCheckOn)
+        {
+            int lastInstruction = toCheckOn.NextItemToRun;
+            if (lastInstruction >= 0)
+            {
+                if (toCheckOn.Instructions[lastInstruction] is DelayTime)
+                    return true;
+            }
+            return false;
+        }
+        ///Needs to interface with the alarm better
+        private bool ValidateProtocol(Protocol curProtocol)
+        {
+          
+            try
+            {
+                DateTime now = System.DateTime.Now;
+                int nd = now.Day;
+                int nt = now.Hour;
+                bool InSuspensionInterval = nt >= SuspensionHourStart || nt <= SuspensionHourEnd;
+                if (DetermineIfCurrentInstructionIsDelay(curProtocol) && InSuspensionInterval)
+                {
+                    bool Valid = false;
+                    Alarm a = manager.GiveAlarmReference();
+                    if (a != null && a.Connected)
+                    {
+                        DateTime valiationTime = a.getValidationTimeForProtocol(curProtocol.ProtocolName);
+                        if (DateTime.Now.Subtract(valiationTime).Hours > 20)
+                        {
+                            //Reset time
+                            DateTime newTime = DateTime.Now;
+                            newTime = newTime.AddHours(9);
+                            EmailSuspensionToUser(curProtocol);
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception thrown)
+            {
+                throw new InstrumentError("Could not validate protocol " + thrown.Message);
+            }
+        }
 
-        
     }
     public class ProtocolConverter
     {
