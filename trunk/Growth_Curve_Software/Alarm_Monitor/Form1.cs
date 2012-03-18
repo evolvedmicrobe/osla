@@ -23,7 +23,7 @@ namespace Robot_Alarm
     public partial class Form1 : Form
     {
         bool ClientSideAlarmActivation;
-        static int POLLING_INTERVAL = 3000;
+        static int POLLING_INTERVAL = 10000;
         bool isConnected;//Lets me know if the monitor is up and running.
         AlarmClient InstrumentMonitor;
         bool PerformPolling;
@@ -304,6 +304,8 @@ namespace Robot_Alarm
                 }
             }
         }
+
+       
 
 
 

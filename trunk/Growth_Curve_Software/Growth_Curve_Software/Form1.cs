@@ -35,7 +35,7 @@ namespace Growth_Curve_Software
     {
         //public const string AppDataDirectory = @"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
         public string RecoveryProtocolFile;
-        private string pAppDataDirectory = @"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
+        private string pAppDataDirectory = Directory.GetCurrentDirectory();//@"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
         public string AppDataDirectory
         {
             get { return pAppDataDirectory; }
@@ -1243,26 +1243,30 @@ namespace Growth_Curve_Software
                                     //we check the attributes and add another argument to the object array if this is the 
                                     //case
                                     object[] attrs=MI.GetCustomAttributes(T, false);
+                                    
                                     if (attrs.Length > 0)
                                     {
                                         UserCallableMethod attr = (UserCallableMethod)attrs[0];
                                         AdditionalMethodArguments extraArgs = new AdditionalMethodArguments();
-                                        if (attr.RequiresCurrentProtocol)
+                                        if (attr.RequiresCurrentProtocol || attr.RequiresInstrumentManager)
                                         {
-                                            //Protocol curProtocol = LoadedProtocols.CurrentProtocolInUse;
-                                            if (curProtocol == null)
-                                            {throw new ArgumentNullException("Method requires a protocol but one isn't set as the current one");}
-                                            extraArgs.CallingProtocol = curProtocol;
+                                            if (attr.RequiresCurrentProtocol)
+                                            {
+                                                //Protocol curProtocol = LoadedProtocols.CurrentProtocolInUse;
+                                                if (curProtocol == null)
+                                                { throw new ArgumentNullException("Method requires a protocol but one isn't set as the current one"); }
+                                                extraArgs.CallingProtocol = curProtocol;
+                                            }
+                                            if (attr.RequiresInstrumentManager)
+                                            {
+                                                extraArgs.InstrumentCollection = this;
+                                            }
+                                            //Add addtional arguments
+                                            int currentLength = ParametersToPass == null ? 0 : ParametersToPass.Length;
+                                            ParametersToPass = new object[currentLength + 1];
+                                            if (ParametersToPass != null) Parameters.CopyTo(ParametersToPass, 0);
+                                            ParametersToPass[ParametersToPass.Length - 1] = extraArgs;
                                         }
-                                        if (attr.RequiresInstrumentManager)
-                                        {
-                                            extraArgs.InstrumentCollection = this;
-                                        }
-                                        //Add addtional arguments
-                                        int currentLength = ParametersToPass == null ? 0 : ParametersToPass.Length;
-                                        ParametersToPass = new object[currentLength + 1];
-                                        if(ParametersToPass!=null) Parameters.CopyTo(ParametersToPass, 0);
-                                        ParametersToPass[ParametersToPass.Length - 1] = extraArgs;
                                     }                                    
                                     if (MI.GetParameters().Length == 0 && ParametersToPass == null)
                                     { MI.Invoke(c, null); return true; }
@@ -1561,8 +1565,6 @@ namespace Growth_Curve_Software
         {
             MessageBox.Show("Version : 5.0");
         }
-
-
         //Backup and Recovery Stuff
         private void OutputRecoveryFile(string FileNameToWrite)
         {
@@ -1572,7 +1574,9 @@ namespace Growth_Curve_Software
                 {
                     FileStream f = new FileStream(FileNameToWrite, FileMode.Create);
                     BinaryFormatter b = new BinaryFormatter();
+                    LoadedProtocols.manager = null;
                     b.Serialize(f, LoadedProtocols);
+                    LoadedProtocols.manager = this;
                     f.Close();
                 }
 
@@ -1596,6 +1600,7 @@ namespace Growth_Curve_Software
                     f.Seek(0, 0);
                     ProtocolManager ReplacementProtocols=(ProtocolManager)b.Deserialize(f);
                     LoadedProtocols = ReplacementProtocols;
+                    LoadedProtocols.manager = this;
                     f.Close();      
             }
             catch (Exception thrown)
@@ -1624,7 +1629,6 @@ namespace Growth_Curve_Software
             if(chk48WellPlate.Checked)
             { chkGBO.Checked = false; }
         }
-
         private void btnGenerateNSFData_Click(object sender, EventArgs e)
         {
             try
@@ -1688,13 +1692,10 @@ namespace Growth_Curve_Software
             
             catch { ShowError("Weird error occurred"); }
         }
-
-
         private void btnInstrumentRefresh_Click(object sender, EventArgs e)
         {
             UpdateInstrumentStatus();
         }
-
         private void button1_Click_2(object sender, EventArgs e)
         {
             Protocol P = new Protocol();
@@ -1708,11 +1709,7 @@ namespace Growth_Curve_Software
             LoadedProtocols.AddProtocol(P);
             UpdateLoadedProtocols();
         }
-
-
-
         #region InstrumentManager Members
-
         public BaseInstrumentClass ReturnInstrument(string InstrumentName)
         {
             if (NamesToBICs.ContainsKey(InstrumentName))

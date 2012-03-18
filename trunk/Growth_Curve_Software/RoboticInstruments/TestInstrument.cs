@@ -16,6 +16,8 @@ namespace Growth_Curve_Software
 
         public TestInstrument()
         {
+            this.StatusOK = true;
+            table = new bool[4];
         }
         [UserCallableMethod()]
         public bool MoveNext()
@@ -41,10 +43,10 @@ namespace Growth_Curve_Software
             return false;
         }
 
-        public bool StatusOK = true;
         [UserCallableMethod()]
         public override bool AttemptRecovery(InstrumentError Error)
         {
+            this.StatusOK = true;
             return true;
         }
 

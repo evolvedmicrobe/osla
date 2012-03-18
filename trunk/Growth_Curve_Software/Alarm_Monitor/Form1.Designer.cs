@@ -47,9 +47,9 @@
             this.btnAttemptReconnect = new System.Windows.Forms.Button();
             this.btnSilenceAlarm = new System.Windows.Forms.Button();
             this.tabValidate = new System.Windows.Forms.TabPage();
-            this.lstProtocols = new System.Windows.Forms.ListBox();
-            this.btnRefresh = new System.Windows.Forms.Button();
             this.btnValidateProtocols = new System.Windows.Forms.Button();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.lstProtocols = new System.Windows.Forms.ListBox();
             this.tabControl1.SuspendLayout();
             this.tabMonitor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -105,7 +105,7 @@
             // lblLastUpdateTime
             // 
             this.lblLastUpdateTime.AutoSize = true;
-            this.lblLastUpdateTime.Location = new System.Drawing.Point(256, 33);
+            this.lblLastUpdateTime.Location = new System.Drawing.Point(260, 374);
             this.lblLastUpdateTime.Name = "lblLastUpdateTime";
             this.lblLastUpdateTime.Size = new System.Drawing.Size(0, 13);
             this.lblLastUpdateTime.TabIndex = 32;
@@ -113,7 +113,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(401, 56);
+            this.label2.Location = new System.Drawing.Point(431, 59);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(92, 13);
             this.label2.TabIndex = 31;
@@ -159,8 +159,6 @@
             // chkMonitorVideo
             // 
             this.chkMonitorVideo.AutoSize = true;
-            this.chkMonitorVideo.Checked = true;
-            this.chkMonitorVideo.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkMonitorVideo.Location = new System.Drawing.Point(506, 10);
             this.chkMonitorVideo.Name = "chkMonitorVideo";
             this.chkMonitorVideo.Size = new System.Drawing.Size(91, 17);
@@ -189,7 +187,7 @@
             // lblTime2
             // 
             this.lblTime2.AutoSize = true;
-            this.lblTime2.Location = new System.Drawing.Point(486, 354);
+            this.lblTime2.Location = new System.Drawing.Point(486, 351);
             this.lblTime2.Name = "lblTime2";
             this.lblTime2.Size = new System.Drawing.Size(91, 13);
             this.lblTime2.TabIndex = 24;
@@ -198,7 +196,7 @@
             // lblTime1
             // 
             this.lblTime1.AutoSize = true;
-            this.lblTime1.Location = new System.Drawing.Point(109, 354);
+            this.lblTime1.Location = new System.Drawing.Point(109, 351);
             this.lblTime1.Name = "lblTime1";
             this.lblTime1.Size = new System.Drawing.Size(91, 13);
             this.lblTime1.TabIndex = 23;
@@ -239,6 +237,7 @@
             this.btnSilenceAlarm.TabIndex = 3;
             this.btnSilenceAlarm.Text = "Silence Most Recent Alarm";
             this.btnSilenceAlarm.UseVisualStyleBackColor = true;
+            this.btnSilenceAlarm.Click += new System.EventHandler(this.btnSilenceAlarm_Click);
             // 
             // tabValidate
             // 
@@ -253,13 +252,15 @@
             this.tabValidate.Text = "Validate Protocol";
             this.tabValidate.UseVisualStyleBackColor = true;
             // 
-            // lstProtocols
+            // btnValidateProtocols
             // 
-            this.lstProtocols.FormattingEnabled = true;
-            this.lstProtocols.Location = new System.Drawing.Point(27, 43);
-            this.lstProtocols.Name = "lstProtocols";
-            this.lstProtocols.Size = new System.Drawing.Size(366, 420);
-            this.lstProtocols.TabIndex = 0;
+            this.btnValidateProtocols.Location = new System.Drawing.Point(429, 246);
+            this.btnValidateProtocols.Name = "btnValidateProtocols";
+            this.btnValidateProtocols.Size = new System.Drawing.Size(206, 41);
+            this.btnValidateProtocols.TabIndex = 2;
+            this.btnValidateProtocols.Text = "Validate Selected Protocols";
+            this.btnValidateProtocols.UseVisualStyleBackColor = true;
+            this.btnValidateProtocols.Click += new System.EventHandler(this.btnValidateProtocols_Click);
             // 
             // btnRefresh
             // 
@@ -271,15 +272,13 @@
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
-            // btnValidateProtocols
+            // lstProtocols
             // 
-            this.btnValidateProtocols.Location = new System.Drawing.Point(429, 246);
-            this.btnValidateProtocols.Name = "btnValidateProtocols";
-            this.btnValidateProtocols.Size = new System.Drawing.Size(206, 41);
-            this.btnValidateProtocols.TabIndex = 2;
-            this.btnValidateProtocols.Text = "Validate Selected Protocols";
-            this.btnValidateProtocols.UseVisualStyleBackColor = true;
-            this.btnValidateProtocols.Click += new System.EventHandler(this.btnValidateProtocols_Click);
+            this.lstProtocols.FormattingEnabled = true;
+            this.lstProtocols.Location = new System.Drawing.Point(27, 43);
+            this.lstProtocols.Name = "lstProtocols";
+            this.lstProtocols.Size = new System.Drawing.Size(366, 420);
+            this.lstProtocols.TabIndex = 0;
             // 
             // Form1
             // 
