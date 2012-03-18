@@ -14,6 +14,10 @@ namespace Robot_Alarm
 
     [Serializable]
     [ServiceBehaviorAttribute(InstanceContextMode = InstanceContextMode.Single)]
+    public class ValidationStatus
+    {
+       public bool Validated; public DateTime TimeValidated;
+    }
     public class AlarmNotifier : IAlarm
 
     {
@@ -21,14 +25,20 @@ namespace Robot_Alarm
         public const int IMAGE_WIDTH = 300;
         public  Bitmap Image1;
         public  Bitmap Image2;
+        Dictionary<string,ValidationStatus> ValidatedProtocols;
+        public List<string> CurrentlyLoadedProtocolNames;
         public string Image1UpdateTime;
         public string Image2UpdateTime;
+        public string CurrentOperation="None Set";
         public static AlarmState CurrentAlarmState;
         public static InstrumentStatus CurrentInstrumentStatus;
         public AlarmNotifier()
         {
             CurrentAlarmState = new AlarmState(false);
             CurrentInstrumentStatus = new InstrumentStatus("Monitoring Not Yet Initialized");
+            ValidatedProtocols=new Dictionary<string,ValidationStatus>();
+            CurrentlyLoadedProtocolNames=new List<string>();
+            CurrentlyLoadedProtocolNames.Add("No Protocols Loaded Yet");
             Image1 = new Bitmap(@"test.bmp");
             Image2 = new Bitmap(@"test.bmp");
             Image1UpdateTime=DateTime.Now.ToString();
@@ -54,9 +64,8 @@ namespace Robot_Alarm
         {
             CurrentInstrumentStatus = new InstrumentStatus(Status);
         }
-
+       
         #region WebCamMonitor Members
-
         public System.Drawing.Bitmap GetCameraImage1(out string updateTime)
         {
             //for some reason, once the object is serilized, it is screwed up locally,
@@ -65,14 +74,12 @@ namespace Robot_Alarm
             updateTime = Image1UpdateTime;
             return BMP;
         }
-
         public System.Drawing.Bitmap GetCameraImage2(out string UpdateTime)
         {
             Bitmap BMP = Image2.Clone() as Bitmap;
             UpdateTime = Image2UpdateTime;
             return BMP;
         }
-
         public void SetCameraImage1(System.Drawing.Bitmap Image)
         {
             //same crap with it getting all corrupted, so must be cloned
@@ -109,15 +116,45 @@ namespace Robot_Alarm
         {
             return IMAGE_WIDTH;
         }
+        public List<string> GetCurrentlyLoadedProtocolNames()
+        {
+            return CurrentlyLoadedProtocolNames;
+        }
+        public void SetCurrentlyLoadedProtocolNames(List<string> Names)
+        {
+            Dictionary<string,ValidationStatus> ValidationStates=new Dictionary<string,ValidationStatus>();
+            foreach(string name in Names)
+            {
+                if (ValidatedProtocols.ContainsKey(name)) { ValidationStates[name] = ValidatedProtocols[name]; }
+                else { 
+                    ValidationStates[name] = new ValidationStatus();
+                    ValidationStates[name].TimeValidated = DateTime.Now.Subtract(new TimeSpan(365, 0, 0, 0)); }
+            }
+            CurrentlyLoadedProtocolNames=Names;
+            ValidatedProtocols=ValidationStates;
+        }
+        public void UpdateOperation(string Operation){CurrentOperation=Operation;}
+        public string GetOperation(){return CurrentOperation;}
+        public void ValidateProtocol(string Name)
+        {
+            if(ValidatedProtocols.ContainsKey(Name))
+            {ValidatedProtocols[Name].TimeValidated=DateTime.Now;ValidatedProtocols[Name].Validated=true;}
+        }
+        public DateTime GetValidationTimeOfProtocol(string name)
+        {
+            if (ValidatedProtocols.ContainsKey(name)) 
+            {return ValidatedProtocols[name].TimeValidated; }
+            else
+            {return DateTime.Now.Subtract(new TimeSpan(365, 0, 0, 0)); }
+        }
         #endregion
     }
- 
-    
     
     [ServiceContract(Namespace = "http://Microsoft.ServiceModel.Samples")]
-    [ServiceKnownType(typeof(System.Drawing.Bitmap))]
+    //[ServiceKnownType(typeof(System.Drawing.Bitmap))]
     [ServiceKnownType(typeof(byte[]))]
     [ServiceKnownType(typeof(System.Drawing.Imaging.Metafile))]
+    //[ServiceKnownType(typeof(System.Collections.Generic.List<string>))]
     public interface IAlarm
     {
         [OperationContract]
@@ -149,6 +186,18 @@ namespace Robot_Alarm
         int GetImageHeight();
         [OperationContract]
         int GetImageWidth();
+        [OperationContract]
+        List<string> GetCurrentlyLoadedProtocolNames();
+        [OperationContract]
+        void SetCurrentlyLoadedProtocolNames(List<string> Names);
+        [OperationContract]
+        void UpdateOperation(string Operation);
+        [OperationContract]
+        string GetOperation();
+        [OperationContract]
+        void ValidateProtocol(string protocolName);
+        [OperationContract]
+        DateTime GetValidationTimeOfProtocol(string name);
     }
 
 }

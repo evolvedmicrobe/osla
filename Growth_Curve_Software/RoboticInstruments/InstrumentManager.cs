@@ -12,8 +12,8 @@ namespace Growth_Curve_Software
     public interface InstrumentManager
     {
         BaseInstrumentClass ReturnInstrument(string InstrumentName);
-        T ReturnInstrumentType<T>() where T : BaseInstrumentClass ; 
-
+        T ReturnInstrumentType<T>() where T : BaseInstrumentClass ;
+        Alarm GiveAlarmReference();
         
     }
 }

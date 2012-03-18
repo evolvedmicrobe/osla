@@ -1,6 +1,6 @@
 ﻿namespace Growth_Curve_Software
 {
-    partial class Form1
+    partial class ClarityForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClarityForm));
             this.MainTab = new System.Windows.Forms.TabControl();
             this.tabSubMain = new System.Windows.Forms.TabPage();
             this.btnResetLid = new System.Windows.Forms.Button();
