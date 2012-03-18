@@ -351,7 +351,7 @@ namespace Growth_Curve_Software
         //instance goodies
         public List<Protocol> Protocols;//This will be the collection of all protocols that are in use,it should not be altered outside of this class
         public Protocol CurrentProtocolInUse;//
-        private InstrumentManager manager;
+        public InstrumentManager manager;
         public ProtocolManager(InstrumentManager manager)
         {
             this.manager = manager;
@@ -440,8 +440,9 @@ namespace Growth_Curve_Software
                 if (MS > 0) { return MS; } //this should always return a positive ms value
             }
             bool valid = ValidateProtocol(CurrentProtocolInUse);
-            if (!valid) return GetNextProtocolObject();
-            int IndexOfNextProtInst=CurrentProtocolInUse.NextItemToRun++;//move up one instruction index           
+            if (!valid) { CurrentProtocolInUse = null; return GetNextProtocolObject(); }
+            //Below is a postfix operation
+            int IndexOfNextProtInst=CurrentProtocolInUse.NextItemToRun++;//move up one instruction index,         
             //now to make sure there is another instruction
             if(CurrentProtocolInUse.Instructions.Count<=IndexOfNextProtInst)
             {
@@ -452,6 +453,7 @@ namespace Growth_Curve_Software
                 //then we have finished this protocol, and it should be removed from the list
                 RemoveProtocol(CurrentProtocolInUse);
                 //note that it is still the current protocol in use though!!
+                //SO I THINKL THIS CODE BELOW IS INCORRECT, STILL NEED TO PASS ON INSTRUCTION
                 if (Protocols.Count == 0)
                 {
                     //then this was the last protocol in the list, so return null
@@ -593,7 +595,7 @@ namespace Growth_Curve_Software
         }
         private bool DetermineIfCurrentInstructionIsDelay(Protocol toCheckOn)
         {
-            int lastInstruction = toCheckOn.NextItemToRun;
+            int lastInstruction = toCheckOn.NextItemToRun-1;
             if (lastInstruction >= 0)
             {
                 if (toCheckOn.Instructions[lastInstruction] is DelayTime)
@@ -618,11 +620,12 @@ namespace Growth_Curve_Software
                     if (a != null && a.Connected)
                     {
                         DateTime valiationTime = a.getValidationTimeForProtocol(curProtocol.ProtocolName);
-                        if (DateTime.Now.Subtract(valiationTime).Hours > 20)
+                        if (DateTime.Now.Subtract(valiationTime).TotalHours > 20)
                         {
                             //Reset time
                             DateTime newTime = DateTime.Now;
                             newTime = newTime.AddHours(9);
+                            curProtocol.NextExecutionTimePoint = newTime;
                             EmailSuspensionToUser(curProtocol);
                             return false;
                         }
@@ -739,6 +742,7 @@ namespace Growth_Curve_Software
         }
         public static void ProtocolToXMLFile(Protocol curProtocol, string Filename)
         {
+
             XmlTextWriter XWriter = new XmlTextWriter(Filename, Encoding.ASCII);
             XWriter.Formatting = Formatting.Indented;
             XWriter.WriteStartDocument();

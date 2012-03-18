@@ -18,6 +18,7 @@ namespace Robot_Alarm
     {
        public bool Validated; public DateTime TimeValidated;
     }
+    [ServiceBehavior(InstanceContextMode=InstanceContextMode.Single)]
     public class AlarmNotifier : IAlarm
 
     {
@@ -68,7 +69,7 @@ namespace Robot_Alarm
             CurrentInstrumentStatus = new InstrumentStatus(Status);
         }
        
-        #region WebCamMonitor Members
+
         public System.Drawing.Bitmap GetCameraImage1(out string updateTime)
         {
             //for some reason, once the object is serilized, it is screwed up locally,
@@ -150,7 +151,6 @@ namespace Robot_Alarm
             else
             {return DateTime.Now.Subtract(new TimeSpan(365, 0, 0, 0)); }
         }
-        #endregion
     }
     
     [ServiceContract(Namespace = "http://Microsoft.ServiceModel.Samples")]
