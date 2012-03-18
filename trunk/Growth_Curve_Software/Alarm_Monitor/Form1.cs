@@ -286,7 +286,7 @@ namespace Robot_Alarm
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            lstProtocols.SelectedItems.Clear();
+            lstProtocols.Items.Clear();
             foreach (string str in InstrumentMonitor.GetCurrentlyLoadedProtocolNames())
             {
                 lstProtocols.Items.Add(str);

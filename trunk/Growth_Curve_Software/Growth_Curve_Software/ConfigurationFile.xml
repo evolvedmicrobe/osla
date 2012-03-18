@@ -6,7 +6,7 @@
     <NSFErrorEmails Type="System.String">ndelaney@fas.harvard.edu;4158234767@vtext.com;marshki87@gmail.com</NSFErrorEmails>
     <RequireProtocolValidation Type="System.Boolean">True</RequireProtocolValidation>
     <AppDataDirectory Type="System.String">C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\</AppDataDirectory>
-    <UseAlarm Type="System.Boolean">False</UseAlarm>
+    <UseAlarm Type="System.Boolean">True</UseAlarm>
   </InterfaceSettings>
   <Instruments>
 <NSFExperiment>

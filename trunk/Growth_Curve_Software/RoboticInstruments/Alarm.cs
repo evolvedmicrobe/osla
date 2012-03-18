@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using Growth_Curve_Software.AlarmServer;
 namespace Growth_Curve_Software
 {
     public class Alarm

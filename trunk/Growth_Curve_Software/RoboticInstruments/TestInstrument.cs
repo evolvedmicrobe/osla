@@ -5,7 +5,13 @@ namespace Growth_Curve_Software
     public class TestInstrument : BaseInstrumentClass
     {
         bool[] table;
-
+        public override string Name
+        {
+            get
+            {
+                return "TEST";
+            }
+        }
         public int Current = 2;
 
         public TestInstrument()

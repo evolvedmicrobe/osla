@@ -23,10 +23,10 @@ namespace Robot_Alarm
     {
         public const int IMAGE_HEIGHT = 225;
         public const int IMAGE_WIDTH = 300;
-        public  Bitmap Image1;
-        public  Bitmap Image2;
-        Dictionary<string,ValidationStatus> ValidatedProtocols;
-        public List<string> CurrentlyLoadedProtocolNames;
+        public  static Bitmap Image1;
+        public  static Bitmap Image2;
+        static Dictionary<string,ValidationStatus> ValidatedProtocols;
+        public static List<string> CurrentlyLoadedProtocolNames;
         public string Image1UpdateTime;
         public string Image2UpdateTime;
         public string CurrentOperation="None Set";
@@ -36,9 +36,12 @@ namespace Robot_Alarm
         {
             CurrentAlarmState = new AlarmState(false);
             CurrentInstrumentStatus = new InstrumentStatus("Monitoring Not Yet Initialized");
-            ValidatedProtocols=new Dictionary<string,ValidationStatus>();
-            CurrentlyLoadedProtocolNames=new List<string>();
-            CurrentlyLoadedProtocolNames.Add("No Protocols Loaded Yet");
+            if (ValidatedProtocols == null)
+            {
+                ValidatedProtocols = new Dictionary<string, ValidationStatus>();
+                CurrentlyLoadedProtocolNames = new List<string>();
+                CurrentlyLoadedProtocolNames.Add("No Protocols Loaded Yet");
+            }
             Image1 = new Bitmap(@"test.bmp");
             Image2 = new Bitmap(@"test.bmp");
             Image1UpdateTime=DateTime.Now.ToString();
