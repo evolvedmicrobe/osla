@@ -5,7 +5,7 @@ using System.Linq;
 namespace Fit_Growth_Curves
 {
 
-    public partial class Form1
+    public partial class FitterForm
     {
         private void ExportData(string FullFileName)
         {

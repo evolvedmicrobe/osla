@@ -16,7 +16,7 @@ using System.Data;
 namespace Fit_Growth_Curves
 {
 
-    public partial class Form1 : Form
+    public partial class FitterForm : Form
     {
         //public string FileLocations = @"C:\Various_Dependencies\GrowthCurve\";
         public const double BAD_DATA_VALUE = -999;
@@ -26,7 +26,7 @@ namespace Fit_Growth_Curves
         private DateTime[] DateTimesinFile;//This will be the list of all of the Datetimes in the file,
         //individual growth curves might
         //not have data everywhere
-        public Form1()
+        public FitterForm()
         {
             InitializeComponent();
             txtEnterDataInstructions.Rtf=@"{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fswiss\fcharset0 Arial;}}{\*\generator Msftedit 5.41.21.2508;}\viewkind4\uc1\pard\qc\b\f0\fs20 The Enter Data Tab\par\pard\par" 

@@ -306,7 +306,7 @@ namespace Fit_Growth_Curves
             //This method takes every pair of points ij and calculates the growth rate between them
             //then returns a maximum rate
             MaxGrowthRate.MaxGrowthRate = DEFAULT_MAX_GROWTH_RATE;
-            MaxGrowthRate.xvals = new double[2] { Form1.BAD_DATA_VALUE, Form1.BAD_DATA_VALUE };
+            MaxGrowthRate.xvals = new double[2] { FitterForm.BAD_DATA_VALUE, FitterForm.BAD_DATA_VALUE };
             MaxGrowthRate.yvals = new double[2] { 0, 0 };
             int startvalue = 0;
             if (FirstReadingisODAtTimeZero) { startvalue = 1; }
@@ -640,7 +640,7 @@ namespace Fit_Growth_Curves
                     FittedXValues = FittedXValuesTemp;
                     FittedLogYValues = FittedYValuesTemp;
                 }
-                else if (MaxGrowthRate.xvals[0] != Form1.BAD_DATA_VALUE)
+                else if (MaxGrowthRate.xvals[0] != FitterForm.BAD_DATA_VALUE)
                 {
                     //take the maximum growth rate if their are three, or less then 2 points
                     List<double> timeList = timevaluesdecimal.ToList();

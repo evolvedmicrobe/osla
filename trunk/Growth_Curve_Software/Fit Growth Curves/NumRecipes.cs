@@ -279,7 +279,7 @@ namespace Fit_Growth_Curves
             //deep copy the data to protect its integrity
             y = YDATA.ToArray();
             x = XDATA.ToArray();
-            pParameters = new double[2] { Form1.BAD_DATA_VALUE, Form1.BAD_DATA_VALUE };
+            pParameters = new double[2] { FitterForm.BAD_DATA_VALUE, FitterForm.BAD_DATA_VALUE };
             CreateHessianDelegates();
             FitModel();
         }
@@ -411,7 +411,7 @@ namespace Fit_Growth_Curves
         public double GetXValueAtYValue(double yValue)
         {
             if (!SuccessfulFit)
-            { return Form1.BAD_DATA_VALUE; }
+            { return FitterForm.BAD_DATA_VALUE; }
             else
             {
                double t= Math.Log(yValue/ Parameters[(int)ParametersIndex.P0Index])/Parameters[(int)ParametersIndex.rIndex];

@@ -14,7 +14,7 @@ using System.Drawing.Drawing2D;
 namespace Fit_Growth_Curves
 {
 
-    public partial class Form1 : Form
+    public partial class FitterForm : Form
     {
         TextBox[] TreatmentTextBoxes = new TextBox[SelectablePlateMap.MAX_GROUP_ASSIGNMENTS];
         delegate double GetValueForTreatment(GrowthData x);

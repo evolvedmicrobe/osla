@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Fit_Growth_Curves
 {
-    partial class Form1 
+    partial class FitterForm 
     {
         int[] TonyCheckerBoard = new int[30];
         int[] NigelSingleSampleBoard = new int[60];
