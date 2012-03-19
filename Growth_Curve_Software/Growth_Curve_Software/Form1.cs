@@ -35,7 +35,7 @@ namespace Growth_Curve_Software
     {
         //public const string AppDataDirectory = @"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
         public string RecoveryProtocolFile;
-        private string pAppDataDirectory = Directory.GetCurrentDirectory();//@"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
+        private string pAppDataDirectory = Directory.GetCurrentDirectory()+"\\";//@"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
         public string AppDataDirectory
         {
             get { return pAppDataDirectory; }
@@ -168,6 +168,9 @@ namespace Growth_Curve_Software
                     }
                     }
                 }
+                Incubator = this.ReturnInstrumentType<IncubatorServ>();
+                TransStation = this.ReturnInstrumentType<TransferStation>();
+                PlateReader = this.ReturnInstrumentType<VictorManager>();
             }
             catch (Exception thrown)
             {
@@ -1658,7 +1661,7 @@ namespace Growth_Curve_Software
                             StaticProtocolItem SP = new StaticProtocolItem();
                             SP.MethodName="CreateProtocol";
                             SP.InstrumentName=tmp.Name;
-                            SP.Parameters=new object[3] {baseName,plateslot,null};
+                            SP.Parameters=new object[2] {baseName,plateslot};
                             NewProt.Instructions.Add(SP);
                             ProtsToAdd.Add(NewProt);
                         }
