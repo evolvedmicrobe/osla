@@ -25,12 +25,7 @@ using System.Net;
 using Growth_Curve_Software;
 
 namespace Growth_Curve_Software 
-{
-    /// <summary>
-    /// A delegate that takes an returns to arguments
-    /// </summary>
-    
-     
+{    
     public partial class ClarityForm : Form, InstrumentManager
     {
         //public const string AppDataDirectory = @"C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\";
@@ -68,6 +63,7 @@ namespace Growth_Curve_Software
         private bool pRequireProtocolValidation;
         public bool RequireProtocolValidation
         { get; set; }
+        // TODO: Settings file
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
         public string NSFErrorEmails
         {
@@ -89,6 +85,7 @@ namespace Growth_Curve_Software
             get { return pGBO_PLATE_PROTOCOL_ID; }
             set { pGBO_PLATE_PROTOCOL_ID = value; }
         }
+        // TODO: Settings file
         int[] ExcludedIncubatorPositions =  { 19,38 };
 
         public ClarityForm()
@@ -103,7 +100,7 @@ namespace Growth_Curve_Software
         {
             try
             {
-                //Make a collection to hold everythin
+                //Make a collection to hold everything
                 InstrumentCollection = new List<BaseInstrumentClass>();
                 LoadedProtocols = new ProtocolManager(this);
                 ProtocolEvents = new ProtocolEventCaller();
@@ -137,7 +134,7 @@ namespace Growth_Curve_Software
                     if(FI.FieldType.IsSubclassOf(BICType))
                     {   
                        var InstanceToSet=TypesToInstruments[FI.FieldType.Name];
-                        FI.SetValue(this,InstanceToSet);
+                       FI.SetValue(this,InstanceToSet);
                     }
                 }
                 //Now to load and initialize the instruments from XML
@@ -198,7 +195,7 @@ namespace Growth_Curve_Software
             {
                 Clarity_Alarm = new Alarm();
             }
-                Thread LoadingThread = new Thread(ShowWelcomeForm);
+            Thread LoadingThread = new Thread(ShowWelcomeForm);
             LoadingThread.SetApartmentState(ApartmentState.STA);
             LoadingThread.IsBackground = true;
             LoadingThread.Start();
@@ -235,6 +232,7 @@ namespace Growth_Curve_Software
 
             catch { }
         }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if(!Debugging)
@@ -310,7 +308,7 @@ namespace Growth_Curve_Software
             }
             catch (Exception thrown)
             {
-                ShowError("Could not start shaker\n\n",thrown);
+                ShowError("Could not start shaker\mn\n",thrown);
             }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
         }
@@ -1321,7 +1319,6 @@ namespace Growth_Curve_Software
         {
             WorkerToRunRobots = new BackgroundWorker();
             WorkerToRunRobots.WorkerReportsProgress = true;
-            WorkerToRunRobots.WorkerReportsProgress = true;
             WorkerToRunRobots.WorkerSupportsCancellation = true;
             WorkerToRunRobots.DoWork += new DoWorkEventHandler(WorkerToRunRobots_DoWork);
             WorkerToRunRobots.ProgressChanged += new ProgressChangedEventHandler(WorkerToRunRobots_ProgressChanged);
@@ -1699,6 +1696,7 @@ namespace Growth_Curve_Software
         {
             UpdateInstrumentStatus();
         }
+        // TODO: Nothing calls this method, should we get rid of it? 
         private void button1_Click_2(object sender, EventArgs e)
         {
             Protocol P = new Protocol();
