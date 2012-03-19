@@ -131,6 +131,7 @@
             this.cmbIdleTime.Name = "cmbIdleTime";
             this.cmbIdleTime.Size = new System.Drawing.Size(121, 21);
             this.cmbIdleTime.TabIndex = 30;
+            this.cmbIdleTime.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // chkIdle
             // 
@@ -227,6 +228,7 @@
             this.btnAttemptReconnect.TabIndex = 20;
             this.btnAttemptReconnect.Text = "Attempt To Reconnect";
             this.btnAttemptReconnect.UseVisualStyleBackColor = true;
+            this.btnAttemptReconnect.Click += new System.EventHandler(this.btnAttemptReconnect_Click);
             // 
             // btnSilenceAlarm
             // 
