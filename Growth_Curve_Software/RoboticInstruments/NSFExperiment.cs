@@ -57,7 +57,7 @@ namespace Growth_Curve_Software
 
             ODReadInstruction = new StaticProtocolItem();
             ODReadInstruction.MethodName = "ReadPlate2";
-            ODReadInstruction.InstrumentName = "Plate_Reader";
+            ODReadInstruction.InstrumentName = "PlateReader";
             ODReadInstruction.Parameters = new object[2] {OD_OutDirec, OD600ProtocolID };
 
             VenusReadInstruction = ODReadInstruction.Clone();
