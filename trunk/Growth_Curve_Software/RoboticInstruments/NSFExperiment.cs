@@ -77,7 +77,7 @@ namespace Growth_Curve_Software
             ReturnInstruction.MethodName = "ModifyGrowthProtocol";
             ReturnInstruction.InstrumentName = this.Name;
             //Last item is passed in by the parser
-            ReturnInstruction.Parameters = new object[3] { ExpName, Slot, null };
+            ReturnInstruction.Parameters = new object[2] { ExpName, Slot };
             
         }
         [UserCallableMethod(RequiresCurrentProtocol=true)]

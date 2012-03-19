@@ -178,7 +178,7 @@ namespace VictorRemoteServer
            //If this happens I am assuming the assay finished successfully
             if(!CompletedAssayIDs.Contains(e.assayID))
             {
-            EventFinishedSuccessfully();
+                EventFinishedSuccessfully();
             }
         }
         void Victor_ServerAssayEnd(object sender, _DVictorEvents_ServerAssayEndEvent e)
