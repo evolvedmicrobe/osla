@@ -905,7 +905,7 @@ namespace Growth_Curve_Software
                             {
                                 SP2 = new StaticProtocolItem();
                                 SP2.MethodName = "ReadPlate2";
-                                SP2.InstrumentName = "Plate_Reader";
+                                SP2.InstrumentName = "PlateReader";
                                 SP2.Parameters = new object[2] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString(), WELL48_PLATE_PROTOCOL_ID };
                                 NewProt.Instructions.Add(SP2);
                                
@@ -914,7 +914,7 @@ namespace Growth_Curve_Software
                             {
                                 SP2 = new StaticProtocolItem();
                                 SP2.MethodName = "ReadPlate2";
-                                SP2.InstrumentName = "Plate_Reader";
+                                SP2.InstrumentName = "PlateReader";
                                 SP2.Parameters = new object[2] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString(), GBO_PLATE_PROTOCOL_ID };
                                 NewProt.Instructions.Add(SP2);
                             }
@@ -922,7 +922,7 @@ namespace Growth_Curve_Software
                             {
                                 SP2 = new StaticProtocolItem();
                                 SP2.MethodName = "ReadPlate";
-                                SP2.InstrumentName = "Plate_Reader";
+                                SP2.InstrumentName = "PlateReader";
                                 SP2.Parameters = new object[1] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString() };
                                 NewProt.Instructions.Add(SP2);
                             }
