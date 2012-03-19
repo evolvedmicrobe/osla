@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Fit_Growth_Curves
 {
 
-    public partial class Form1 : Form
+    public partial class FitterForm : Form
     {
         DataTable DT;
         private void MakeEnterDataTable()

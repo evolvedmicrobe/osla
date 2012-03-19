@@ -90,17 +90,17 @@ namespace Fit_Growth_Curves
         int NumWells;
         bool UseBinaryColorScheme = false;//The binary color scheme is designed to show either blanks or not blanks
       
-        public Plate_Tools(Fit_Growth_Curves.Form1 curForm)
+        public Plate_Tools(Fit_Growth_Curves.FitterForm curForm)
             : this(curForm, 50, false, false)
         {
             AddText = true;
         }
-        public Plate_Tools(Fit_Growth_Curves.Form1 curForm, bool Is48WellPlate)
+        public Plate_Tools(Fit_Growth_Curves.FitterForm curForm, bool Is48WellPlate)
             : this(curForm, 50, false, Is48WellPlate)
         {
             AddText = true;
         }
-        public Plate_Tools(Fit_Growth_Curves.Form1 curForm, int sidelength, bool BinaryColors,bool Is48WellPlate)
+        public Plate_Tools(Fit_Growth_Curves.FitterForm curForm, int sidelength, bool BinaryColors,bool Is48WellPlate)
         {
             UseBinaryColorScheme = BinaryColors;
             AddText=false;

@@ -16,9 +16,10 @@ namespace Fit_Growth_Curves
         static double[] timeValues;//time values as a double
         static string[] IntToName;//this cell will map array integer to cell name;
         static DateTime[] acTimeValues;//time values as a datetime
-        static double[] VenusValues=null;
+        static double[,] VenusValues=null;
         static string Directory;
         public static string NameofTempFile = "CondensedForCurveFitter.csv";
+        public static string NameofVenusFile = "VenusCondensedForCurveFitter.csv";
         public static void ChangeTo48WellPlates()
         {
             plateSize=48;
@@ -126,6 +127,7 @@ namespace Fit_Growth_Curves
             timeValues = new double[300];
             acTimeValues = new DateTime[300];
             absDATA = new double[300, plateSize];
+
             int currentRow = 0;
             DirectoryInfo DI = new DirectoryInfo(FileLocations);
             ApplicationClass app=null;
@@ -186,7 +188,7 @@ namespace Fit_Growth_Curves
             ChangeTo48WellPlates();
             //DecideIf96Or48WellPlate(FileLocations);
             SetIntToWell();
-            string error = "";
+          
             //first to create an array of values, I know there will be 48 columns in the second one,
             //and for now I am going to assume we will have 200 datapoints, which we will not!
             Directory = FileLocations;
@@ -198,6 +200,7 @@ namespace Fit_Growth_Curves
             ApplicationClass app = null;
             try
             {
+                bool hasVenus = false;
                 app = new ApplicationClass();
                 foreach (FileInfo FI in DI.GetFiles())
                 {
@@ -210,16 +213,15 @@ namespace Fit_Growth_Curves
                             "",
                             "",
                             true,
-                            XlPlatform.xlWindows, "", false, false, 0, true, 1, 0);
-                        
+                            XlPlatform.xlWindows, "", false, false, 0, true, 1, 0);                        
                         Worksheet workSheet = (Worksheet)workBook.Worksheets[1];
                         Range excelRange = workSheet.UsedRange;
                         object[,] valueArray = (object[,])excelRange.get_Value(
                             XlRangeValueDataType.xlRangeValueDefault);
-                        int numCols = valueArray.GetUpperBound(1);
-                        bool hasVenus = false;
-                        if (numCols > 6)
+                        int numCols = valueArray.GetUpperBound(1);                        
+                        if (currentRow==0 && numCols > 6)
                         {
+                            if (VenusValues == null) { VenusValues = new double[300,plateSize]; }
                             hasVenus = true;
                         }                        
                         for (int i = 0; i < 48; i++)
@@ -227,6 +229,12 @@ namespace Fit_Growth_Curves
                             var Cell = valueArray[i + 2, 6];
                             double value = (double)Cell;
                             absDATA[currentRow, i] = value;
+                            if (hasVenus)
+                            {
+                                Cell = valueArray[i + 2, 8];
+                                VenusValues[currentRow, i] = Convert.ToDouble(Cell);                               
+                                
+                            }                            
                         }
                         ///NEW CODE ADDED BELOW
                         string timeline = "";
@@ -287,22 +295,29 @@ namespace Fit_Growth_Curves
                 if (absDATA[EndRow, 1] == 0) { break; }
                 EndRow++;
             }
+            Array.Resize<DateTime>(ref acTimeValues, EndRow);
+            Array.Resize(ref timeValues, EndRow);
             //copy data into new smaller arrays, probably not efficent here
-            DateTime[] acTimeTemp = new DateTime[EndRow];
-            double[] timeTemp = new double[EndRow];
+            //DateTime[] acTimeTemp = new DateTime[EndRow];
+           // double[] timeTemp = new double[EndRow];
             double[,] absDATAtemp = new double[EndRow, plateSize];
+            double[,] VenusTemp = null;
+            if(VenusValues!=null) VenusTemp= new double[EndRow, plateSize];
             for (int i = 0; i < EndRow; i++)
             {
-                timeTemp[i] = timeValues[i];
-                acTimeTemp[i] = acTimeValues[i];
+                //timeTemp[i] = timeValues[i];
+               // acTimeTemp[i] = acTimeValues[i];
                 for (int r = 0; r < plateSize; r++)
                 {
                     absDATAtemp[i, r] = absDATA[i, r];
+                    if (VenusValues != null)
+                        VenusTemp[i, r] = VenusValues[i, r];
                 }
             }
             absDATA = absDATAtemp;
-            acTimeValues = acTimeTemp;
-            timeValues = timeTemp;
+            VenusValues = VenusTemp;
+            //acTimeValues = acTimeTemp;
+           // timeValues = timeTemp;
         }
         private static void SetIntToWell()
         {
@@ -340,6 +355,34 @@ namespace Fit_Growth_Curves
                 SW.Write(lastline + "\n");
             }
             SW.Close();
+            if (VenusValues != null)
+            {
+                SW = new StreamWriter(Directory + "\\" + NameofVenusFile);
+                SW.Write("Time,");
+                nextline = "";
+                for (int i = 0; i < plateSize; i++)
+                {
+                    nextline += IntToWell[i] + ",";
+                }
+                nextline = nextline.Trim(',');
+                SW.Write(nextline + "\n");
+                for (int i = 0; i < timeValues.Length; i++)
+                {
+                    SW.Write(acTimeValues[i].ToString() + ",");
+                    string lastline = "";
+                    for (int j = 0; j < VenusValues.GetLength(1); j++)
+                    {
+                        lastline += VenusValues[i, j].ToString() + ",";
+                    }
+                    lastline = lastline.TrimEnd(',');
+                    SW.Write(lastline + "\n");
+                }
+                SW.Close();
+            }
+            VenusValues = null;
+            absDATA = null;
+            acTimeValues = null;
+            timeValues = null;
         }
     }
 }

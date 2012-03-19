@@ -1,6 +1,6 @@
 namespace Fit_Growth_Curves
 {
-    partial class Form1
+    partial class FitterForm
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace Fit_Growth_Curves
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FitterForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuOpenFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +63,6 @@ namespace Fit_Growth_Curves
             this.btnAvgDataPoint1AndDeleteBlanks = new System.Windows.Forms.Button();
             this.btnRemoveTonyCheckerboard = new System.Windows.Forms.Button();
             this.txtDeleteBlanksTab = new System.Windows.Forms.RichTextBox();
-            this.toDeletePlateMap = new Fit_Growth_Curves.SelectablePlateMap();
             this.tabRobo = new System.Windows.Forms.TabPage();
             this.label12 = new System.Windows.Forms.Label();
             this.lstTimePoints = new System.Windows.Forms.ListBox();
@@ -170,9 +169,8 @@ namespace Fit_Growth_Curves
             this.label14 = new System.Windows.Forms.Label();
             this.txtTreatment1 = new System.Windows.Forms.TextBox();
             this.plotTreatments = new ZedGraph.ZedGraphControl();
+            this.toDeletePlateMap = new Fit_Growth_Curves.SelectablePlateMap();
             this.selectablePlateMap1 = new Fit_Growth_Curves.SelectablePlateMap();
-            this.venusDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadExcelFileWithODAndVenusDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabBlankRemoval.SuspendLayout();
             this.tabRobo.SuspendLayout();
@@ -203,8 +201,7 @@ namespace Fit_Growth_Curves
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openFileToolStripMenuItem,
-            this.venusDataToolStripMenuItem});
+            this.openFileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1173, 24);
@@ -476,14 +473,6 @@ namespace Fit_Growth_Curves
             this.txtDeleteBlanksTab.Size = new System.Drawing.Size(310, 408);
             this.txtDeleteBlanksTab.TabIndex = 0;
             this.txtDeleteBlanksTab.Text = "";
-            // 
-            // toDeletePlateMap
-            // 
-            this.toDeletePlateMap.CurGroupToSelect = 1;
-            this.toDeletePlateMap.Location = new System.Drawing.Point(552, 30);
-            this.toDeletePlateMap.Name = "toDeletePlateMap";
-            this.toDeletePlateMap.Size = new System.Drawing.Size(239, 189);
-            this.toDeletePlateMap.TabIndex = 13;
             // 
             // tabRobo
             // 
@@ -1700,6 +1689,14 @@ namespace Fit_Growth_Curves
             this.plotTreatments.Size = new System.Drawing.Size(754, 658);
             this.plotTreatments.TabIndex = 2;
             // 
+            // toDeletePlateMap
+            // 
+            this.toDeletePlateMap.CurGroupToSelect = 1;
+            this.toDeletePlateMap.Location = new System.Drawing.Point(552, 30);
+            this.toDeletePlateMap.Name = "toDeletePlateMap";
+            this.toDeletePlateMap.Size = new System.Drawing.Size(239, 189);
+            this.toDeletePlateMap.TabIndex = 13;
+            // 
             // selectablePlateMap1
             // 
             this.selectablePlateMap1.CurGroupToSelect = 1;
@@ -1708,22 +1705,7 @@ namespace Fit_Growth_Curves
             this.selectablePlateMap1.Size = new System.Drawing.Size(246, 188);
             this.selectablePlateMap1.TabIndex = 3;
             // 
-            // venusDataToolStripMenuItem
-            // 
-            this.venusDataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadExcelFileWithODAndVenusDataToolStripMenuItem});
-            this.venusDataToolStripMenuItem.Name = "venusDataToolStripMenuItem";
-            this.venusDataToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
-            this.venusDataToolStripMenuItem.Text = "Venus Data";
-            // 
-            // loadExcelFileWithODAndVenusDataToolStripMenuItem
-            // 
-            this.loadExcelFileWithODAndVenusDataToolStripMenuItem.Name = "loadExcelFileWithODAndVenusDataToolStripMenuItem";
-            this.loadExcelFileWithODAndVenusDataToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
-            this.loadExcelFileWithODAndVenusDataToolStripMenuItem.Text = "Load Excel file with OD and Venus data";
-            this.loadExcelFileWithODAndVenusDataToolStripMenuItem.Click += new System.EventHandler(this.loadExcelFileWithODAndVenusDataToolStripMenuItem_Click);
-            // 
-            // Form1
+            // FitterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1733,7 +1715,7 @@ namespace Fit_Growth_Curves
             this.Controls.Add(this.tabMainTab);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form1";
+            this.Name = "FitterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Fit Growth Curves";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -1920,8 +1902,6 @@ namespace Fit_Growth_Curves
         private System.Windows.Forms.Button btnFlagGrowthRate;
         private System.Windows.Forms.Button btnFlagOD;
         private System.Windows.Forms.Button btnMakeEvoGroups;
-        private System.Windows.Forms.ToolStripMenuItem venusDataToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loadExcelFileWithODAndVenusDataToolStripMenuItem;
 
     }
 }
