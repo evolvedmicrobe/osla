@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robot_Alarm_Server", "Robot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alarm_Monitor", "Alarm_Monitor\Alarm_Monitor.csproj", "{EAEA9C3C-7F6F-436E-8183-1BB301AD80A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fit Growth Curves", "Fit Growth Curves\Fit Growth Curves.csproj", "{133B4212-8C0C-41A3-B1FF-6A41BD780337}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -104,6 +106,16 @@ Global
 		{EAEA9C3C-7F6F-436E-8183-1BB301AD80A2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EAEA9C3C-7F6F-436E-8183-1BB301AD80A2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EAEA9C3C-7F6F-436E-8183-1BB301AD80A2}.Release|x86.ActiveCfg = Release|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|Any CPU.Build.0 = Release|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
