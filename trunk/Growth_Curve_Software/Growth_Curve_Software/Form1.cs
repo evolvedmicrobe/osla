@@ -308,7 +308,7 @@ namespace Growth_Curve_Software
             }
             catch (Exception thrown)
             {
-                ShowError("Could not start shaker\mn\n",thrown);
+                ShowError("Could not start shaker\n\n",thrown);
             }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
         }
