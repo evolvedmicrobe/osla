@@ -41,7 +41,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>InstallFitter.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>7</ApplicationRevision>
     <ApplicationVersion>3.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -69,7 +69,7 @@
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NumRecipes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\NumRecipes.dll</HintPath>
+      <HintPath>bin\Release\NumRecipes.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

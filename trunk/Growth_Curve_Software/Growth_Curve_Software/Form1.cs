@@ -1232,7 +1232,7 @@ namespace Growth_Curve_Software
                         if ((Instr.StatusOK == true | !RequireStatusOK) || MethodName == "Initialize")
                         {
                             Type InstType = c.GetType();
-                            var q = InstType.GetMethods();
+                            //var q = InstType.GetMethods();
                             foreach (MethodInfo MI in InstType.GetMethods())
                             {
                                 if (MI.Name == MethodName)

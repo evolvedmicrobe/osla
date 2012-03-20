@@ -379,10 +379,17 @@ namespace Fit_Growth_Curves
                 }
                 SW.Close();
             }
+            if (VenusValues != null)
+            {
+                FitterForm newF = new FitterForm();
+                newF.Show();
+                newF.LoadFile(Directory + "\\" + NameofVenusFile);
+            }
             VenusValues = null;
             absDATA = null;
             acTimeValues = null;
             timeValues = null;
+            
         }
     }
 }

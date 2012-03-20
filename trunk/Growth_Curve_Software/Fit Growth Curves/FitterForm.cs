@@ -479,6 +479,16 @@ namespace Fit_Growth_Curves
                 
             }
         }
+        public void LoadFile(string FileName)
+        {
+            ClearLists();
+            
+                this.Text = "Fit Growth Curves - " + FileName;
+                try { GetData(openFileDialog1.FileName, false); }
+                catch (Exception thrown) { MessageBox.Show("Could not open the file, please check the format \n Also, make sure it is not open by another program\n\n  Error: " + thrown.Message); }
+            
+
+        }
         private void SelectFileToOpen(bool CalculateLagTime)
         {
             ClearLists();

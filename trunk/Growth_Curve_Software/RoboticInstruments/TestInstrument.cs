@@ -42,7 +42,7 @@ namespace Growth_Curve_Software
             }
             return false;
         }
-
+        
         [UserCallableMethod()]
         public override bool AttemptRecovery(InstrumentError Error)
         {
@@ -58,6 +58,7 @@ namespace Growth_Curve_Software
 
         public override void Initialize()
         {
+            this.StatusOK = true;
             this.Initialize(1000);
         }
 
