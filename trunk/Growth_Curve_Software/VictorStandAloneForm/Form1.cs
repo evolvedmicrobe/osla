@@ -215,7 +215,7 @@ namespace VictorRemoteServer
         {
             try
             {
-                if (m_Assay != null && LastCommandResult!=null && !LastCommandResult.ErrorSetAlready)
+                if (m_Assay != null && LastCommandResult != null && !LastCommandResult.ErrorSetAlready)
                 {
                     string Filename = m_Assay.GetAssayID().ToString();
                     MovePlateDataToNewDirectory(NextPlateName, Filename);
@@ -225,7 +225,8 @@ namespace VictorRemoteServer
                 }
             }
             catch { txtErrors.Text += "\n\nProblem Moving File and Ending Assay\n"; }
-            PulseObject();
+            finally { PulseObject(); txtErrors.Text += "\nEvent Finish Call at: " + DateTime.Now.ToString(); }
+            //
         }
         private void RunProtocol(int ProtocolID, string PlateName)
         {

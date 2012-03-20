@@ -185,7 +185,7 @@ namespace Growth_Curve_Software
                         bool Success = false;
                         lock (PlateReader.MonitorPulseObject)
                         {
-                            //wait for two minutes for a completion
+                            //wait for 10 minutes for a completion
                             Success = Monitor.Wait(PlateReader.MonitorPulseObject, 60 * 1000 * 10);
                         }
                         if (Success)//no timeout
