@@ -638,7 +638,10 @@ namespace Growth_Curve_Software
                 throw new InstrumentError("Could not validate protocol " + thrown.Message);
             }
         }
-
+        public double GetMilliSecondsTillNextRunTime()
+        {
+            return this.FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();
+        }
     }
     public class ProtocolConverter
     {

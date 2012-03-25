@@ -803,7 +803,6 @@ namespace Growth_Curve_Software
                                 OkayToRemove = false;
                                 MessageBox.Show("Cannot delete currently executing protocol, please stop the protocol and then delete it", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
-
                         }
                         if (LoadedProtocols.CurrentProtocolInUse == toRemove)
                         {
@@ -816,7 +815,12 @@ namespace Growth_Curve_Software
                         }
                         if (btnExecuteProtocols.Enabled==false && ResetTimerAfterwards && OkayToRemove)
                         {
-                            StopClockWaitAndExecute();
+                            double timeMS=LoadedProtocols.GetMilliSecondsTillNextRunTime();
+                            TimeSpan delay = new TimeSpan(10000*(Convert.ToInt64(timeMS) + 1));
+                            ProtocolEvents.FirePauseEvent(delay);
+                            int Delay = Convert.ToInt32(timeMS) + 1;//always make sure the value is greater then 0
+                            SetDelayAndStartWait(Delay);
+                            //StopClockWaitAndExecute();
                         }
                     }
                 }
@@ -1695,20 +1699,6 @@ namespace Growth_Curve_Software
         private void btnInstrumentRefresh_Click(object sender, EventArgs e)
         {
             UpdateInstrumentStatus();
-        }
-        // TODO: Nothing calls this method, should we get rid of it? 
-        private void button1_Click_2(object sender, EventArgs e)
-        {
-            Protocol P = new Protocol();
-            P.ProtocolName = "tmp";
-            StaticProtocolItem ReturnInstruction = new StaticProtocolItem();
-            ReturnInstruction.MethodName = "ModifyGrowthProtocol";
-            ReturnInstruction.InstrumentName = "NSFExperiment";
-            //Last item is passed in by the parser
-            ReturnInstruction.Parameters = new object[3] { "NSF-111204-0", 31, null };
-            P.Instructions.Add(ReturnInstruction);
-            LoadedProtocols.AddProtocol(P);
-            UpdateLoadedProtocols();
         }
         #region InstrumentManager Members
         public BaseInstrumentClass ReturnInstrument(string InstrumentName)
