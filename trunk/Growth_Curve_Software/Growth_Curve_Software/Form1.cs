@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -53,6 +53,8 @@ namespace Growth_Curve_Software
         static public ProtocolManager LoadedProtocols;
         static public ProtocolEventCaller ProtocolEvents;
         //This should not be static in the future
+        static public SkypeAlarm SkypeAlarm_;
+        public bool UseSkypeAlarm = true;
         static public Alarm Clarity_Alarm;
         private bool pUseAlarm=true;
         public bool UseAlarm
@@ -186,7 +188,8 @@ namespace Growth_Curve_Software
         }
         public void ShowWelcomeForm()
         {
-            Application.Run(WF = new WelcomeForm());
+            // Use full reference or it'll conflict with Skype
+            System.Windows.Forms.Application.Run(WF = new WelcomeForm());
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -195,6 +198,7 @@ namespace Growth_Curve_Software
             {
                 Clarity_Alarm = new Alarm();
             }
+            if (UseSkypeAlarm) { SkypeAlarm_ = new SkypeAlarm(); }
             Thread LoadingThread = new Thread(ShowWelcomeForm);
             LoadingThread.SetApartmentState(ApartmentState.STA);
             LoadingThread.IsBackground = true;
@@ -231,6 +235,7 @@ namespace Growth_Curve_Software
             }
 
             catch { }
+
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -531,7 +536,8 @@ namespace Growth_Curve_Software
         }
         private void DisplayMakeProtocolsForm()
         {
-            Application.Run(new MakeProtocols(InstrumentCollection));
+            // Use full reference to avoid conflict with Skype
+            System.Windows.Forms.Application.Run(new MakeProtocols(InstrumentCollection));
         }
         private void UpdateLoadedProtocols()
         {
@@ -873,6 +879,11 @@ namespace Growth_Curve_Software
                 {
                     ShowError("You did not select any slots");
                 }
+                // For SkypeAlarm
+                else if (! SkypeAlarm_.TestNumber(textbox_number.Text.Trim()))
+                {
+                    ShowError("Your number failed the test");
+                }
                 else
                 {
                     try { minuteDelay = Convert.ToInt32(txtGrowthRateMinutes.Text); cycles = Convert.ToInt32(txtGrowthRateTimesToMeasure.Text); }
@@ -910,7 +921,7 @@ namespace Growth_Curve_Software
                                 SP2.InstrumentName = "PlateReader";
                                 SP2.Parameters = new object[2] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString(), WELL48_PLATE_PROTOCOL_ID };
                                 NewProt.Instructions.Add(SP2);
-                               
+
                             }
                             else if (chkGBO.Checked)
                             {
@@ -1196,6 +1207,17 @@ namespace Growth_Curve_Software
             }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
             
+        }
+        private void Test_Click(object sender, EventArgs e)
+        {
+            if (SkypeAlarm_.TestNumber(textbox_number.Text.Trim()))
+            {
+                label_tested.Text = "Verified";
+            }
+            else
+            {
+                label_tested.Text = "Failed";
+            }
         }
 
         //protocol execution
@@ -1723,6 +1745,7 @@ namespace Growth_Curve_Software
             return Clarity_Alarm;
         }
         #endregion
+
     }
 }
 
