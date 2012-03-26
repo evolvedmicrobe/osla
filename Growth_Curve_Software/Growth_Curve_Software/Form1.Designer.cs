@@ -75,6 +75,10 @@
             this.label8 = new System.Windows.Forms.Label();
             this.wBrowRecovInstructions = new System.Windows.Forms.WebBrowser();
             this.tabMakeGrowthInstructions = new System.Windows.Forms.TabPage();
+            this.label_tested = new System.Windows.Forms.Label();
+            this.Test = new System.Windows.Forms.Button();
+            this.textbox_number = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
             this.chkGBO = new System.Windows.Forms.CheckBox();
             this.chk48WellPlate = new System.Windows.Forms.CheckBox();
             this.txtGrowthRateMinutes = new System.Windows.Forms.TextBox();
@@ -617,12 +621,16 @@
             this.wBrowRecovInstructions.MinimumSize = new System.Drawing.Size(20, 20);
             this.wBrowRecovInstructions.Name = "wBrowRecovInstructions";
             this.wBrowRecovInstructions.ScriptErrorsSuppressed = true;
-            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 643);
+            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 645);
             this.wBrowRecovInstructions.TabIndex = 0;
             this.wBrowRecovInstructions.WebBrowserShortcutsEnabled = false;
             // 
             // tabMakeGrowthInstructions
             // 
+            this.tabMakeGrowthInstructions.Controls.Add(this.label_tested);
+            this.tabMakeGrowthInstructions.Controls.Add(this.Test);
+            this.tabMakeGrowthInstructions.Controls.Add(this.textbox_number);
+            this.tabMakeGrowthInstructions.Controls.Add(this.label18);
             this.tabMakeGrowthInstructions.Controls.Add(this.chkGBO);
             this.tabMakeGrowthInstructions.Controls.Add(this.chk48WellPlate);
             this.tabMakeGrowthInstructions.Controls.Add(this.txtGrowthRateMinutes);
@@ -646,12 +654,48 @@
             this.tabMakeGrowthInstructions.Text = "Make A Growth Rate Experiment Protocol";
             this.tabMakeGrowthInstructions.UseVisualStyleBackColor = true;
             // 
+            // label_tested
+            // 
+            this.label_tested.AutoSize = true;
+            this.label_tested.Location = new System.Drawing.Point(687, 539);
+            this.label_tested.Name = "label_tested";
+            this.label_tested.Size = new System.Drawing.Size(56, 15);
+            this.label_tested.TabIndex = 22;
+            this.label_tested.Text = "Untested";
+            // 
+            // Test
+            // 
+            this.Test.Location = new System.Drawing.Point(607, 534);
+            this.Test.Name = "Test";
+            this.Test.Size = new System.Drawing.Size(75, 23);
+            this.Test.TabIndex = 21;
+            this.Test.Text = "Test";
+            this.Test.UseVisualStyleBackColor = true;
+            this.Test.Click += new System.EventHandler(this.Test_Click);
+            // 
+            // textbox_number
+            // 
+            this.textbox_number.Location = new System.Drawing.Point(442, 536);
+            this.textbox_number.Name = "textbox_number";
+            this.textbox_number.Size = new System.Drawing.Size(159, 21);
+            this.textbox_number.TabIndex = 20;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(373, 513);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(274, 20);
+            this.label18.TabIndex = 19;
+            this.label18.Text = "F - Type your phone number here";
+            // 
             // chkGBO
             // 
             this.chkGBO.AutoSize = true;
             this.chkGBO.Checked = true;
             this.chkGBO.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkGBO.Location = new System.Drawing.Point(656, 109);
+            this.chkGBO.Location = new System.Drawing.Point(645, 93);
             this.chkGBO.Name = "chkGBO";
             this.chkGBO.Size = new System.Drawing.Size(129, 19);
             this.chkGBO.TabIndex = 18;
@@ -662,7 +706,7 @@
             // chk48WellPlate
             // 
             this.chk48WellPlate.AutoSize = true;
-            this.chk48WellPlate.Location = new System.Drawing.Point(658, 86);
+            this.chk48WellPlate.Location = new System.Drawing.Point(645, 71);
             this.chk48WellPlate.Name = "chk48WellPlate";
             this.chk48WellPlate.Size = new System.Drawing.Size(98, 19);
             this.chk48WellPlate.TabIndex = 14;
@@ -672,14 +716,14 @@
             // 
             // txtGrowthRateMinutes
             // 
-            this.txtGrowthRateMinutes.Location = new System.Drawing.Point(442, 369);
+            this.txtGrowthRateMinutes.Location = new System.Drawing.Point(442, 288);
             this.txtGrowthRateMinutes.Name = "txtGrowthRateMinutes";
             this.txtGrowthRateMinutes.Size = new System.Drawing.Size(240, 21);
             this.txtGrowthRateMinutes.TabIndex = 13;
             // 
             // txtGrowthRateTimesToMeasure
             // 
-            this.txtGrowthRateTimesToMeasure.Location = new System.Drawing.Point(442, 426);
+            this.txtGrowthRateTimesToMeasure.Location = new System.Drawing.Point(442, 350);
             this.txtGrowthRateTimesToMeasure.Name = "txtGrowthRateTimesToMeasure";
             this.txtGrowthRateTimesToMeasure.Size = new System.Drawing.Size(240, 21);
             this.txtGrowthRateTimesToMeasure.TabIndex = 14;
@@ -688,7 +732,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(373, 393);
+            this.label15.Location = new System.Drawing.Point(373, 327);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(377, 20);
             this.label15.TabIndex = 11;
@@ -696,7 +740,7 @@
             // 
             // btnStartGrowthRate
             // 
-            this.btnStartGrowthRate.Location = new System.Drawing.Point(442, 600);
+            this.btnStartGrowthRate.Location = new System.Drawing.Point(442, 614);
             this.btnStartGrowthRate.Name = "btnStartGrowthRate";
             this.btnStartGrowthRate.Size = new System.Drawing.Size(240, 28);
             this.btnStartGrowthRate.TabIndex = 17;
@@ -708,15 +752,15 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(373, 566);
+            this.label14.Location = new System.Drawing.Point(373, 575);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(345, 20);
+            this.label14.Size = new System.Drawing.Size(348, 20);
             this.label14.TabIndex = 9;
-            this.label14.Text = "F - Double Check Everything and Hit Start";
+            this.label14.Text = "G - Double Check Everything and Hit Start";
             // 
             // txtGrowthRateEmail
             // 
-            this.txtGrowthRateEmail.Location = new System.Drawing.Point(442, 542);
+            this.txtGrowthRateEmail.Location = new System.Drawing.Point(442, 474);
             this.txtGrowthRateEmail.Name = "txtGrowthRateEmail";
             this.txtGrowthRateEmail.Size = new System.Drawing.Size(240, 21);
             this.txtGrowthRateEmail.TabIndex = 16;
@@ -725,7 +769,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(373, 506);
+            this.label13.Location = new System.Drawing.Point(373, 451);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(271, 20);
             this.label13.TabIndex = 7;
@@ -735,7 +779,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(373, 337);
+            this.label12.Location = new System.Drawing.Point(373, 265);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(413, 20);
             this.label12.TabIndex = 5;
@@ -743,7 +787,7 @@
             // 
             // txtGrowthRateExperimentName
             // 
-            this.txtGrowthRateExperimentName.Location = new System.Drawing.Point(442, 473);
+            this.txtGrowthRateExperimentName.Location = new System.Drawing.Point(442, 412);
             this.txtGrowthRateExperimentName.Name = "txtGrowthRateExperimentName";
             this.txtGrowthRateExperimentName.Size = new System.Drawing.Size(240, 21);
             this.txtGrowthRateExperimentName.TabIndex = 15;
@@ -752,7 +796,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(373, 450);
+            this.label11.Location = new System.Drawing.Point(373, 389);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(266, 20);
             this.label11.TabIndex = 3;
@@ -762,7 +806,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(373, 26);
+            this.label10.Location = new System.Drawing.Point(373, 13);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(393, 20);
             this.label10.TabIndex = 2;
@@ -772,10 +816,10 @@
             // 
             this.lstGrowthRatesProtocol.FormattingEnabled = true;
             this.lstGrowthRatesProtocol.ItemHeight = 15;
-            this.lstGrowthRatesProtocol.Location = new System.Drawing.Point(399, 62);
+            this.lstGrowthRatesProtocol.Location = new System.Drawing.Point(403, 36);
             this.lstGrowthRatesProtocol.Name = "lstGrowthRatesProtocol";
             this.lstGrowthRatesProtocol.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstGrowthRatesProtocol.Size = new System.Drawing.Size(240, 259);
+            this.lstGrowthRatesProtocol.Size = new System.Drawing.Size(240, 214);
             this.lstGrowthRatesProtocol.TabIndex = 1;
             // 
             // wBrowGrowthRate
@@ -1150,7 +1194,6 @@
         private System.Windows.Forms.TextBox txtGrowthRateEmail;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btnStartGrowthRate;
-        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox txtGrowthRateTimesToMeasure;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.RichTextBox txtErrorLog;
@@ -1181,6 +1224,11 @@
         private System.Windows.Forms.TextBox txtNSFName;
         private System.Windows.Forms.Button btnInstrumentRefresh;
         private System.Windows.Forms.Button btnResetLid;
+        private System.Windows.Forms.TextBox textbox_number;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label_tested;
+        private System.Windows.Forms.Button Test;
+        private System.Windows.Forms.Label label14;
 
     }
 }
