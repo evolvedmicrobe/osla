@@ -567,10 +567,12 @@ namespace Growth_Curve_Software
         {
             if (StatusOK && CheckIfReady())
             { return; }
-            else 
+            else
             {
                 StatusOK = false;
-                throw new InstrumentError("Not appropriate to give a command, instrument not initialized or not accepting communications", false, this); }
+                //Removed for testing:
+                //throw new InstrumentError("Not appropriate to give a command, instrument not initialized or not accepting communications", false, this); }
+            }
         }
         [UserCallableMethod()]
         public void LoadPlate(int Position)

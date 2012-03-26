@@ -621,7 +621,7 @@
             this.wBrowRecovInstructions.MinimumSize = new System.Drawing.Size(20, 20);
             this.wBrowRecovInstructions.Name = "wBrowRecovInstructions";
             this.wBrowRecovInstructions.ScriptErrorsSuppressed = true;
-            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 645);
+            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 643);
             this.wBrowRecovInstructions.TabIndex = 0;
             this.wBrowRecovInstructions.WebBrowserShortcutsEnabled = false;
             // 

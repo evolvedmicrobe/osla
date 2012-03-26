@@ -60,6 +60,8 @@
             this.btnDelayInstruction = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.txtNumbers = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.txtEmails = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtProtocolName = new System.Windows.Forms.TextBox();
@@ -272,7 +274,7 @@
             this.label2.Size = new System.Drawing.Size(254, 54);
             this.label2.TabIndex = 10;
             this.label2.Text = "List of Machines and Possible Tasks \r\nSelect one to customize it so you \r\ncan add" +
-    " it to your protocol";
+                " it to your protocol";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel2
@@ -354,7 +356,7 @@
             this.label1.Size = new System.Drawing.Size(754, 48);
             this.label1.TabIndex = 12;
             this.label1.Text = "To Create A Protocol, Add Methods And Fill Out The Required Information Here\r\nThe" +
-    "n Save it to a File And Load That File In Clarity";
+                "n Save it to a File And Load That File In Clarity";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // panel3
@@ -409,6 +411,8 @@
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel4.Controls.Add(this.txtNumbers);
+            this.panel4.Controls.Add(this.label16);
             this.panel4.Controls.Add(this.txtEmails);
             this.panel4.Controls.Add(this.label11);
             this.panel4.Controls.Add(this.txtProtocolName);
@@ -416,12 +420,30 @@
             this.panel4.Controls.Add(this.label10);
             this.panel4.Location = new System.Drawing.Point(423, 540);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(421, 121);
+            this.panel4.Size = new System.Drawing.Size(421, 166);
             this.panel4.TabIndex = 13;
+            // 
+            // txtNumbers
+            // 
+            this.txtNumbers.Location = new System.Drawing.Point(151, 65);
+            this.txtNumbers.Name = "txtNumbers";
+            this.txtNumbers.Size = new System.Drawing.Size(256, 24);
+            this.txtNumbers.TabIndex = 8;
+            this.txtNumbers.Text = "0123456789";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(4, 74);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(116, 15);
+            this.label16.TabIndex = 7;
+            this.label16.Text = "Phone(s) of User(s):";
             // 
             // txtEmails
             // 
-            this.txtEmails.Location = new System.Drawing.Point(151, 58);
+            this.txtEmails.Location = new System.Drawing.Point(151, 98);
             this.txtEmails.Name = "txtEmails";
             this.txtEmails.Size = new System.Drawing.Size(256, 24);
             this.txtEmails.TabIndex = 6;
@@ -431,12 +453,12 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(3, 63);
+            this.label11.Location = new System.Drawing.Point(3, 103);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(288, 45);
             this.label11.TabIndex = 5;
             this.label11.Text = "Email Address of User(s):\r\n(to have error messages sent to multiple addresses \r\ni" +
-    "nsert a semicolon between them)";
+                "nsert a semicolon between them)";
             // 
             // txtProtocolName
             // 
@@ -503,7 +525,7 @@
             this.tabOfProtocols.Location = new System.Drawing.Point(12, 81);
             this.tabOfProtocols.Name = "tabOfProtocols";
             this.tabOfProtocols.SelectedIndex = 0;
-            this.tabOfProtocols.Size = new System.Drawing.Size(1137, 709);
+            this.tabOfProtocols.Size = new System.Drawing.Size(1137, 743);
             this.tabOfProtocols.TabIndex = 17;
             // 
             // tabPage1
@@ -522,7 +544,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 27);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1129, 678);
+            this.tabPage1.Size = new System.Drawing.Size(1129, 712);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Method Creation";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -537,7 +559,7 @@
             this.tabVariables.Location = new System.Drawing.Point(4, 27);
             this.tabVariables.Name = "tabVariables";
             this.tabVariables.Padding = new System.Windows.Forms.Padding(3);
-            this.tabVariables.Size = new System.Drawing.Size(1129, 678);
+            this.tabVariables.Size = new System.Drawing.Size(1129, 712);
             this.tabVariables.TabIndex = 1;
             this.tabVariables.Text = "Make Variables";
             this.tabVariables.UseVisualStyleBackColor = true;
@@ -654,7 +676,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Navy;
-            this.ClientSize = new System.Drawing.Size(1149, 802);
+            this.ClientSize = new System.Drawing.Size(1149, 836);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tabOfProtocols);
             this.Controls.Add(this.lblMethodName);
@@ -745,5 +767,7 @@
         private System.Windows.Forms.ListBox lstCurrentVariables;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txtNumbers;
+        private System.Windows.Forms.Label label16;
     }
 }

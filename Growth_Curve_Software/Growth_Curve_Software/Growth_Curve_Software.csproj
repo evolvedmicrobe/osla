@@ -80,7 +80,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SkypeAlarm.cs" />
     <Compile Include="ConfigurationLoader.cs" />
     <Compile Include="CountDownTimer.cs">
       <SubType>Component</SubType>
