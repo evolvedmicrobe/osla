@@ -393,6 +393,7 @@ namespace Growth_Curve_Software
                 throw new Exception("There are no instructions in your protocol, please add them.");
             }
             newProtocol.ErrorEmailAddress = txtEmails.Text;
+            newProtocol.ErrorPhoneNumber = txtNumbers.Text;
             newProtocol.ProtocolName = txtProtocolName.Text;
             newProtocol.Instructions = ProtocolListBoxToProtocolInstructionList(lstProtocol);
             foreach (object o in lstCurrentVariables.Items)
@@ -437,6 +438,7 @@ namespace Growth_Curve_Software
                     string filename = OFD.FileName;
                     Protocol NewProtocol = ProtocolConverter.XMLFileToProtocol(filename);
                     txtEmails.Text = NewProtocol.ErrorEmailAddress;
+                    txtNumbers.Text = NewProtocol.ErrorPhoneNumber;
                     txtProtocolName.Text = NewProtocol.ProtocolName;
                     lstProtocol.Items.Clear();
                     lstCurrentVariables.Items.Clear();
@@ -463,6 +465,7 @@ namespace Growth_Curve_Software
                     string filename = OFD.FileName;
                     Protocol NewProtocol = ProtocolConverter.XMLFileToProtocol(filename);
                     txtEmails.Text = NewProtocol.ErrorEmailAddress;
+                    txtNumbers.Text = NewProtocol.ErrorPhoneNumber;
                     txtProtocolName.Text = NewProtocol.ProtocolName;
                     //to make sure they are unique I am making a new set
                     List<ProtocolVariable> NewVariables = new List<ProtocolVariable>();
@@ -663,6 +666,7 @@ namespace Growth_Curve_Software
         {
             MessageBox.Show("Something Weird Happened, Contact Nigel", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
     }
 
 }

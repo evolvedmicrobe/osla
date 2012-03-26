@@ -53,8 +53,6 @@ namespace Growth_Curve_Software
         static public ProtocolManager LoadedProtocols;
         static public ProtocolEventCaller ProtocolEvents;
         //This should not be static in the future
-        static public SkypeAlarm SkypeAlarm_;
-        public bool UseSkypeAlarm = true;
         static public Alarm Clarity_Alarm;
         private bool pUseAlarm=true;
         public bool UseAlarm
@@ -62,9 +60,6 @@ namespace Growth_Curve_Software
             get { return pUseAlarm; }
             set { pUseAlarm = value; }
         }
-        private bool pRequireProtocolValidation;
-        public bool RequireProtocolValidation
-        { get; set; }
         // TODO: Settings file
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
         public string NSFErrorEmails
@@ -198,7 +193,6 @@ namespace Growth_Curve_Software
             {
                 Clarity_Alarm = new Alarm();
             }
-            if (UseSkypeAlarm) { SkypeAlarm_ = new SkypeAlarm(); }
             Thread LoadingThread = new Thread(ShowWelcomeForm);
             LoadingThread.SetApartmentState(ApartmentState.STA);
             LoadingThread.IsBackground = true;
@@ -242,7 +236,8 @@ namespace Growth_Curve_Software
         {
             if(!Debugging)
             {
-            try{LoadedProtocols.EmailErrorMessageToAllUsers("The Robot Software Has Been Closed");}catch{}
+                try { LoadedProtocols.ReportToAllUsers("The Robot Software Has Been Closed"); }
+                catch { }
             try { if (UseAlarm) { Clarity_Alarm.TurnOnAlarm("The software was closed"); } }
             catch { }
                 this.Cursor = Cursors.WaitCursor;
@@ -880,7 +875,7 @@ namespace Growth_Curve_Software
                     ShowError("You did not select any slots");
                 }
                 // For SkypeAlarm
-                else if (! SkypeAlarm_.TestNumber(textbox_number.Text.Trim()))
+                else if (! SkypeAlarm.TestNumbers(textbox_number.Text))
                 {
                     ShowError("Your number failed the test");
                 }
@@ -901,6 +896,7 @@ namespace Growth_Curve_Software
                     Protocol NewProt = new Protocol();
                     NewProt.ProtocolName = txtGrowthRateExperimentName.Text;
                     NewProt.ErrorEmailAddress = txtGrowthRateEmail.Text;
+                    NewProt.ErrorPhoneNumber = textbox_number.Text;
                     NewProt.Instructions = new ArrayList();
                     for (int i = 0; i < cycles; i++)
                     {
@@ -1002,7 +998,7 @@ namespace Growth_Curve_Software
         {
             try
             {
-                LoadedProtocols.EmailErrorMessageToAllUsers("The Robot System Is Okay Now ");
+                LoadedProtocols.ReportToAllUsers("The Robot System Is Okay Now ");
                 MessageBox.Show("Clarity has sent a message to all users");
                 if (UseAlarm)
                 { Clarity_Alarm.TurnOffAlarm(); }
@@ -1208,9 +1204,10 @@ namespace Growth_Curve_Software
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
             
         }
+        // For SkypeAlarm
         private void Test_Click(object sender, EventArgs e)
         {
-            if (SkypeAlarm_.TestNumber(textbox_number.Text.Trim()))
+            if (SkypeAlarm.TestNumbers(textbox_number.Text))
             {
                 label_tested.Text = "Verified";
             }
@@ -1352,11 +1349,7 @@ namespace Growth_Curve_Software
         }
         private void DealWithErrorDuringProtocolRun(Exception thrown)
         {
-            try
-            {
-                LoadedProtocols.EmailErrorMessageToAllUsers();
-            }
-            catch { }
+            LoadedProtocols.ReportToAllUsers();
             StatusLabel.Text = "Procedure ended with errors";
             if (UseAlarm)
             {
@@ -1441,7 +1434,7 @@ namespace Growth_Curve_Software
             }
             catch (Exception thrown)
             {
-                LoadedProtocols.EmailErrorMessageToAllUsers("There was an error in the protocol manager, and the system is down.");
+                LoadedProtocols.ReportToAllUsers("There was an error in the protocol manager, and the system is down.");
                 btnCancelProtocolExecution.Enabled = false;
                 btnExecuteProtocols.Enabled = true;
                 StatusLabel.Text = "Problem in Execution Management";

@@ -13,15 +13,15 @@ using System.Net;
 namespace Growth_Curve_Software
 {
     //This file contains all the code for Creating/Managing Protocols
- 
+
     public interface ValidInstruction
     {
     }
     public enum ProtocolRunResult
-    { AllProtocolsFinished,NoLoadedProtocols, Error }
+    { AllProtocolsFinished, NoLoadedProtocols, Error }
     public enum ProtocolPriority
     {
-        Low,Medium,High
+        Low, Medium, High
     }
     [Serializable]
     public class ProtocolVariable
@@ -42,7 +42,7 @@ namespace Growth_Curve_Software
         }
         public override string ToString()
         {
-            return "%"+Name+"%";
+            return "%" + Name + "%";
         }
         public override int GetHashCode()
         {
@@ -52,7 +52,7 @@ namespace Growth_Curve_Software
         {
             if (obj is ProtocolVariable)
             {
-                ProtocolVariable PV2 =(ProtocolVariable)obj;
+                ProtocolVariable PV2 = (ProtocolVariable)obj;
                 if (PV2.Name == Name) { return true; }
                 else { return false; }
             }
@@ -83,9 +83,9 @@ namespace Growth_Curve_Software
             return VaribleName;
         }
     }
-    
+
     [Serializable]
-    public class StaticProtocolItem :ValidInstruction, ICloneable//not really sure why I made a valid instruction interface
+    public class StaticProtocolItem : ValidInstruction, ICloneable//not really sure why I made a valid instruction interface
     {
         //this is an excecution step in the protocol, where the parameters 
         //are determined at the start of the run
@@ -103,16 +103,16 @@ namespace Growth_Curve_Software
             ToReturn = MethodName + " (";
             if (Parameters != null)
             {
-                foreach (object o in Parameters) { if(o!=null) ToReturn += o.ToString() + ","; }
+                foreach (object o in Parameters) { if (o != null) ToReturn += o.ToString() + ","; }
             }
             return ToReturn.TrimEnd(',') + ")";
         }
         public StaticProtocolItem Clone()
         {
-           StaticProtocolItem SP = new StaticProtocolItem();
-            SP.MethodName=this.MethodName;
+            StaticProtocolItem SP = new StaticProtocolItem();
+            SP.MethodName = this.MethodName;
             SP.Parameters = this.Parameters;
-            SP.InstrumentName=this.InstrumentName;
+            SP.InstrumentName = this.InstrumentName;
             SP.ContainingProtocol = this.ContainingProtocol;
             return SP;
         }
@@ -204,6 +204,7 @@ namespace Growth_Curve_Software
         public DateTime NextExecutionTimePoint;//when the next execution point needs to  be run (for example, if there is a 45 minute delay, this time will be in 45 minutes)
         public string ProtocolName;//the name of the protocol
         public string ErrorEmailAddress;//if more then one email, can be seperated by semicolon
+        public string ErrorPhoneNumber;
         public int NextItemToRun;//the index in the protocol array where the next item should run
         public ProtocolPriority Priority;//not actually used right now, will be implemented in the future
         public Protocol()
@@ -217,7 +218,7 @@ namespace Growth_Curve_Software
         {
             //This method will take a protocol item that has variables, and replace it with actual values,
             //It should be called before the method is run
-            StaticProtocolItem NewProtocolItem=ToRun.Clone();
+            StaticProtocolItem NewProtocolItem = ToRun.Clone();
             NewProtocolItem.ContainingProtocol = this;
             for (int i = 0; i < NewProtocolItem.Parameters.Length; i++)
             {
@@ -229,17 +230,17 @@ namespace Growth_Curve_Software
                     //now have to go through and remove all of the variables, replacing them with other strings
                     String myval = (String)o;
                     while (true)
-                    {                        
+                    {
                         bool variableInString = ProtocolManager.GetVariableNameFromText(myval, out VariableName);
                         if (variableInString)
                         {
                             string ToReplace = Variables[VariableName].Value.ToString();
-                            myval=myval.Replace(VariableName, ToReplace);//swap out the value and searchagain
+                            myval = myval.Replace(VariableName, ToReplace);//swap out the value and searchagain
                         }
                         else
-                        { break;}
+                        { break; }
                     }
-                    ToRun.Parameters[i] = myval;                    
+                    ToRun.Parameters[i] = myval;
                 }
                 else if (o is ReferenceToProtocolVariable)
                 {
@@ -254,7 +255,7 @@ namespace Growth_Curve_Software
             try { return ProtocolName + " -- " + NextExecutionTimePoint.ToString(); }
             catch { }
             return ProtocolName;
-        } 
+        }
     }
     [Serializable]
     public delegate void ProtocolPauseEventHandler(TimeSpan TS);
@@ -262,8 +263,8 @@ namespace Growth_Curve_Software
     [Serializable]
     public class ProtocolManager
     {
-        int SuspensionHourStart=23;
-        int SuspensionHourEnd=8;
+        int CallHourStart = 23;
+        int CallHourEnd = 8;
         //Static methods
         public static bool IsVariableInList(string VariableName, IList ListOfVariables)
         {
@@ -284,11 +285,11 @@ namespace Growth_Curve_Software
             //2,%Variable2%,%Variable3%, it will ensure that these variables exist, if not returns false
             Regex VariableFinder = new Regex("%[^%]*%");
             string VariableName;
-            foreach(Match myVariable in VariableFinder.Matches(Text))
+            foreach (Match myVariable in VariableFinder.Matches(Text))
             {
                 VariableName = myVariable.Groups[0].ToString();
                 bool InCollection = IsVariableInList(VariableName, ListOfVariables);
-                if(!InCollection){return false;}
+                if (!InCollection) { return false; }
             }
             return true;
 
@@ -313,7 +314,7 @@ namespace Growth_Curve_Software
         {
             List<string> toReturn = new List<string>();
             Regex VariableFinder = new Regex("%[^%]*%");
-            foreach(Match hit in VariableFinder.Matches(Text))
+            foreach (Match hit in VariableFinder.Matches(Text))
             {
                 toReturn.Add(hit.Groups[0].ToString());
             }
@@ -341,8 +342,8 @@ namespace Growth_Curve_Software
                         {
                             ReferenceToProtocolVariable CurRef = (ReferenceToProtocolVariable)Param;
                             if (!ProtocolToRun.Variables.ContainsKey(CurRef.ToString())) { return false; }
-                        }     
-                    }                    
+                        }
+                    }
                 }
             }
             return true;
@@ -363,20 +364,20 @@ namespace Growth_Curve_Software
             if (Protocols.Count == 0)//check if this is the most current protocol
             {
                 CurrentProtocolInUse = ProtocolToAdd;
-            }            
+            }
             Protocols.Add(ProtocolToAdd);
-            
+
             UpdateAlarmProtocols();
         }
         public void UpdateAlarmProtocols()
         {
             List<string> newNames = Protocols.Select(x => x.ProtocolName).ToList();
-              Alarm a = manager.GiveAlarmReference();
-              if (a != null && a.Connected) a.SetProtocolNames(newNames);
+            Alarm a = manager.GiveAlarmReference();
+            if (a != null && a.Connected) a.SetProtocolNames(newNames);
 
         }
         public void RemoveProtocol(Protocol ProtocolToRemove)
-        {            
+        {
             if (Protocols.Count == 1)
             {//empty out the current protocol in use
                 CurrentProtocolInUse = null;
@@ -407,7 +408,7 @@ namespace Growth_Curve_Software
                 //should throw an error here
             }
             DateTime CurNextTimePoint;
-            if(CurrentProtocolInUse==null)//this happens if the protocol was deleted
+            if (CurrentProtocolInUse == null)//this happens if the protocol was deleted
             {
                 CurNextTimePoint = DateTime.Now.AddYears(100);//makes sure another protocol always runs sooner
             }
@@ -424,32 +425,30 @@ namespace Growth_Curve_Software
                 }
             }
             //now return the time until the next run in milliseconds
-            TimeSpan CurDelay=CurNextTimePoint.Subtract(DateTime.Now);
+            TimeSpan CurDelay = CurNextTimePoint.Subtract(DateTime.Now);
             return CurDelay.TotalMilliseconds;
         }
         public object GetNextProtocolObject()
         {
             //this will return one of three objects, an instruction, a delay time (double), or null if protocols are done            
-            if(Protocols.Count==0)
+            if (Protocols.Count == 0)
             {//Once we are out of protocols, then that is it. Return null so that the program knows that there are no protocols
                 return null;
             }
             else if (CurrentProtocolInUse == null)
             {
-                double MS=FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();
+                double MS = FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();
                 if (MS > 0) { return MS; } //this should always return a positive ms value
             }
-            bool valid = ValidateProtocol(CurrentProtocolInUse);
-            if (!valid) { CurrentProtocolInUse = null; return GetNextProtocolObject(); }
             //Below is a postfix operation
-            int IndexOfNextProtInst=CurrentProtocolInUse.NextItemToRun++;//move up one instruction index,         
+            int IndexOfNextProtInst = CurrentProtocolInUse.NextItemToRun++;//move up one instruction index,         
             //now to make sure there is another instruction
-            if(CurrentProtocolInUse.Instructions.Count<=IndexOfNextProtInst)
+            if (CurrentProtocolInUse.Instructions.Count <= IndexOfNextProtInst)
             {
                 //soon I will check for the protocol to be run next, based on the protocols next execution time
                 //by setting the time to now plus several years, I guarantee other protocols will be much earlier then this one            
                 //Removed later, not sure why here 
-                
+
                 //then we have finished this protocol, and it should be removed from the list
                 RemoveProtocol(CurrentProtocolInUse);
                 //note that it is still the current protocol in use though!!
@@ -464,13 +463,13 @@ namespace Growth_Curve_Software
                     return GetNextProtocolObject();
                 }
             }
-            else if(CurrentProtocolInUse.Instructions[IndexOfNextProtInst].GetType()==typeof(DelayTime))
+            else if (CurrentProtocolInUse.Instructions[IndexOfNextProtInst].GetType() == typeof(DelayTime))
             {
                 //in this case this protocol run has ended
-                DelayTime Delay=(DelayTime)CurrentProtocolInUse.Instructions[IndexOfNextProtInst];
+                DelayTime Delay = (DelayTime)CurrentProtocolInUse.Instructions[IndexOfNextProtInst];
                 //determine the time when the next protocol should be run
                 DateTime NextRunTime = DateTime.Now;
-                NextRunTime= NextRunTime.AddMinutes(Delay.minutes);
+                NextRunTime = NextRunTime.AddMinutes(Delay.minutes);
                 CurrentProtocolInUse.NextExecutionTimePoint = NextRunTime;
                 double MillisecondDelay = FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();
                 //now if this time is negative, no delay should be used, and we should directly proceed to the next protocol
@@ -484,7 +483,7 @@ namespace Growth_Curve_Software
             else if (CurrentProtocolInUse.Instructions[IndexOfNextProtInst].GetType() == typeof(StaticProtocolItem))
             {
                 //in this case we simply return the protocol item
-                return CurrentProtocolInUse.ReplaceVariablesWithValues((StaticProtocolItem) CurrentProtocolInUse.Instructions[IndexOfNextProtInst]);
+                return CurrentProtocolInUse.ReplaceVariablesWithValues((StaticProtocolItem)CurrentProtocolInUse.Instructions[IndexOfNextProtInst]);
                 //after converting it to replace the variables with values
             }
             else
@@ -505,138 +504,51 @@ namespace Growth_Curve_Software
             return ToSend;
 
         }
-        public void EmailErrorMessageToAllUsers(string ErrorMessage)
+        public void ReportToAllUsers(string message = "The robot has an error, and has stopped working")
+        {
+            EmailErrorMessageToAllUsers(message);
+            if (ShouldCall()) { CallAllUsers(); }
+        }
+        public void EmailErrorMessageToAllUsers(string ErrorMessage = "The robot has an error, and has stopped working")
         {
             foreach (object o in Protocols)
             {
-                try
+                Protocol ProtocolForEmails = (Protocol)o;
+                string[] emails = ProtocolForEmails.ErrorEmailAddress.Split(';');
+                foreach (string emailaddress in emails)
                 {
-                    Protocol ProtocolForEmails = (Protocol)o;
+                    //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
+                    //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
+                    String senderAddress = "cjmarxlab@gmail.com";
                     try
                     {
-                        string[] emails = ProtocolForEmails.ErrorEmailAddress.Split(';');
-                        foreach (string emailaddress in emails)
-                        {
-                            //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
-                            //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
-           
-                            String senderAddress = "cjmarxlab@gmail.com";
-                            MailMessage email = new MailMessage(senderAddress, emailaddress, "Robot Alert", ErrorMessage);
-                            SmtpClient ToSend = createSmtpClient();
-                            ToSend.Send(email);
-                        }
-                    }
-                    catch (Exception thrown)
-                    {
-                        string newS=thrown.Message;
-                        newS = "";
-                    }
-                }
-                catch (Exception)
-                {
-
-                }
-            }
-        }
-        public void EmailErrorMessageToAllUsers()
-        {
-            foreach (object o in Protocols)
-            {
-                try
-                {
-                    Protocol ProtocolForEmails = (Protocol)o;
-                    try
-                    {
-                        //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
-                        //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
-                        if (ProtocolForEmails.ErrorEmailAddress != null && ProtocolForEmails.ErrorEmailAddress != "")
-                        {
-                            string[] emails = ProtocolForEmails.ErrorEmailAddress.Split(';');
-                            foreach (string emailaddress in emails)
-                            {
-                                MailMessage email = new MailMessage("cjmarxlab@gmail.com", emailaddress, "Robots Down", "The robot has an error, and has stopped working");
-                                SmtpClient ToSend = createSmtpClient();
-                                ToSend.Send(email);
-                            }
-                        }
-                    }
-                    catch (Exception)
-                    {
-                            
-                    }
-                }
-                catch (Exception)
-                {
-                    
-                }
-            }
-        }
-        private void EmailSuspensionToUser(Protocol ProtocolForEmails)
-        {
-            try
-                    {
-                //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
-                //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
-                if (ProtocolForEmails.ErrorEmailAddress != null && ProtocolForEmails.ErrorEmailAddress != "")
-                {
-                    string[] emails = ProtocolForEmails.ErrorEmailAddress.Split(';');
-                    foreach (string emailaddress in emails)
-                    {
-                        MailMessage email = new MailMessage("cjmarxlab@gmail.com", emailaddress, "Protocol Suspended", "Your protocol was not being monitored and is now suspended for 9 hours");
+                        MailMessage email = new MailMessage(senderAddress, emailaddress, "Robot Alert", ErrorMessage);
                         SmtpClient ToSend = createSmtpClient();
                         ToSend.Send(email);
                     }
+                    catch { }
                 }
             }
-            catch (Exception)
-            {
-                            
-            }
         }
-        private bool DetermineIfCurrentInstructionIsDelay(Protocol toCheckOn)
+        public void CallAllUsers()
         {
-            int lastInstruction = toCheckOn.NextItemToRun-1;
-            if (lastInstruction >= 0)
+            foreach (object o in Protocols)
             {
-                if (toCheckOn.Instructions[lastInstruction] is DelayTime)
-                    return true;
-            }
-            return false;
-        }
-        ///Needs to interface with the alarm better
-        private bool ValidateProtocol(Protocol curProtocol)
-        {
-          
-            try
-            {
-                DateTime now = System.DateTime.Now;
-                int nd = now.Day;
-                int nt = now.Hour;
-                bool InSuspensionInterval = nt >= SuspensionHourStart || nt <= SuspensionHourEnd;
-                if (DetermineIfCurrentInstructionIsDelay(curProtocol) && InSuspensionInterval)
+                Protocol ProtocolNumbers = (Protocol)o;
+                string[] phonenumbers = ProtocolNumbers.ErrorPhoneNumber.Split(';');
+                foreach (string number in phonenumbers)
                 {
-                    bool Valid = false;
-                    Alarm a = manager.GiveAlarmReference();
-                    if (a != null && a.Connected)
-                    {
-                        DateTime valiationTime = a.getValidationTimeForProtocol(curProtocol.ProtocolName);
-                        if (DateTime.Now.Subtract(valiationTime).TotalHours > 20)
-                        {
-                            //Reset time
-                            DateTime newTime = DateTime.Now;
-                            newTime = newTime.AddHours(9);
-                            curProtocol.NextExecutionTimePoint = newTime;
-                            EmailSuspensionToUser(curProtocol);
-                            return false;
-                        }
-                    }
+                    // Todo use boolean return to implement multiple call attempts
+                    SkypeAlarm.CallConnects(number);
                 }
-                return true;
             }
-            catch (Exception thrown)
-            {
-                throw new InstrumentError("Could not validate protocol " + thrown.Message);
-            }
+        }
+        private bool ShouldCall()
+        {
+            DateTime now = System.DateTime.Now;
+            int nd = now.Day;
+            int nt = now.Hour;
+            return nt >= CallHourStart || nt <= CallHourEnd;
         }
         public double GetMilliSecondsTillNextRunTime()
         {
@@ -676,71 +588,71 @@ namespace Growth_Curve_Software
         {
             //Starting to approach the point where I need to break this up....
 
-                Protocol NewProtocol = new Protocol();
-                XmlDocument XmlDoc = new XmlDocument();
-                XmlTextReader XReader = new XmlTextReader(Filename);//http://dn.codegear.com/article/32384
-                XmlDoc.Load(XReader);
-                //first node is xml, second is the protocol, this is assumed and should be the case
-                XmlNode ProtocolXML = XmlDoc.ChildNodes[1];
-                NewProtocol.ProtocolName = ProtocolXML.ChildNodes[0].InnerText;
-                NewProtocol.ErrorEmailAddress = ProtocolXML.ChildNodes[1].InnerText;
-                Assembly assembly = Assembly.GetExecutingAssembly();
+            Protocol NewProtocol = new Protocol();
+            XmlDocument XmlDoc = new XmlDocument();
+            XmlTextReader XReader = new XmlTextReader(Filename);//http://dn.codegear.com/article/32384
+            XmlDoc.Load(XReader);
+            //first node is xml, second is the protocol, this is assumed and should be the case
+            XmlNode ProtocolXML = XmlDoc.ChildNodes[1];
+            NewProtocol.ProtocolName = ProtocolXML.ChildNodes[0].InnerText;
+            NewProtocol.ErrorEmailAddress = ProtocolXML.ChildNodes[1].InnerText;
+            Assembly assembly = Assembly.GetExecutingAssembly();
 
-                XmlNode VariablesNode = ProtocolXML.ChildNodes[2];
-                foreach (XmlNode variable in VariablesNode.ChildNodes)
+            XmlNode VariablesNode = ProtocolXML.ChildNodes[2];
+            foreach (XmlNode variable in VariablesNode.ChildNodes)
+            {
+                string Name = variable.ChildNodes[0].InnerText;
+                string variableTypeString = variable.ChildNodes[1].Attributes[0].Value;
+                Type VariableType = System.Type.GetType(variableTypeString);
+                object valueAsString = variable.ChildNodes[1].InnerText;
+                var Value = Convert.ChangeType(valueAsString, VariableType);
+                ProtocolVariable PV = new ProtocolVariable(Name, VariableType, Value);
+                NewProtocol.Variables.Add(PV.ToString(), PV);
+
+            }
+
+            XmlNode instructionsNode = ProtocolXML.ChildNodes[3];
+            foreach (XmlNode instruct in instructionsNode.ChildNodes)
+            {
+                string DataType = instruct.Attributes[0].Value;
+                Type InstructionType = assembly.GetType(DataType);
+                object ProtocolInstruction = Activator.CreateInstance(InstructionType);
+                string ValueType, Value;
+                foreach (XmlNode Property in instruct.ChildNodes)
                 {
-                    string Name = variable.ChildNodes[0].InnerText;
-                    string variableTypeString = variable.ChildNodes[1].Attributes[0].Value;
-                    Type VariableType = System.Type.GetType(variableTypeString);
-                    object valueAsString = variable.ChildNodes[1].InnerText;
-                    var Value = Convert.ChangeType(valueAsString, VariableType);
-                    ProtocolVariable PV = new ProtocolVariable(Name, VariableType, Value);
-                    NewProtocol.Variables.Add(PV.ToString(), PV);
-    
-                }
-            
-                XmlNode instructionsNode = ProtocolXML.ChildNodes[3];                
-                foreach (XmlNode instruct in instructionsNode.ChildNodes)
-                {
-                    string DataType = instruct.Attributes[0].Value;
-                    Type InstructionType = assembly.GetType(DataType);
-                    object ProtocolInstruction = Activator.CreateInstance(InstructionType);
-                    string ValueType, Value;
-                    foreach (XmlNode Property in instruct.ChildNodes)
+                    if (Property.Name == "Parameters")//this means I have a static protocol item
                     {
-                        if (Property.Name == "Parameters")//this means I have a static protocol item
-                        {
-                            ArrayList AL = new ArrayList();
-                             object[] ParameterArray;
-                             if (Property.ChildNodes.Count == 0) { ParameterArray = new object[0]; }
-                             else
-                             {
-                                 ParameterArray = new object[Property.ChildNodes.Count];
-                                 int ParameterIndex = 0;
-                                 foreach (XmlNode Parameter in Property.ChildNodes)
-                                 {
-                                     ValueType = Parameter.Attributes[0].Value;
-                                     Value = Parameter.InnerText;
-                                     ParameterArray[ParameterIndex] = ReturnValue(ValueType, Value);
-                                     ParameterIndex++;
-                                 }
-                             }
-                            StaticProtocolItem ProtocolItem = (StaticProtocolItem)ProtocolInstruction;
-                            ProtocolItem.Parameters = ParameterArray;
-                            ProtocolItem.ContainingProtocol = NewProtocol;
-                        }
+                        ArrayList AL = new ArrayList();
+                        object[] ParameterArray;
+                        if (Property.ChildNodes.Count == 0) { ParameterArray = new object[0]; }
                         else
                         {
-                            FieldInfo FI = ProtocolInstruction.GetType().GetField(Property.Name);
-                            ValueType = Property.Attributes[0].Value;
-                            Value = Property.InnerText;
-                            object ValuetoSet = ReturnValue(ValueType, Value);
-                            FI.SetValue(ProtocolInstruction, ValuetoSet);
+                            ParameterArray = new object[Property.ChildNodes.Count];
+                            int ParameterIndex = 0;
+                            foreach (XmlNode Parameter in Property.ChildNodes)
+                            {
+                                ValueType = Parameter.Attributes[0].Value;
+                                Value = Parameter.InnerText;
+                                ParameterArray[ParameterIndex] = ReturnValue(ValueType, Value);
+                                ParameterIndex++;
+                            }
                         }
+                        StaticProtocolItem ProtocolItem = (StaticProtocolItem)ProtocolInstruction;
+                        ProtocolItem.Parameters = ParameterArray;
+                        ProtocolItem.ContainingProtocol = NewProtocol;
                     }
-                    NewProtocol.Instructions.Add(ProtocolInstruction);
+                    else
+                    {
+                        FieldInfo FI = ProtocolInstruction.GetType().GetField(Property.Name);
+                        ValueType = Property.Attributes[0].Value;
+                        Value = Property.InnerText;
+                        object ValuetoSet = ReturnValue(ValueType, Value);
+                        FI.SetValue(ProtocolInstruction, ValuetoSet);
+                    }
                 }
-                XReader.Close();
+                NewProtocol.Instructions.Add(ProtocolInstruction);
+            }
+            XReader.Close();
             return NewProtocol;
         }
         public static void ProtocolToXMLFile(Protocol curProtocol, string Filename)
@@ -766,15 +678,15 @@ namespace Growth_Curve_Software
             {
                 ProtocolVariable PV = curProtocol.Variables[varName];
                 XWriter.WriteStartElement("Variable");
-                    XWriter.WriteStartElement("Name");
-                   XWriter.WriteString(PV.Name);
-                    XWriter.WriteEndElement();
-                    XWriter.WriteStartElement("Value");
-                    XWriter.WriteStartAttribute("Type");
-                    XWriter.WriteValue(PV.DataType.ToString());
-                    XWriter.WriteEndAttribute();
-                    XWriter.WriteValue(PV.Value.ToString());
-                    XWriter.WriteEndElement();
+                XWriter.WriteStartElement("Name");
+                XWriter.WriteString(PV.Name);
+                XWriter.WriteEndElement();
+                XWriter.WriteStartElement("Value");
+                XWriter.WriteStartAttribute("Type");
+                XWriter.WriteValue(PV.DataType.ToString());
+                XWriter.WriteEndAttribute();
+                XWriter.WriteValue(PV.Value.ToString());
+                XWriter.WriteEndElement();
                 XWriter.WriteEndElement();
             }
             XWriter.WriteEndElement();//end variables
@@ -827,12 +739,12 @@ namespace Growth_Curve_Software
 
             XWriter.WriteEndElement();
             XWriter.WriteEndDocument();
-            XWriter.Close();          
+            XWriter.Close();
         }
-        private static ArrayList ProtocolWithRepsRecurscion(ArrayList Instructions,LoopInstruction Repeat, int RepeatIndex)
+        private static ArrayList ProtocolWithRepsRecurscion(ArrayList Instructions, LoopInstruction Repeat, int RepeatIndex)
         {
             //this protocol should be called by the one below it to expand out a loop
-            ArrayList ProtToAppend=new ArrayList();//this will be returned
+            ArrayList ProtToAppend = new ArrayList();//this will be returned
             for (int j = 0; j < Repeat.TimesToRepeat; j++)
             {
                 for (int i = Repeat.StartInstruction - 1; i < RepeatIndex; i++)
@@ -841,7 +753,7 @@ namespace Growth_Curve_Software
                     if (Item is LoopInstruction)
                     {
                         LoopInstruction NewRepeat = (LoopInstruction)Item;
-                        ArrayList NewListToAdd = ProtocolWithRepsRecurscion(Instructions, NewRepeat,i);
+                        ArrayList NewListToAdd = ProtocolWithRepsRecurscion(Instructions, NewRepeat, i);
                         ProtToAppend.AddRange(NewListToAdd);
                     }
                     else
@@ -866,7 +778,7 @@ namespace Growth_Curve_Software
                     if (Item is LoopInstruction)
                     {
                         LoopInstruction Repeat = (LoopInstruction)Item;
-                        ArrayList NewList = ProtocolWithRepsRecurscion(Instructions, Repeat,currentIndex);
+                        ArrayList NewList = ProtocolWithRepsRecurscion(Instructions, Repeat, currentIndex);
                         CurrentProtocol.AddRange(NewList);
                     }
                     else
@@ -874,7 +786,7 @@ namespace Growth_Curve_Software
                         CurrentProtocol.Add(Item);
                     }
                     currentIndex++;
-                }                
+                }
             }
             catch (Exception thrown) { throw new Exception("Could not convert the protocol, inner error is:\n" + thrown.Message); }
             return CurrentProtocol;
@@ -915,7 +827,7 @@ namespace Growth_Curve_Software
     }
     public class ProtocolEventCaller
     {
-        public event ProtocolPauseEventHandler onProtocolPause;        
+        public event ProtocolPauseEventHandler onProtocolPause;
         public ProtocolEventCaller()
         {
         }
