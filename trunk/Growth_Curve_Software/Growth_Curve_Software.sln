@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alarm_Monitor", "Alarm_Moni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fit Growth Curves", "Fit Growth Curves\Fit Growth Curves.csproj", "{133B4212-8C0C-41A3-B1FF-6A41BD780337}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "Setup1\Setup1.vdproj", "{1AEB622E-5A5F-4DC0-B639-A77D35954136}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -115,6 +117,12 @@ Global
 		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|x86.ActiveCfg = Release|Any CPU
+		{1AEB622E-5A5F-4DC0-B639-A77D35954136}.Debug|Any CPU.ActiveCfg = Debug
+		{1AEB622E-5A5F-4DC0-B639-A77D35954136}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{1AEB622E-5A5F-4DC0-B639-A77D35954136}.Debug|x86.ActiveCfg = Debug
+		{1AEB622E-5A5F-4DC0-B639-A77D35954136}.Release|Any CPU.ActiveCfg = Release
+		{1AEB622E-5A5F-4DC0-B639-A77D35954136}.Release|Mixed Platforms.ActiveCfg = Release
+		{1AEB622E-5A5F-4DC0-B639-A77D35954136}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
