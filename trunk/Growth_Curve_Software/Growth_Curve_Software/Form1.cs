@@ -60,6 +60,7 @@ namespace Growth_Curve_Software
             get { return pUseAlarm; }
             set { pUseAlarm = value; }
         }
+        static public SkypeAlarm
         // TODO: Settings file
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
         public string NSFErrorEmails
