@@ -85,11 +85,14 @@ namespace Robot_Alarm
                 Console.WriteLine(httpAddress.OriginalString);
                 Console.WriteLine();
                 //now to 
-                AlarmNotifier AN = new AlarmNotifier();
+                ThisAlarm = new AlarmNotifier();
                 //AN.TurnOnAlarm();
-                Console.WriteLine(AN.GetAlarmStatus().AlarmOn.ToString());
+                Console.WriteLine(ThisAlarm.GetAlarmStatus().AlarmOn.ToString());
+               // Thread test = new Thread(Test);
+                //test.Start();
+                ThisAlarm.TestNumbers("4158234767"); 
                 Application.Run();
-               
+                 
             }
             catch(CommunicationException ce)
             {
@@ -111,6 +114,12 @@ namespace Robot_Alarm
            //InstStatus.UpdateStatus("New Status");
 
             selfHost.Close();
+        }
+        static void Test()
+        {
+            Thread.Sleep(1000);
+            ThisAlarm.TestNumbers("4158234767"); 
+
         }
     }
 }
