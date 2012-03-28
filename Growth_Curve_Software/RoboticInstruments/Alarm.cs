@@ -5,20 +5,28 @@ using System.Text;
 using Growth_Curve_Software.AlarmServer;
 namespace Growth_Curve_Software
 {
+    /// <summary>
+    /// To make a client:
+    /// 
+    /// Allow the program to use an address:
+    ///     netsh http add urlacl url=http://+:8001/AlarmNotifier user=DOMAIN\user
+    ///     
+    /// Now follow: http://msdn.microsoft.com/en-us/library/ms733133.aspx
+    /// </summary>
     public class Alarm
     {
         //Class for turning on and off the remote alarm
         AlarmServer.AlarmClient AC;
-        public enum AlarmState{On,Off,Disconnected};
+        public enum AlarmState { On, Off, Disconnected };
         public bool Connected;
         public Alarm()
         {
-                try
-                {
-                    AC = new AlarmClient();
-                    Connected = true;
-                }
-                catch { Connected = false; }
+            try
+            {
+                AC = new AlarmClient();
+                Connected = true;
+            }
+            catch { Connected = false; }
         }
         public void TurnOnAlarm(string StatusMessage)
         {
@@ -66,7 +74,7 @@ namespace Growth_Curve_Software
         {
             try
             {
-                bool status= AC.GetAlarmStatus().AlarmOn;
+                bool status = AC.GetAlarmStatus().AlarmOn;
                 if (status) { return AlarmState.On; }
                 else { return AlarmState.Off; }
             }
@@ -85,8 +93,58 @@ namespace Growth_Curve_Software
                 }
                 else { return DateTime.Now; }
             }
-            catch (Exception thrown)
+            catch
             { return DateTime.Now; }
+        }
+        public bool TestNumbers(string numbers)
+        {
+            try
+            {
+                if (AC != null && Connected)
+                {
+                    return AC.TestNumbers(numbers);
+                }
+                else { return false; }
+            }
+            catch
+            { return false; }
+        }
+        public bool CallConnects(string number)
+        {
+            try
+            {
+                if (AC != null && Connected)
+                {
+                    return AC.CallConnects(number);
+                }
+                else { return false; }
+            }
+            catch
+            { return false; }
+        }
+        public bool isVerified(string number)
+        {
+            try
+            {
+                if (AC != null && Connected)
+                {
+                    return AC.isVerified(number);
+                }
+                else { return false; }
+            }
+            catch
+            { return false; }
+        }
+        public void addToVerified(string number)
+        {
+            try
+            {
+                if (AC != null && Connected)
+                {
+                    AC.addToVerified(number);
+                }
+            }
+            catch { }
         }
     }
 }

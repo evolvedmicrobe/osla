@@ -60,7 +60,6 @@ namespace Growth_Curve_Software
             get { return pUseAlarm; }
             set { pUseAlarm = value; }
         }
-        static public SkypeAlarm
         // TODO: Settings file
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
         public string NSFErrorEmails
@@ -876,7 +875,7 @@ namespace Growth_Curve_Software
                     ShowError("You did not select any slots");
                 }
                 // For SkypeAlarm
-                else if (! SkypeAlarm.TestNumbers(textbox_number.Text))
+                else if (! Clarity_Alarm.TestNumbers(textbox_number.Text))
                 {
                     ShowError("Your number failed the test");
                 }
@@ -1208,7 +1207,7 @@ namespace Growth_Curve_Software
         // For SkypeAlarm
         private void Test_Click(object sender, EventArgs e)
         {
-            if (SkypeAlarm.TestNumbers(textbox_number.Text))
+            if (Clarity_Alarm.TestNumbers(textbox_number.Text))
             {
                 label_tested.Text = "Verified";
             }
@@ -1739,7 +1738,6 @@ namespace Growth_Curve_Software
             return Clarity_Alarm;
         }
         #endregion
-
     }
 }
 
