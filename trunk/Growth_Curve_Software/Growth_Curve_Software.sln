@@ -22,8 +22,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alarm_Monitor", "Alarm_Moni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fit Growth Curves", "Fit Growth Curves\Fit Growth Curves.csproj", "{133B4212-8C0C-41A3-B1FF-6A41BD780337}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkypeAlarmServer", "SkypeAlarmServer\SkypeAlarmServer.csproj", "{C4D58E32-5292-4D28-A86F-166D8125C0CD}"
-EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -117,16 +115,6 @@ Global
 		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{133B4212-8C0C-41A3-B1FF-6A41BD780337}.Release|x86.ActiveCfg = Release|Any CPU
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Debug|x86.ActiveCfg = Debug|x86
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Debug|x86.Build.0 = Debug|x86
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Release|Any CPU.ActiveCfg = Release|x86
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Release|Mixed Platforms.Build.0 = Release|x86
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Release|x86.ActiveCfg = Release|x86
-		{C4D58E32-5292-4D28-A86F-166D8125C0CD}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,6 +8,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.IO;
+using SKYPE4COMLib;
+using System.Text.RegularExpressions;
 
 namespace Robot_Alarm
 {
@@ -151,6 +153,59 @@ namespace Robot_Alarm
             else
             {return DateTime.Now.Subtract(new TimeSpan(365, 0, 0, 0)); }
         }
+
+        #region SkypeAlarm
+        private static Skype skype = new Skype();
+        // This set simply remembers what numbers we've verified and so that we don't
+        // waste precious cents re-verifying
+        private static HashSet<string> verified = new HashSet<string>();
+        private static string number_re = @"^([0-9]{10};? *)+$";
+        public bool TestNumbers(string numbers)
+        {
+            Match m = Regex.Match(numbers, number_re);
+            if (!m.Success) { return false; }
+            foreach (string n in numbers.Split(';'))
+            {
+                string number = n.Trim();
+                if (verified.Contains(number)) { continue; }
+                if (CallConnects(number)) { verified.Add(number); }
+                else { return false; }
+            }
+            return true;
+        }
+        public bool CallConnects(string number)
+        {
+            if (!skype.Client.IsRunning)
+            {
+                skype.Client.Start(true, true);
+            }
+            Call c;
+            try
+            {
+                c = skype.PlaceCall(number);
+            }
+            catch { return false; }
+            int waits = 1;
+            // TODO: Use some kind of call property to avoid waiting for calls that fail instantly
+            while (c.Duration == 0)
+            {
+                System.Threading.Thread.Sleep(500);
+                if (waits++ > 50) { return false; }
+            }
+            try { c.Finish(); }
+            catch { return false; }
+            return true;
+
+        }
+        public bool isVerified(string number)
+        {
+            return verified.Contains(number);
+        }
+        public void addToVerified(string number)
+        {
+            verified.Add(number);
+        }
+        #endregion
     }
     
     [ServiceContract(Namespace = "http://Microsoft.ServiceModel.Samples")]
@@ -201,6 +256,15 @@ namespace Robot_Alarm
         void ValidateProtocol(string protocolName);
         [OperationContract]
         DateTime GetValidationTimeOfProtocol(string name);
+
+        [OperationContract]
+        bool TestNumbers(string numbers);
+        [OperationContract]
+        bool CallConnects(string number);
+        [OperationContract]
+        bool isVerified(string number);
+        [OperationContract]
+        void addToVerified(string number);
     }
 
 }
