@@ -49,7 +49,19 @@ namespace Robot_Alarm
             Image2 = new Bitmap(@"test.bmp");
             Image1UpdateTime=DateTime.Now.ToString();
             Image2UpdateTime=DateTime.Now.ToString();
+            try
+            {
+                if (!skype.Client.IsRunning)
+                {
+                    skype.Client.Start(true, true);
+                }
+                           }
+            catch (Exception thrown)
+            {
+                Console.WriteLine("Could not start skype or create DTMF event. " + thrown.Message);
+            }
         }
+
         public InstrumentStatus GetInstrumentStatus()
         {
             return CurrentInstrumentStatus;
@@ -156,6 +168,7 @@ namespace Robot_Alarm
 
         #region SkypeAlarm
         private static Skype skype = new Skype();
+        private bool FivePressed = false;
         // This set simply remembers what numbers we've verified and so that we don't
         // waste precious cents re-verifying
         private static HashSet<string> verified = new HashSet<string>();
@@ -175,28 +188,43 @@ namespace Robot_Alarm
         }
         public bool CallConnects(string number)
         {
-            if (!skype.Client.IsRunning)
-            {
-                skype.Client.Start(true, true);
-            }
-            Call c;
+            bool callSuccessful = false;
             try
-            {
+            {               
+                Call c;
                 c = skype.PlaceCall(number);
+                int waits = 1;
+                const int maxWait = 50;
+                // TODO: Use some kind of call property to avoid waiting for calls that fail instantly
+                while (c.Status != TCallStatus.clsInProgress && waits < maxWait)
+                {
+                    TCallStatus curStatus = c.Status;
+                    if (curStatus == TCallStatus.clsFailed | curStatus == TCallStatus.clsRefused
+                        || curStatus == TCallStatus.clsCancelled || curStatus == TCallStatus.clsBusy ||
+                        curStatus == TCallStatus.clsBusy)
+                    {
+                        break;
+                    }
+                    System.Threading.Thread.Sleep(500);
+                }
+                waits = 0;
+               while (c.Status == TCallStatus.clsInProgress && waits < maxWait)
+                {
+                    if (waits > 5)
+                    { callSuccessful = true; break; }
+                    waits++;                   
+                    System.Threading.Thread.Sleep(1000);
+                }
+                if(c.Status!=TCallStatus.clsFinished)
+                    c.Finish();
             }
-            catch { return false; }
-            int waits = 1;
-            // TODO: Use some kind of call property to avoid waiting for calls that fail instantly
-            while (c.Duration == 0)
-            {
-                System.Threading.Thread.Sleep(500);
-                if (waits++ > 50) { return false; }
-            }
-            try { c.Finish(); }
-            catch { return false; }
-            return true;
+            catch (Exception thrown) { Console.WriteLine(thrown.Message); }
+            finally { }
+            return callSuccessful;
 
         }
+
+        
         public bool isVerified(string number)
         {
             return verified.Contains(number);
