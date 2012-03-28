@@ -48,6 +48,7 @@ namespace Robot_Alarm
             //WSHttpBinding myBinding = new WSHttpBinding();
             BasicHttpBinding myBinding = new BasicHttpBinding();
             //giant value to allow large transfers
+
             int LargeValue = (int)Math.Pow(2.0, 26);
             myBinding.ReaderQuotas.MaxArrayLength = LargeValue;
             myBinding.MaxBufferSize = LargeValue;
@@ -55,6 +56,7 @@ namespace Robot_Alarm
             myBinding.MaxReceivedMessageSize = LargeValue;
             myBinding.ReaderQuotas.MaxBytesPerRead = LargeValue;
             myBinding.ReaderQuotas.MaxStringContentLength = LargeValue;
+
             //myBinding.ReaderQuotas.MaxDepth = LargeValue;
             //myBinding.ReaderQuotas.MaxNameTableCharCount = LargeValue;
             
@@ -86,34 +88,7 @@ namespace Robot_Alarm
                 AlarmNotifier AN = new AlarmNotifier();
                 //AN.TurnOnAlarm();
                 Console.WriteLine(AN.GetAlarmStatus().AlarmOn.ToString());
-                while (true)
-                {
-                    string entry=Console.ReadLine();
-                    if (entry == "y")
-                    {
-                        AN.TurnOnAlarm();
-                        AN.UpdateStatus("Alarm is on");
-                    }
-                    else if (entry == "n")
-                    {
-                        AN.TurnOffAlarm();
-                        AN.UpdateStatus("Alarm is off");
-                    }
-                    else if (entry == "q")
-                    {
-                        break;
-                    }
-                    else if (entry == "j")
-                    {
-                        AN.CallConnects("971228263");
-                    }
-                    else
-                    {
-                        Console.WriteLine(entry);
-                    }
-                }
-
-
+                Application.Run();
                
             }
             catch(CommunicationException ce)
@@ -134,10 +109,8 @@ namespace Robot_Alarm
            //InstStatus.TurnOnAlarm();
            //Thread.Sleep(6000);
            //InstStatus.UpdateStatus("New Status");
-           
 
-           Console.ReadLine();
-           selfHost.Close();
+            selfHost.Close();
         }
     }
 }
