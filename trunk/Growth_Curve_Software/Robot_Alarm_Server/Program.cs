@@ -103,6 +103,10 @@ namespace Robot_Alarm
                     {
                         break;
                     }
+                    else if (entry == "j")
+                    {
+                        AN.CallConnects("971228263");
+                    }
                     else
                     {
                         Console.WriteLine(entry);

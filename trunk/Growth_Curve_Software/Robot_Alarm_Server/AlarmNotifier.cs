@@ -257,6 +257,7 @@ namespace Robot_Alarm
         [OperationContract]
         DateTime GetValidationTimeOfProtocol(string name);
 
+        #region SkypeAlarm
         [OperationContract]
         bool TestNumbers(string numbers);
         [OperationContract]
@@ -265,6 +266,7 @@ namespace Robot_Alarm
         bool isVerified(string number);
         [OperationContract]
         void addToVerified(string number);
+        #endregion
     }
 
 }
