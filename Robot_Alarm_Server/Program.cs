@@ -42,15 +42,12 @@ namespace Robot_Alarm
         [STAThread]
         static void Main()
         {
-            //Uri httpAddress = new Uri("http://140.247.92.83:8001/AlarmNotifier");
-            // To get this to work you need to:
-            //     netsh http add urlacl url=http://localhost:8001/AlarmNotifier user=DOMAIN\user
-            Uri httpAddress = new Uri("http://localhost:8001/AlarmNotifier");
+            Uri httpAddress = new Uri("http://140.247.92.83:8001/AlarmNotifier");
+            //Uri httpAddress = new Uri("http://localhost:8001/AlarmNotifier");
             ServiceHost selfHost = new ServiceHost(typeof(AlarmNotifier), httpAddress);
             //WSHttpBinding myBinding = new WSHttpBinding();
             BasicHttpBinding myBinding = new BasicHttpBinding();
             //giant value to allow large transfers
-
             int LargeValue = (int)Math.Pow(2.0, 26);
             myBinding.ReaderQuotas.MaxArrayLength = LargeValue;
             myBinding.MaxBufferSize = LargeValue;
@@ -58,7 +55,6 @@ namespace Robot_Alarm
             myBinding.MaxReceivedMessageSize = LargeValue;
             myBinding.ReaderQuotas.MaxBytesPerRead = LargeValue;
             myBinding.ReaderQuotas.MaxStringContentLength = LargeValue;
-
             //myBinding.ReaderQuotas.MaxDepth = LargeValue;
             //myBinding.ReaderQuotas.MaxNameTableCharCount = LargeValue;
             
@@ -87,13 +83,34 @@ namespace Robot_Alarm
                 Console.WriteLine(httpAddress.OriginalString);
                 Console.WriteLine();
                 //now to 
-                ThisAlarm = new AlarmNotifier();
+                AlarmNotifier AN = new AlarmNotifier();
                 //AN.TurnOnAlarm();
-                Console.WriteLine(ThisAlarm.GetAlarmStatus().AlarmOn.ToString());
-               // Thread test = new Thread(Test);
-                //test.Start();
-                Application.Run();
-                 
+                Console.WriteLine(AN.GetAlarmStatus().AlarmOn.ToString());
+                while (true)
+                {
+                    string entry=Console.ReadLine();
+                    if (entry == "y")
+                    {
+                        AN.TurnOnAlarm();
+                        AN.UpdateStatus("Alarm is on");
+                    }
+                    else if (entry == "n")
+                    {
+                        AN.TurnOffAlarm();
+                        AN.UpdateStatus("Alarm is off");
+                    }
+                    else if (entry == "q")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine(entry);
+                    }
+                }
+
+
+               
             }
             catch(CommunicationException ce)
             {
@@ -113,14 +130,10 @@ namespace Robot_Alarm
            //InstStatus.TurnOnAlarm();
            //Thread.Sleep(6000);
            //InstStatus.UpdateStatus("New Status");
+           
 
-            selfHost.Close();
-        }
-        static void Test()
-        {
-            Thread.Sleep(1000);
-            ThisAlarm.TestNumbers("4158234767"); 
-
+           Console.ReadLine();
+           selfHost.Close();
         }
     }
 }

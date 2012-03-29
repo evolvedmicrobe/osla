@@ -532,7 +532,6 @@ namespace Growth_Curve_Software
         }
         public void CallAllUsers()
         {
-            Alarm a = manager.GiveAlarmReference();
             foreach (object o in Protocols)
             {
                 Protocol ProtocolNumbers = (Protocol)o;
@@ -540,7 +539,7 @@ namespace Growth_Curve_Software
                 foreach (string number in phonenumbers)
                 {
                     // Todo use boolean return to implement multiple call attempts
-                     a.CallConnects(number);
+                    SkypeAlarm.CallConnects(number);
                 }
             }
         }

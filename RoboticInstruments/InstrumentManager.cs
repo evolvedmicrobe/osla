@@ -14,5 +14,6 @@ namespace Growth_Curve_Software
         BaseInstrumentClass ReturnInstrument(string InstrumentName);
         T ReturnInstrumentType<T>() where T : BaseInstrumentClass ;
         Alarm GiveAlarmReference();
+        
     }
 }

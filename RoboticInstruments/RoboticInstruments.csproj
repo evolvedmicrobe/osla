@@ -95,6 +95,7 @@
     <Compile Include="AdditionalMethodArguments.cs" />
     <Compile Include="Alarm.cs" />
     <Compile Include="BaseInstrumentClass.cs" />
+    <Compile Include="SkypeAlarm.cs" />
     <Compile Include="DelegatesAndAttributes.cs" />
     <Compile Include="Incubator.cs" />
     <Compile Include="InstrumentError.cs" />
@@ -126,7 +127,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Properties\DataSources\System.Drawing.Bitmap.datasource" />
     <None Include="Service References\AlarmServer\AlarmNotifier.wsdl" />
     <None Include="Service References\AlarmServer\AlarmNotifier.xsd">
@@ -172,6 +172,17 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="SKYPE4COMLib">
+      <Guid>{03282B5D-B38F-469D-849A-09B0A7F4881B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

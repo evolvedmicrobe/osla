@@ -875,7 +875,7 @@ namespace Growth_Curve_Software
                     ShowError("You did not select any slots");
                 }
                 // For SkypeAlarm
-                else if (! Clarity_Alarm.TestNumbers(textbox_number.Text))
+                else if (! SkypeAlarm.TestNumbers(textbox_number.Text))
                 {
                     ShowError("Your number failed the test");
                 }
@@ -1207,7 +1207,7 @@ namespace Growth_Curve_Software
         // For SkypeAlarm
         private void Test_Click(object sender, EventArgs e)
         {
-            if (Clarity_Alarm.TestNumbers(textbox_number.Text))
+            if (SkypeAlarm.TestNumbers(textbox_number.Text))
             {
                 label_tested.Text = "Verified";
             }
@@ -1738,6 +1738,7 @@ namespace Growth_Curve_Software
             return Clarity_Alarm;
         }
         #endregion
+
     }
 }
 
