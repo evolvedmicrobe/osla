@@ -168,7 +168,6 @@ namespace Robot_Alarm
 
         #region SkypeAlarm
         private static Skype skype = new Skype();
-        private bool FivePressed = false;
         // This set simply remembers what numbers we've verified and so that we don't
         // waste precious cents re-verifying
         private static HashSet<string> verified = new HashSet<string>();

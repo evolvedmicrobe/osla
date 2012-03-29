@@ -43,6 +43,8 @@ namespace Robot_Alarm
         static void Main()
         {
             //Uri httpAddress = new Uri("http://140.247.92.83:8001/AlarmNotifier");
+            // To get this to work you need to:
+            //     netsh http add urlacl url=http://localhost:8001/AlarmNotifier user=DOMAIN\user
             Uri httpAddress = new Uri("http://localhost:8001/AlarmNotifier");
             ServiceHost selfHost = new ServiceHost(typeof(AlarmNotifier), httpAddress);
             //WSHttpBinding myBinding = new WSHttpBinding();
@@ -90,7 +92,6 @@ namespace Robot_Alarm
                 Console.WriteLine(ThisAlarm.GetAlarmStatus().AlarmOn.ToString());
                // Thread test = new Thread(Test);
                 //test.Start();
-                ThisAlarm.TestNumbers("4158234767"); 
                 Application.Run();
                  
             }
