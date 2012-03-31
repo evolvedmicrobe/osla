@@ -324,6 +324,9 @@ namespace VictorRemoteServer
                 int MaxCounter = 14;
                 if (counter == MaxCounter)
                 {
+                    LastCommandResult = new CommandResult(TimeOutError);
+                    LastCommandResult.ErrorSetAlready = true;
+                    
                     txtErrors.Text += "Failed to Move DataFile: " + FileName + " for " + PlateName+"\n"+TimeOutError;
                     throw new Exception(TimeOutError);
                 }
@@ -348,7 +351,7 @@ namespace VictorRemoteServer
                     throw thrown;
                 else
                 {
-                    Thread.Sleep(10000);//wait 5 seconds in case the victor has a file lock on it
+                    Thread.Sleep(15000);//wait 10 seconds in case the victor has a file lock on it
                     MovePlateDataToNewDirectory(PlateName, FileName);
                 }
             }
