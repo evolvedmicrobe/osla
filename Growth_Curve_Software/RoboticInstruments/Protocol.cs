@@ -511,7 +511,7 @@ namespace Growth_Curve_Software
         public void ReportToAllUsers(string message = "The robot has an error, and has stopped working")
         {
             EmailErrorMessageToAllUsers(message);
-            if (ShouldCall()) { CallAllUsers(); }
+            //if (ShouldCall()) { CallAllUsers(); }
         }
         public void EmailErrorMessageToAllUsers(string ErrorMessage = "The robot has an error, and has stopped working")
         {
@@ -548,13 +548,13 @@ namespace Growth_Curve_Software
                 }
             }
         }
-        private bool ShouldCall()
-        {
-            DateTime now = System.DateTime.Now;
-            int nd = now.Day;
-            int nt = now.Hour;
-            return nt >= CallHourStart || nt <= CallHourEnd;
-        }
+        //private bool ShouldCall()
+        //{
+        //    DateTime now = System.DateTime.Now;
+        //    int nd = now.Day;
+        //    int nt = now.Hour;
+        //    return nt >= CallHourStart || nt <= CallHourEnd;
+        //}
         public double GetMilliSecondsTillNextRunTime()
         {
             return this.FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();

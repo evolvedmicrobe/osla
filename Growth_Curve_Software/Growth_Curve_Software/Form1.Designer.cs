@@ -665,6 +665,7 @@
             // 
             // Test
             // 
+            this.Test.Enabled = false;
             this.Test.Location = new System.Drawing.Point(607, 534);
             this.Test.Name = "Test";
             this.Test.Size = new System.Drawing.Size(75, 23);
@@ -679,6 +680,7 @@
             this.textbox_number.Name = "textbox_number";
             this.textbox_number.Size = new System.Drawing.Size(159, 21);
             this.textbox_number.TabIndex = 20;
+            this.textbox_number.Text = "Ignore me for now";
             // 
             // label18
             // 
