@@ -563,7 +563,8 @@ namespace Growth_Curve_Software
         ///Needs to interface with the alarm better
         private bool ValidateProtocol(Protocol curProtocol)
         {
-
+            if (curProtocol.ProtocolName.StartsWith("NSF"))
+                return true;
             try
             {
                 DateTime now = System.DateTime.Now;
