@@ -1667,20 +1667,20 @@ namespace Growth_Curve_Software
                 {
                     try { tranNum = Convert.ToInt32(txtNSFTransferNumber.Text); }
                     catch { ShowError("Could not convert your transfer number into an integer, please enter an appropriate value"); return; }
-                        NSFExperiment tmp=new NSFExperiment();
-                        foreach (int plateslot in lstNSFPlates.SelectedItems)
-                        {
-                            Protocol NewProt = new Protocol();
-                            NewProt.ErrorEmailAddress="";
-                            string baseName="NSF-"+txtNSFName.Text+"-"+txtNSFTransferNumber.Text.ToString();
-                            NewProt.ProtocolName=baseName+"_"+plateslot.ToString();
-                            StaticProtocolItem SP = new StaticProtocolItem();
-                            SP.MethodName="CreateProtocol";
-                            SP.InstrumentName=tmp.Name;
-                            SP.Parameters=new object[2] {baseName,plateslot};
-                            NewProt.Instructions.Add(SP);
-                            ProtsToAdd.Add(NewProt);
-                        }
+                        //NSFExperiment tmp=new NSFExperiment();
+                        //foreach (int plateslot in lstNSFPlates.SelectedItems)
+                        //{
+                        //    Protocol NewProt = new Protocol();
+                        //    NewProt.ErrorEmailAddress="";
+                        //    string baseName="NSF-"+txtNSFName.Text+"-"+txtNSFTransferNumber.Text.ToString();
+                        //    NewProt.ProtocolName=baseName+"_"+plateslot.ToString();
+                        //    StaticProtocolItem SP = new StaticProtocolItem();
+                        //    SP.MethodName="CreateProtocol";
+                        //    SP.InstrumentName=tmp.Name;
+                        //    SP.Parameters=new object[2] {baseName,plateslot};
+                        //    NewProt.Instructions.Add(SP);
+                        //    ProtsToAdd.Add(NewProt);
+                        //}
                         Protocol Watcher = new Protocol();
                         Watcher.ProtocolName = "NSF-Error-" + txtNSFTransferNumber.Text.ToString();
                         Watcher.ErrorEmailAddress = this.NSFErrorEmails;
