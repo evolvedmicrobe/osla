@@ -168,8 +168,7 @@ namespace Robot_Alarm
 
         #region SkypeAlarm
         private static Skype skype = new Skype();
-        // This set simply remembers what numbers we've verified and so that we don't
-        // waste precious cents re-verifying
+        // This set simply remembers what numbers we've verified
         private static HashSet<string> verified = new HashSet<string>();
         private static string number_re = @"^([0-9]{10};? *)+$";
         public bool TestNumbers(string numbers)
@@ -285,6 +284,7 @@ namespace Robot_Alarm
         DateTime GetValidationTimeOfProtocol(string name);
 
         #region SkypeAlarm
+
         [OperationContract]
         bool TestNumbers(string numbers);
         [OperationContract]
@@ -293,6 +293,7 @@ namespace Robot_Alarm
         bool isVerified(string number);
         [OperationContract]
         void addToVerified(string number);
+        
         #endregion
     }
 
