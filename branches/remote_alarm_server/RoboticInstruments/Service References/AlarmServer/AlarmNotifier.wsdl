@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://Microsoft.ServiceModel.Samples" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://Microsoft.ServiceModel.Samples" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://Microsoft.ServiceModel.Samples/Imports">
+      <xsd:import schemaLocation="http://localhost:8001/AlarmNotifier?xsd=xsd3" namespace="http://Microsoft.ServiceModel.Samples" />
+      <xsd:import schemaLocation="http://localhost:8001/AlarmNotifier?xsd=xsd0" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8001/AlarmNotifier?xsd=xsd1" namespace="http://schemas.datacontract.org/2004/07/System.Drawing.Imaging" />
+      <xsd:import schemaLocation="http://localhost:8001/AlarmNotifier?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/System.Drawing" />
+      <xsd:import schemaLocation="http://localhost:8001/AlarmNotifier?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/Robot_Alarm" />
+      <xsd:import schemaLocation="http://localhost:8001/AlarmNotifier?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IAlarm_GetInstrumentStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetInstrumentStatus" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetInstrumentStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetInstrumentStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetAlarmStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAlarmStatus" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetAlarmStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAlarmStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_TurnOnAlarm_InputMessage">
+    <wsdl:part name="parameters" element="tns:TurnOnAlarm" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_TurnOnAlarm_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TurnOnAlarmResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_TurnOffAlarm_InputMessage">
+    <wsdl:part name="parameters" element="tns:TurnOffAlarm" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_TurnOffAlarm_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TurnOffAlarmResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_UpdateStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateStatus" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_UpdateStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetCameraImage1_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCameraImage1" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetCameraImage1_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCameraImage1Response" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetCameraImage2_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCameraImage2" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetCameraImage2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCameraImage2Response" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_SetCameraImage1_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetCameraImage1" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_SetCameraImage1_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetCameraImage1Response" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_SetCameraImage2_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetCameraImage2" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_SetCameraImage2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetCameraImage2Response" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_ReturnJPEGCamera1_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReturnJPEGCamera1" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_ReturnJPEGCamera1_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReturnJPEGCamera1Response" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_ReturnJPEGCamera2_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReturnJPEGCamera2" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_ReturnJPEGCamera2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReturnJPEGCamera2Response" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetImageHeight_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetImageHeight" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetImageHeight_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetImageHeightResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetImageWidth_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetImageWidth" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetImageWidth_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetImageWidthResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetCurrentlyLoadedProtocolNames_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentlyLoadedProtocolNames" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetCurrentlyLoadedProtocolNames_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCurrentlyLoadedProtocolNamesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_SetCurrentlyLoadedProtocolNames_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetCurrentlyLoadedProtocolNames" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_SetCurrentlyLoadedProtocolNames_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetCurrentlyLoadedProtocolNamesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_UpdateOperation_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateOperation" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_UpdateOperation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateOperationResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetOperation_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetOperation" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetOperation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetOperationResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_ValidateProtocol_InputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateProtocol" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_ValidateProtocol_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateProtocolResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetValidationTimeOfProtocol_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetValidationTimeOfProtocol" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_GetValidationTimeOfProtocol_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetValidationTimeOfProtocolResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_TestNumbers_InputMessage">
+    <wsdl:part name="parameters" element="tns:TestNumbers" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_TestNumbers_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TestNumbersResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_CallConnects_InputMessage">
+    <wsdl:part name="parameters" element="tns:CallConnects" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_CallConnects_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CallConnectsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_isVerified_InputMessage">
+    <wsdl:part name="parameters" element="tns:isVerified" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_isVerified_OutputMessage">
+    <wsdl:part name="parameters" element="tns:isVerifiedResponse" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_addToVerified_InputMessage">
+    <wsdl:part name="parameters" element="tns:addToVerified" />
+  </wsdl:message>
+  <wsdl:message name="IAlarm_addToVerified_OutputMessage">
+    <wsdl:part name="parameters" element="tns:addToVerifiedResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IAlarm">
+    <wsdl:operation name="GetInstrumentStatus">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetInstrumentStatus" message="tns:IAlarm_GetInstrumentStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetInstrumentStatusResponse" message="tns:IAlarm_GetInstrumentStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAlarmStatus">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetAlarmStatus" message="tns:IAlarm_GetAlarmStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetAlarmStatusResponse" message="tns:IAlarm_GetAlarmStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="TurnOnAlarm">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/TurnOnAlarm" message="tns:IAlarm_TurnOnAlarm_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/TurnOnAlarmResponse" message="tns:IAlarm_TurnOnAlarm_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="TurnOffAlarm">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/TurnOffAlarm" message="tns:IAlarm_TurnOffAlarm_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/TurnOffAlarmResponse" message="tns:IAlarm_TurnOffAlarm_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateStatus">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/UpdateStatus" message="tns:IAlarm_UpdateStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/UpdateStatusResponse" message="tns:IAlarm_UpdateStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCameraImage1">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetCameraImage1" message="tns:IAlarm_GetCameraImage1_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetCameraImage1Response" message="tns:IAlarm_GetCameraImage1_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCameraImage2">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetCameraImage2" message="tns:IAlarm_GetCameraImage2_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetCameraImage2Response" message="tns:IAlarm_GetCameraImage2_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetCameraImage1">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/SetCameraImage1" message="tns:IAlarm_SetCameraImage1_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/SetCameraImage1Response" message="tns:IAlarm_SetCameraImage1_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetCameraImage2">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/SetCameraImage2" message="tns:IAlarm_SetCameraImage2_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/SetCameraImage2Response" message="tns:IAlarm_SetCameraImage2_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReturnJPEGCamera1">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ReturnJPEGCamera1" message="tns:IAlarm_ReturnJPEGCamera1_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ReturnJPEGCamera1Response" message="tns:IAlarm_ReturnJPEGCamera1_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReturnJPEGCamera2">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ReturnJPEGCamera2" message="tns:IAlarm_ReturnJPEGCamera2_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ReturnJPEGCamera2Response" message="tns:IAlarm_ReturnJPEGCamera2_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetImageHeight">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetImageHeight" message="tns:IAlarm_GetImageHeight_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetImageHeightResponse" message="tns:IAlarm_GetImageHeight_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetImageWidth">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetImageWidth" message="tns:IAlarm_GetImageWidth_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetImageWidthResponse" message="tns:IAlarm_GetImageWidth_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentlyLoadedProtocolNames">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetCurrentlyLoadedProtocolNames" message="tns:IAlarm_GetCurrentlyLoadedProtocolNames_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetCurrentlyLoadedProtocolNamesResponse" message="tns:IAlarm_GetCurrentlyLoadedProtocolNames_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetCurrentlyLoadedProtocolNames">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/SetCurrentlyLoadedProtocolNames" message="tns:IAlarm_SetCurrentlyLoadedProtocolNames_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/SetCurrentlyLoadedProtocolNamesResponse" message="tns:IAlarm_SetCurrentlyLoadedProtocolNames_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOperation">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/UpdateOperation" message="tns:IAlarm_UpdateOperation_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/UpdateOperationResponse" message="tns:IAlarm_UpdateOperation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOperation">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetOperation" message="tns:IAlarm_GetOperation_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetOperationResponse" message="tns:IAlarm_GetOperation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateProtocol">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ValidateProtocol" message="tns:IAlarm_ValidateProtocol_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ValidateProtocolResponse" message="tns:IAlarm_ValidateProtocol_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetValidationTimeOfProtocol">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetValidationTimeOfProtocol" message="tns:IAlarm_GetValidationTimeOfProtocol_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetValidationTimeOfProtocolResponse" message="tns:IAlarm_GetValidationTimeOfProtocol_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="TestNumbers">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/TestNumbers" message="tns:IAlarm_TestNumbers_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/TestNumbersResponse" message="tns:IAlarm_TestNumbers_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CallConnects">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/CallConnects" message="tns:IAlarm_CallConnects_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/CallConnectsResponse" message="tns:IAlarm_CallConnects_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="isVerified">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/isVerified" message="tns:IAlarm_isVerified_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/isVerifiedResponse" message="tns:IAlarm_isVerified_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="addToVerified">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/addToVerified" message="tns:IAlarm_addToVerified_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/addToVerifiedResponse" message="tns:IAlarm_addToVerified_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

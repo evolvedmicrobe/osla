@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{999BD960-00C5-4429-82EE-9F5C25DA8410}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Growth_Curve_Software</RootNamespace>
+    <AssemblyName>RoboticInstruments</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AxInterop.MlrCtls">
+      <HintPath>RequiredDLLs\AxInterop.MlrCtls.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.DCU">
+      <HintPath>RequiredDLLs\Interop.DCU.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.MlrCtls">
+      <HintPath>RequiredDLLs\Interop.MlrCtls.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.MlrServ">
+      <HintPath>RequiredDLLs\Interop.MlrServ.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.ZyRobotAdapter">
+      <HintPath>RequiredDLLs\Interop.ZyRobotAdapter.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.ZyRobot_ICP">
+      <HintPath>RequiredDLLs\Interop.ZyRobot_ICP.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdditionalMethodArguments.cs" />
+    <Compile Include="Alarm.cs" />
+    <Compile Include="BaseInstrumentClass.cs" />
+    <Compile Include="DelegatesAndAttributes.cs" />
+    <Compile Include="Incubator.cs" />
+    <Compile Include="InstrumentError.cs" />
+    <Compile Include="InstrumentFinder.cs" />
+    <Compile Include="InstrumentManager.cs" />
+    <Compile Include="Macros.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol.cs" />
+    <Compile Include="ProtocolExecutor.cs" />
+    <Compile Include="Service References\AlarmServer\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="TestInstrument.cs" />
+    <Compile Include="TransferStation.cs" />
+    <Compile Include="Twister.cs" />
+    <Compile Include="VictorManager.cs" />
+    <Compile Include="VirtualInstrument.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VictorStandAloneForm\VictorStandAloneForm.csproj">
+      <Project>{BD582F22-A96C-49B0-9769-E601F12FFD09}</Project>
+      <Name>VictorStandAloneForm</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\DataSources\System.Drawing.Bitmap.datasource" />
+    <None Include="Service References\AlarmServer\AlarmNotifier.wsdl" />
+    <None Include="Service References\AlarmServer\AlarmNotifier.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier1.wsdl" />
+    <None Include="Service References\AlarmServer\AlarmNotifier1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\Growth_Curve_Software.AlarmServer.AlarmState.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AlarmServer\Growth_Curve_Software.AlarmServer.InstrumentStatus.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\AlarmServer\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AlarmServer\AlarmNotifier.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AlarmServer\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AlarmServer\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AlarmServer\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
