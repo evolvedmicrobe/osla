@@ -20,18 +20,18 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:8001/AlarmNotifier" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://140.247.90.36:8001/AlarmNotifier" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="AlarmNotifier.disco" MetadataType="Disco" ID="20b70d8a-d3c8-4cd2-b3df-da3e5ff37d33" SourceId="1" SourceUrl="http://localhost:8001/AlarmNotifier?disco" />
-    <MetadataFile FileName="AlarmNotifier.xsd" MetadataType="Schema" ID="1e92b174-8375-48c2-a805-297ea7ad67da" SourceId="1" SourceUrl="http://localhost:8001/AlarmNotifier?xsd=xsd0" />
-    <MetadataFile FileName="AlarmNotifier1.xsd" MetadataType="Schema" ID="b9f6db93-94b4-4ede-a23b-ce1f312cb915" SourceId="1" SourceUrl="http://localhost:8001/AlarmNotifier?xsd=xsd5" />
-    <MetadataFile FileName="AlarmNotifier.wsdl" MetadataType="Wsdl" ID="922c7dc9-868b-4fbe-8955-b1ce61a3619f" SourceId="1" SourceUrl="http://localhost:8001/AlarmNotifier?wsdl=wsdl0" />
-    <MetadataFile FileName="AlarmNotifier2.xsd" MetadataType="Schema" ID="26626b3a-2d47-4dcd-b36c-943a2ae2b63d" SourceId="1" SourceUrl="http://localhost:8001/AlarmNotifier?xsd=xsd1" />
-    <MetadataFile FileName="AlarmNotifier1.wsdl" MetadataType="Wsdl" ID="82d1683b-71b0-4456-b3e6-32272403be75" SourceId="1" SourceUrl="http://localhost:8001/AlarmNotifier?wsdl" />
-    <MetadataFile FileName="AlarmNotifier3.xsd" MetadataType="Schema" ID="b04427f3-1a2c-4566-9f0f-44da043aba22" SourceId="1" SourceUrl="http://localhost:8001/AlarmNotifier?xsd=xsd2" />
-    <MetadataFile FileName="AlarmNotifier4.xsd" MetadataType="Schema" ID="61b56247-defe-4910-a7d0-db6ffd5fa2c5" SourceId="1" SourceUrl="http://localhost:8001/AlarmNotifier?xsd=xsd3" />
-    <MetadataFile FileName="AlarmNotifier5.xsd" MetadataType="Schema" ID="9d905b9f-7639-4cc3-9331-ef21781a692a" SourceId="1" SourceUrl="http://localhost:8001/AlarmNotifier?xsd=xsd4" />
+    <MetadataFile FileName="AlarmNotifier1.disco" MetadataType="Disco" ID="61f8d89b-7361-490a-bcdd-5fc2009d7999" SourceId="1" SourceUrl="http://140.247.90.36:8001/AlarmNotifier?disco" />
+    <MetadataFile FileName="AlarmNotifier6.xsd" MetadataType="Schema" ID="b3820b11-52ea-40d3-bedf-c16e3ad8f403" SourceId="1" SourceUrl="http://140.247.90.36:8001/AlarmNotifier?xsd=xsd5" />
+    <MetadataFile FileName="AlarmNotifier2.wsdl" MetadataType="Wsdl" ID="dc6a5376-1920-4143-8f0e-3bed1888622e" SourceId="1" SourceUrl="http://140.247.90.36:8001/AlarmNotifier?wsdl=wsdl0" />
+    <MetadataFile FileName="AlarmNotifier61.xsd" MetadataType="Schema" ID="a5a4b379-adc8-4d29-804a-efa9a1f583e1" SourceId="1" SourceUrl="http://140.247.90.36:8001/AlarmNotifier?xsd=xsd2" />
+    <MetadataFile FileName="AlarmNotifier21.wsdl" MetadataType="Wsdl" ID="49202be5-5a2e-4d1d-856c-b2c4ee6d58f9" SourceId="1" SourceUrl="http://140.247.90.36:8001/AlarmNotifier?wsdl" />
+    <MetadataFile FileName="AlarmNotifier62.xsd" MetadataType="Schema" ID="e64adca3-ae6a-4dba-b143-a77c02df479d" SourceId="1" SourceUrl="http://140.247.90.36:8001/AlarmNotifier?xsd=xsd1" />
+    <MetadataFile FileName="AlarmNotifier63.xsd" MetadataType="Schema" ID="be18f977-7360-4304-9feb-15df37258356" SourceId="1" SourceUrl="http://140.247.90.36:8001/AlarmNotifier?xsd=xsd3" />
+    <MetadataFile FileName="AlarmNotifier64.xsd" MetadataType="Schema" ID="06c46983-4b31-4da0-a274-a06ff7bab463" SourceId="1" SourceUrl="http://140.247.90.36:8001/AlarmNotifier?xsd=xsd0" />
+    <MetadataFile FileName="AlarmNotifier65.xsd" MetadataType="Schema" ID="8e6237dd-a59f-4f1b-9cba-86694233443c" SourceId="1" SourceUrl="http://140.247.90.36:8001/AlarmNotifier?xsd=xsd4" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
