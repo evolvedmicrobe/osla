@@ -207,43 +207,17 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="ValidateProtocol">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="protocolName" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="ValidateProtocolResponse">
-    <xs:complexType>
-      <xs:sequence />
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetValidationTimeOfProtocol">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="GetValidationTimeOfProtocolResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="GetValidationTimeOfProtocolResult" type="xs:dateTime" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="TestNumbers">
+  <xs:element name="ValidNumbers">
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="numbers" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="TestNumbersResponse">
+  <xs:element name="ValidNumbersResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="TestNumbersResult" type="xs:boolean" />
+        <xs:element minOccurs="0" name="ValidNumbersResult" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -259,32 +233,6 @@
       <xs:sequence>
         <xs:element minOccurs="0" name="CallConnectsResult" type="xs:boolean" />
       </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="isVerified">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="number" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="isVerifiedResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="isVerifiedResult" type="xs:boolean" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="addToVerified">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="number" nillable="true" type="xs:string" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="addToVerifiedResponse">
-    <xs:complexType>
-      <xs:sequence />
     </xs:complexType>
   </xs:element>
 </xs:schema>

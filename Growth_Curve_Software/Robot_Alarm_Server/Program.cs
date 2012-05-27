@@ -119,7 +119,7 @@ namespace Robot_Alarm
         static void Test()
         {
             Thread.Sleep(1000);
-            ThisAlarm.TestNumbers("9712228263"); 
+            ThisAlarm.CallConnects("9712228263"); 
 
         }
     }

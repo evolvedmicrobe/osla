@@ -188,23 +188,11 @@ namespace Growth_Curve_Software.AlarmServer {
         [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetOperation", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/GetOperationResponse")]
         string GetOperation();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/ValidateProtocol", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/ValidateProtocolResponse")]
-        void ValidateProtocol(string protocolName);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetValidationTimeOfProtocol", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/GetValidationTimeOfProtocolResponse")]
-        System.DateTime GetValidationTimeOfProtocol(string name);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/TestNumbers", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/TestNumbersResponse")]
-        bool TestNumbers(string numbers);
+        [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/ValidNumbers", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/ValidNumbersResponse")]
+        bool ValidNumbers(string numbers);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/CallConnects", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/CallConnectsResponse")]
         bool CallConnects(string number);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/isVerified", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/isVerifiedResponse")]
-        bool isVerified(string number);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/addToVerified", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/addToVerifiedResponse")]
-        void addToVerified(string number);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -302,28 +290,12 @@ namespace Growth_Curve_Software.AlarmServer {
             return base.Channel.GetOperation();
         }
         
-        public void ValidateProtocol(string protocolName) {
-            base.Channel.ValidateProtocol(protocolName);
-        }
-        
-        public System.DateTime GetValidationTimeOfProtocol(string name) {
-            return base.Channel.GetValidationTimeOfProtocol(name);
-        }
-        
-        public bool TestNumbers(string numbers) {
-            return base.Channel.TestNumbers(numbers);
+        public bool ValidNumbers(string numbers) {
+            return base.Channel.ValidNumbers(numbers);
         }
         
         public bool CallConnects(string number) {
             return base.Channel.CallConnects(number);
-        }
-        
-        public bool isVerified(string number) {
-            return base.Channel.isVerified(number);
-        }
-        
-        public void addToVerified(string number) {
-            base.Channel.addToVerified(number);
         }
     }
 }
