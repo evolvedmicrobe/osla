@@ -112,41 +112,17 @@
   <wsdl:message name="IAlarm_GetOperation_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetOperationResponse" />
   </wsdl:message>
-  <wsdl:message name="IAlarm_ValidateProtocol_InputMessage">
-    <wsdl:part name="parameters" element="tns:ValidateProtocol" />
+  <wsdl:message name="IAlarm_ValidNumbers_InputMessage">
+    <wsdl:part name="parameters" element="tns:ValidNumbers" />
   </wsdl:message>
-  <wsdl:message name="IAlarm_ValidateProtocol_OutputMessage">
-    <wsdl:part name="parameters" element="tns:ValidateProtocolResponse" />
-  </wsdl:message>
-  <wsdl:message name="IAlarm_GetValidationTimeOfProtocol_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetValidationTimeOfProtocol" />
-  </wsdl:message>
-  <wsdl:message name="IAlarm_GetValidationTimeOfProtocol_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetValidationTimeOfProtocolResponse" />
-  </wsdl:message>
-  <wsdl:message name="IAlarm_TestNumbers_InputMessage">
-    <wsdl:part name="parameters" element="tns:TestNumbers" />
-  </wsdl:message>
-  <wsdl:message name="IAlarm_TestNumbers_OutputMessage">
-    <wsdl:part name="parameters" element="tns:TestNumbersResponse" />
+  <wsdl:message name="IAlarm_ValidNumbers_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ValidNumbersResponse" />
   </wsdl:message>
   <wsdl:message name="IAlarm_CallConnects_InputMessage">
     <wsdl:part name="parameters" element="tns:CallConnects" />
   </wsdl:message>
   <wsdl:message name="IAlarm_CallConnects_OutputMessage">
     <wsdl:part name="parameters" element="tns:CallConnectsResponse" />
-  </wsdl:message>
-  <wsdl:message name="IAlarm_isVerified_InputMessage">
-    <wsdl:part name="parameters" element="tns:isVerified" />
-  </wsdl:message>
-  <wsdl:message name="IAlarm_isVerified_OutputMessage">
-    <wsdl:part name="parameters" element="tns:isVerifiedResponse" />
-  </wsdl:message>
-  <wsdl:message name="IAlarm_addToVerified_InputMessage">
-    <wsdl:part name="parameters" element="tns:addToVerified" />
-  </wsdl:message>
-  <wsdl:message name="IAlarm_addToVerified_OutputMessage">
-    <wsdl:part name="parameters" element="tns:addToVerifiedResponse" />
   </wsdl:message>
   <wsdl:portType name="IAlarm">
     <wsdl:operation name="GetInstrumentStatus">
@@ -217,29 +193,13 @@
       <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetOperation" message="tns:IAlarm_GetOperation_InputMessage" />
       <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetOperationResponse" message="tns:IAlarm_GetOperation_OutputMessage" />
     </wsdl:operation>
-    <wsdl:operation name="ValidateProtocol">
-      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ValidateProtocol" message="tns:IAlarm_ValidateProtocol_InputMessage" />
-      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ValidateProtocolResponse" message="tns:IAlarm_ValidateProtocol_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="GetValidationTimeOfProtocol">
-      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetValidationTimeOfProtocol" message="tns:IAlarm_GetValidationTimeOfProtocol_InputMessage" />
-      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetValidationTimeOfProtocolResponse" message="tns:IAlarm_GetValidationTimeOfProtocol_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="TestNumbers">
-      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/TestNumbers" message="tns:IAlarm_TestNumbers_InputMessage" />
-      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/TestNumbersResponse" message="tns:IAlarm_TestNumbers_OutputMessage" />
+    <wsdl:operation name="ValidNumbers">
+      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ValidNumbers" message="tns:IAlarm_ValidNumbers_InputMessage" />
+      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/ValidNumbersResponse" message="tns:IAlarm_ValidNumbers_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="CallConnects">
       <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/CallConnects" message="tns:IAlarm_CallConnects_InputMessage" />
       <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/CallConnectsResponse" message="tns:IAlarm_CallConnects_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="isVerified">
-      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/isVerified" message="tns:IAlarm_isVerified_InputMessage" />
-      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/isVerifiedResponse" message="tns:IAlarm_isVerified_OutputMessage" />
-    </wsdl:operation>
-    <wsdl:operation name="addToVerified">
-      <wsdl:input wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/addToVerified" message="tns:IAlarm_addToVerified_InputMessage" />
-      <wsdl:output wsaw:Action="http://Microsoft.ServiceModel.Samples/IAlarm/addToVerifiedResponse" message="tns:IAlarm_addToVerified_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
 </wsdl:definitions>

@@ -263,8 +263,6 @@ namespace Growth_Curve_Software
     [Serializable]
     public class ProtocolManager
     {
-         int SuspensionHourStart=23;		    
-         int SuspensionHourEnd=8;
         int CallHourStart = 23;
         int CallHourEnd = 8;
         //Static methods
@@ -442,8 +440,6 @@ namespace Growth_Curve_Software
                 double MS = FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();
                 if (MS > 0) { return MS; } //this should always return a positive ms value
             }
-            bool valid = ValidateProtocol(CurrentProtocolInUse);
-            if (!valid) { CurrentProtocolInUse = null; return GetNextProtocolObject(); }
             //Below is a postfix operation
             int IndexOfNextProtInst = CurrentProtocolInUse.NextItemToRun++;//move up one instruction index,         
             //now to make sure there is another instruction
@@ -511,7 +507,7 @@ namespace Growth_Curve_Software
         public void ReportToAllUsers(string message = "The robot has an error, and has stopped working")
         {
             EmailErrorMessageToAllUsers(message);
-            //if (ShouldCall()) { CallAllUsers(); }
+            if (ShouldCall()) { CallAllUsers(); }
         }
         public void EmailErrorMessageToAllUsers(string ErrorMessage = "The robot has an error, and has stopped working")
         {

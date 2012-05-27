@@ -157,26 +157,8 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
-    <wsdl:operation name="ValidateProtocol">
-      <soap:operation soapAction="http://Microsoft.ServiceModel.Samples/IAlarm/ValidateProtocol" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetValidationTimeOfProtocol">
-      <soap:operation soapAction="http://Microsoft.ServiceModel.Samples/IAlarm/GetValidationTimeOfProtocol" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="TestNumbers">
-      <soap:operation soapAction="http://Microsoft.ServiceModel.Samples/IAlarm/TestNumbers" style="document" />
+    <wsdl:operation name="ValidNumbers">
+      <soap:operation soapAction="http://Microsoft.ServiceModel.Samples/IAlarm/ValidNumbers" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -186,24 +168,6 @@
     </wsdl:operation>
     <wsdl:operation name="CallConnects">
       <soap:operation soapAction="http://Microsoft.ServiceModel.Samples/IAlarm/CallConnects" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="isVerified">
-      <soap:operation soapAction="http://Microsoft.ServiceModel.Samples/IAlarm/isVerified" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="addToVerified">
-      <soap:operation soapAction="http://Microsoft.ServiceModel.Samples/IAlarm/addToVerified" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

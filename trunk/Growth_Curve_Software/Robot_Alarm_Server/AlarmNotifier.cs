@@ -16,7 +16,6 @@ namespace Robot_Alarm
 
     [Serializable]
     [ServiceBehaviorAttribute(InstanceContextMode = InstanceContextMode.Single)]
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class AlarmNotifier : IAlarm
     {
         public const int IMAGE_HEIGHT = 225;
@@ -128,18 +127,7 @@ namespace Robot_Alarm
         }
         public void SetCurrentlyLoadedProtocolNames(List<string> Names)
         {
-            Dictionary<string, ValidationStatus> ValidationStates = new Dictionary<string, ValidationStatus>();
-            foreach (string name in Names)
-            {
-                if (ValidatedProtocols.ContainsKey(name)) { ValidationStates[name] = ValidatedProtocols[name]; }
-                else
-                {
-                    ValidationStates[name] = new ValidationStatus();
-                    ValidationStates[name].TimeValidated = DateTime.Now.Subtract(new TimeSpan(365, 0, 0, 0));
-                }
-            }
             CurrentlyLoadedProtocolNames = Names;
-            ValidatedProtocols = ValidationStates;
         }
         public void UpdateOperation(string Operation) { CurrentOperation = Operation; }
         public string GetOperation() { return CurrentOperation; }
@@ -236,11 +224,6 @@ namespace Robot_Alarm
         void UpdateOperation(string Operation);
         [OperationContract]
         string GetOperation();
-        [OperationContract]
-        void ValidateProtocol(string protocolName);
-        [OperationContract]
-        DateTime GetValidationTimeOfProtocol(string name);
-
         #region SkypeAlarm
 
         [OperationContract]
