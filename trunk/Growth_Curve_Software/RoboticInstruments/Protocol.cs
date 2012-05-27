@@ -540,95 +540,31 @@ namespace Growth_Curve_Software
             foreach (object o in Protocols)
             {
                 Protocol ProtocolNumbers = (Protocol)o;
-                string[] phonenumbers = ProtocolNumbers.ErrorPhoneNumber.Split(';');
-                foreach (string number in phonenumbers)
+                string[] phonenumbers;
+                // This try/catch block is only for the transition to protocols having numbers
+                try
                 {
-                    // Todo use boolean return to implement multiple call attempts
-                     a.CallConnects(number);
+                    phonenumbers = ProtocolNumbers.ErrorPhoneNumber.Split(';');
+                    foreach (string number in phonenumbers)
+                    {
+                        // Todo use boolean return to implement multiple call attempts
+                        a.CallConnects(number);
+                    }
                 }
+                catch { }
             }
         }
-        //private bool ShouldCall()
-        //{
-        //    DateTime now = System.DateTime.Now;
-        //    int nd = now.Day;
-        //    int nt = now.Hour;
-        //    return nt >= CallHourStart || nt <= CallHourEnd;
-        //}
+        private bool ShouldCall()
+        {
+            DateTime now = System.DateTime.Now;
+            int nd = now.Day;
+            int nt = now.Hour;
+            return nt >= CallHourStart || nt <= CallHourEnd;
+        }
         public double GetMilliSecondsTillNextRunTime()
         {
             return this.FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();
         }
-
-        ///Needs to interface with the alarm better
-        private bool ValidateProtocol(Protocol curProtocol)
-        {
-            if (curProtocol.ProtocolName.StartsWith("NSF"))
-                return true;
-            try
-            {
-                DateTime now = System.DateTime.Now;
-                int nd = now.Day;
-                int nt = now.Hour;
-                bool InSuspensionInterval = nt >= SuspensionHourStart || nt <= SuspensionHourEnd;
-                if (DetermineIfCurrentInstructionIsDelay(curProtocol) && InSuspensionInterval)
-                {
-                    bool Valid = false;
-                    Alarm a = manager.GiveAlarmReference();
-                    if (a != null && a.Connected)
-                    {
-                        DateTime valiationTime = a.getValidationTimeForProtocol(curProtocol.ProtocolName);
-                        if (DateTime.Now.Subtract(valiationTime).TotalHours > 20)
-                        {
-                            //Reset time
-                            DateTime newTime = DateTime.Now;
-                            newTime = newTime.AddHours(9);
-                            curProtocol.NextExecutionTimePoint = newTime;
-                            EmailSuspensionToUser(curProtocol);
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-            catch (Exception thrown)
-            {
-                throw new InstrumentError("Could not validate protocol " + thrown.Message);
-            }
-        }
-        private void EmailSuspensionToUser(Protocol ProtocolForEmails)
-        {
-            try
-            {
-                //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
-                //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
-                if (ProtocolForEmails.ErrorEmailAddress != null && ProtocolForEmails.ErrorEmailAddress != "")
-                {
-                    string[] emails = ProtocolForEmails.ErrorEmailAddress.Split(';');
-                    foreach (string emailaddress in emails)
-                    {
-                        MailMessage email = new MailMessage("cjmarxlab@gmail.com", emailaddress, "Protocol Suspended", "Your protocol was not being monitored and is now suspended for 9 hours");
-                        SmtpClient ToSend = createSmtpClient();
-                        ToSend.Send(email);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-        }
-        private bool DetermineIfCurrentInstructionIsDelay(Protocol toCheckOn)
-        {
-            int lastInstruction = toCheckOn.NextItemToRun - 1;
-            if (lastInstruction >= 0)
-            {
-                if (toCheckOn.Instructions[lastInstruction] is DelayTime)
-                    return true;
-            }
-            return false;
-        }
-    
     }
     public class ProtocolConverter
     {

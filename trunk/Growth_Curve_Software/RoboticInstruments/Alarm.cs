@@ -96,7 +96,7 @@ namespace Growth_Curve_Software
             catch
             { return DateTime.Now; }
         }
-        public bool TestNumbers(string numbers)
+        public bool ValidNumbers(string numbers)
         {
             try
             {
@@ -121,30 +121,6 @@ namespace Growth_Curve_Software
             }
             catch
             { return false; }
-        }
-        public bool isVerified(string number)
-        {
-            try
-            {
-                if (AC != null && Connected)
-                {
-                    return AC.isVerified(number);
-                }
-                else { return false; }
-            }
-            catch
-            { return false; }
-        }
-        public void addToVerified(string number)
-        {
-            try
-            {
-                if (AC != null && Connected)
-                {
-                    AC.addToVerified(number);
-                }
-            }
-            catch { }
         }
     }
 }

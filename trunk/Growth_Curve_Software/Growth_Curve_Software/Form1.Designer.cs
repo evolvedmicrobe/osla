@@ -75,8 +75,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.wBrowRecovInstructions = new System.Windows.Forms.WebBrowser();
             this.tabMakeGrowthInstructions = new System.Windows.Forms.TabPage();
-            this.label_tested = new System.Windows.Forms.Label();
-            this.Test = new System.Windows.Forms.Button();
             this.textbox_number = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.chkGBO = new System.Windows.Forms.CheckBox();
@@ -627,8 +625,6 @@
             // 
             // tabMakeGrowthInstructions
             // 
-            this.tabMakeGrowthInstructions.Controls.Add(this.label_tested);
-            this.tabMakeGrowthInstructions.Controls.Add(this.Test);
             this.tabMakeGrowthInstructions.Controls.Add(this.textbox_number);
             this.tabMakeGrowthInstructions.Controls.Add(this.label18);
             this.tabMakeGrowthInstructions.Controls.Add(this.chkGBO);
@@ -654,33 +650,12 @@
             this.tabMakeGrowthInstructions.Text = "Make A Growth Rate Experiment Protocol";
             this.tabMakeGrowthInstructions.UseVisualStyleBackColor = true;
             // 
-            // label_tested
-            // 
-            this.label_tested.AutoSize = true;
-            this.label_tested.Location = new System.Drawing.Point(687, 539);
-            this.label_tested.Name = "label_tested";
-            this.label_tested.Size = new System.Drawing.Size(56, 15);
-            this.label_tested.TabIndex = 22;
-            this.label_tested.Text = "Untested";
-            // 
-            // Test
-            // 
-            this.Test.Enabled = false;
-            this.Test.Location = new System.Drawing.Point(607, 534);
-            this.Test.Name = "Test";
-            this.Test.Size = new System.Drawing.Size(75, 23);
-            this.Test.TabIndex = 21;
-            this.Test.Text = "Test";
-            this.Test.UseVisualStyleBackColor = true;
-            this.Test.Click += new System.EventHandler(this.Test_Click);
-            // 
             // textbox_number
             // 
             this.textbox_number.Location = new System.Drawing.Point(442, 536);
             this.textbox_number.Name = "textbox_number";
-            this.textbox_number.Size = new System.Drawing.Size(159, 21);
+            this.textbox_number.Size = new System.Drawing.Size(240, 21);
             this.textbox_number.TabIndex = 20;
-            this.textbox_number.Text = "Ignore me for now";
             // 
             // label18
             // 
@@ -959,41 +934,41 @@
             this.loadPreviousSystemStateToolStripMenuItem,
             this.recoverLastProtcolInstructionToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // loadProtocolToolStripMenuItem
             // 
             this.loadProtocolToolStripMenuItem.Name = "loadProtocolToolStripMenuItem";
-            this.loadProtocolToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.loadProtocolToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
             this.loadProtocolToolStripMenuItem.Text = "Load Protocol";
             this.loadProtocolToolStripMenuItem.Click += new System.EventHandler(this.loadProtocolToolStripMenuItem_Click);
             // 
             // saveCurrentProtocolsToolStripMenuItem
             // 
             this.saveCurrentProtocolsToolStripMenuItem.Name = "saveCurrentProtocolsToolStripMenuItem";
-            this.saveCurrentProtocolsToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.saveCurrentProtocolsToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
             this.saveCurrentProtocolsToolStripMenuItem.Text = "Save Current System State";
             this.saveCurrentProtocolsToolStripMenuItem.Click += new System.EventHandler(this.saveCurrentProtocolsToolStripMenuItem_Click);
             // 
             // loadPreviousSystemStateToolStripMenuItem
             // 
             this.loadPreviousSystemStateToolStripMenuItem.Name = "loadPreviousSystemStateToolStripMenuItem";
-            this.loadPreviousSystemStateToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.loadPreviousSystemStateToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
             this.loadPreviousSystemStateToolStripMenuItem.Text = "Load Previous System State";
             this.loadPreviousSystemStateToolStripMenuItem.Click += new System.EventHandler(this.loadPreviousSystemStateToolStripMenuItem_Click);
             // 
             // recoverLastProtcolInstructionToolStripMenuItem
             // 
             this.recoverLastProtcolInstructionToolStripMenuItem.Name = "recoverLastProtcolInstructionToolStripMenuItem";
-            this.recoverLastProtcolInstructionToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.recoverLastProtcolInstructionToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
             this.recoverLastProtcolInstructionToolStripMenuItem.Text = "Recover From System Failure, Load Last System State";
             this.recoverLastProtcolInstructionToolStripMenuItem.Click += new System.EventHandler(this.recoverLastProtcolInstructionToolStripMenuItem_Click);
             // 
             // versionToolStripMenuItem
             // 
             this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
-            this.versionToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.versionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.versionToolStripMenuItem.Text = "Version";
             this.versionToolStripMenuItem.Click += new System.EventHandler(this.versionToolStripMenuItem_Click);
             // 
@@ -1005,34 +980,34 @@
             this.getAlarmStateToolStripMenuItem,
             this.reconnectToAlarmServerToolStripMenuItem});
             this.alarmStateToolStripMenuItem.Name = "alarmStateToolStripMenuItem";
-            this.alarmStateToolStripMenuItem.Size = new System.Drawing.Size(125, 20);
+            this.alarmStateToolStripMenuItem.Size = new System.Drawing.Size(111, 20);
             this.alarmStateToolStripMenuItem.Text = "Alarm Management";
             // 
             // turnOnAlarmToolStripMenuItem
             // 
             this.turnOnAlarmToolStripMenuItem.Name = "turnOnAlarmToolStripMenuItem";
-            this.turnOnAlarmToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.turnOnAlarmToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.turnOnAlarmToolStripMenuItem.Text = "Turn On Alarm";
             this.turnOnAlarmToolStripMenuItem.Click += new System.EventHandler(this.turnOnAlarmToolStripMenuItem_Click);
             // 
             // turnOffAlarmToolStripMenuItem
             // 
             this.turnOffAlarmToolStripMenuItem.Name = "turnOffAlarmToolStripMenuItem";
-            this.turnOffAlarmToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.turnOffAlarmToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.turnOffAlarmToolStripMenuItem.Text = "Turn Off Alarm";
             this.turnOffAlarmToolStripMenuItem.Click += new System.EventHandler(this.turnOffAlarmToolStripMenuItem_Click);
             // 
             // getAlarmStateToolStripMenuItem
             // 
             this.getAlarmStateToolStripMenuItem.Name = "getAlarmStateToolStripMenuItem";
-            this.getAlarmStateToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.getAlarmStateToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.getAlarmStateToolStripMenuItem.Text = "Get Alarm State";
             this.getAlarmStateToolStripMenuItem.Click += new System.EventHandler(this.getAlarmStateToolStripMenuItem_Click);
             // 
             // reconnectToAlarmServerToolStripMenuItem
             // 
             this.reconnectToAlarmServerToolStripMenuItem.Name = "reconnectToAlarmServerToolStripMenuItem";
-            this.reconnectToAlarmServerToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.reconnectToAlarmServerToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.reconnectToAlarmServerToolStripMenuItem.Text = "Reconnect To Alarm Server";
             this.reconnectToAlarmServerToolStripMenuItem.Click += new System.EventHandler(this.reconnectToAlarmServerToolStripMenuItem_Click);
             // 
@@ -1049,7 +1024,7 @@
             // StatusLabel
             // 
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(115, 17);
+            this.StatusLabel.Size = new System.Drawing.Size(108, 17);
             this.StatusLabel.Text = "System Status: None";
             // 
             // NextInstructionTimer
@@ -1228,8 +1203,6 @@
         private System.Windows.Forms.Button btnResetLid;
         private System.Windows.Forms.TextBox textbox_number;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label_tested;
-        private System.Windows.Forms.Button Test;
         private System.Windows.Forms.Label label14;
 
     }

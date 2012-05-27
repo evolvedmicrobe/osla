@@ -875,10 +875,10 @@ namespace Growth_Curve_Software
                     ShowError("You did not select any slots");
                 }
                 // For SkypeAlarm
-                //else if (! Clarity_Alarm.TestNumbers(textbox_number.Text))
-                //{
-                //    ShowError("Your number failed the test");
-                //}
+                else if (! Clarity_Alarm.ValidNumbers(textbox_number.Text))
+                {
+                    ShowError("Your number is not valid!");
+                }
                 else
                 {
                     try { minuteDelay = Convert.ToInt32(txtGrowthRateMinutes.Text); cycles = Convert.ToInt32(txtGrowthRateTimesToMeasure.Text); }
@@ -896,7 +896,7 @@ namespace Growth_Curve_Software
                     Protocol NewProt = new Protocol();
                     NewProt.ProtocolName = txtGrowthRateExperimentName.Text;
                     NewProt.ErrorEmailAddress = txtGrowthRateEmail.Text;
-                    //NewProt.ErrorPhoneNumber = textbox_number.Text;
+                    NewProt.ErrorPhoneNumber = textbox_number.Text;
                     NewProt.Instructions = new ArrayList();
                     for (int i = 0; i < cycles; i++)
                     {
@@ -1203,18 +1203,6 @@ namespace Growth_Curve_Software
             }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
             
-        }
-        // For SkypeAlarm
-        private void Test_Click(object sender, EventArgs e)
-        {
-            if (Clarity_Alarm.TestNumbers(textbox_number.Text))
-            {
-                label_tested.Text = "Verified";
-            }
-            else
-            {
-                label_tested.Text = "Failed";
-            }
         }
 
         //protocol execution

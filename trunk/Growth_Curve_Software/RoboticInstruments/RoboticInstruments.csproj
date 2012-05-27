@@ -107,7 +107,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="TestInstrument.cs" />
     <Compile Include="TransferStation.cs" />
     <Compile Include="Twister.cs" />
     <Compile Include="VictorManager.cs" />
