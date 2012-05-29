@@ -547,7 +547,10 @@ namespace Growth_Curve_Software
                         a.CallConnects(number);
                     }
                 }
-                catch { }
+                catch 
+                {
+                    // Throw exception here
+                }
             }
         }
         private bool ShouldCall()
