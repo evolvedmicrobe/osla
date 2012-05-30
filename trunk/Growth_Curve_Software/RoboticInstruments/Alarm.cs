@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Growth_Curve_Software.AlarmServer;
 namespace Growth_Curve_Software
 {
@@ -59,9 +60,9 @@ namespace Growth_Curve_Software
             try { AC.UpdateStatus(StatusMessage); }
             catch { Connected = false; }
         }
-        public void SetProtocolNames(List<string> Names)
+        public void SetProtocolData(List<Tuple<string, string, string, int>> Data)
         {
-            AC.SetCurrentlyLoadedProtocolNames(Names);
+            AC.SetCurrentlyLoadedProtocolData(Data);
         }
         public AlarmState IsAlarmOn()
         {

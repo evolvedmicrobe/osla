@@ -6,39 +6,25 @@ using System.Windows.Forms;
 //using System.Runtime.Remoting.Channels;
 //using System.Runtime.Remoting.Channels.Tcp;
 using Robot_Alarm;
+using System.Net;
+using System.Net.Mail;
 using System.ServiceModel;
 using System.Threading;
 using System.ServiceModel.Description;
 
 namespace Robot_Alarm
 {
- /// <summary>
- /// Run a WCF service 
- /// </summary>
-   
+    /// <summary>
+    /// Run a WCF service 
+    /// </summary>
+
     static class Program
     {
-        
-        public static bool ShouldExit
-        {
-            get
-            {
-                Console.WriteLine("What");
-                Console.ReadLine();
-                return false;
-            }
-            set
-            {
-                if (value == true) { Application.Exit(); }                
-            }
-        }
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        static int EXTRATIME = 0;
         public static AlarmNotifier ThisAlarm;
-        static void TurnOnNotifierAlarm()
-        {
-        }
         [STAThread]
         static void Main()
         {
@@ -58,7 +44,7 @@ namespace Robot_Alarm
             myBinding.MaxReceivedMessageSize = LargeValue;
             myBinding.ReaderQuotas.MaxBytesPerRead = LargeValue;
             myBinding.ReaderQuotas.MaxStringContentLength = LargeValue;
-            
+
             myBinding.ReceiveTimeout = new TimeSpan(0, 5, 0);
             myBinding.SendTimeout = new TimeSpan(0, 5, 0);
             myBinding.CloseTimeout = new TimeSpan(0, 10, 0);
@@ -68,10 +54,10 @@ namespace Robot_Alarm
                 selfHost.AddServiceEndpoint(typeof(IAlarm),
                                 myBinding,
                                 "AlarmNotifier");
-                ServiceMetadataBehavior smb=new ServiceMetadataBehavior();
+                ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
                 smb.HttpGetEnabled = true;
                 selfHost.Description.Behaviors.Add(smb);
-                
+
                 selfHost.Open();
                 Console.WriteLine("The service is ready");
                 Console.WriteLine(httpAddress.OriginalString);
@@ -79,32 +65,110 @@ namespace Robot_Alarm
 
 
                 ThisAlarm = new AlarmNotifier();
-                Console.WriteLine("Alarm Status:");
-                Console.WriteLine(ThisAlarm.GetAlarmStatus().AlarmOn.ToString());
-                Thread test = new Thread(Test);
-                test.Start();
-                Thread poll = new Thread(Poll);
+                Console.WriteLine("Alarm Status: " + ThisAlarm.GetAlarmStatus().AlarmOn.ToString());
+                //Thread test = new Thread(Test);
+                //test.Start();
+                Thread monitor = new Thread(Monitor);
+                monitor.Start();
                 Application.Run();
             }
-            catch(CommunicationException ce)
+            catch (CommunicationException ce)
             {
-                Console.WriteLine("An exception ocurred: {0}",ce.Message);
+                Console.WriteLine("An exception ocurred: {0}", ce.Message);
                 selfHost.Abort();
             }
             selfHost.Close();
         }
         static void Test()
         {
+            Console.WriteLine(DateTime.Now.ToString() + "Testing... ");
             Thread.Sleep(1000);
             if (ThisAlarm.CallConnects("9712228263"))
             {
-                Console.WriteLine("Test succeeded");
+                Console.WriteLine(DateTime.Now.ToString() + "Test succeeded");
             }
-            else { Console.WriteLine("Test failed"); }
+            else { Console.WriteLine(DateTime.Now.ToString() + "Test failed"); }
         }
-        static void Poll()
+        static void Monitor()
         {
-            Console.WriteLine("Last poll at {0}", DateTime.Now.ToString());
+            //int CHECK_INTERVAL = 1200000; // 20 minutes
+            int CHECK_INTERVAL = 12000;
+            while (true)
+            {
+                Console.Write(".");
+                foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
+                {
+                    TimeSpan maxdelay = new TimeSpan(0, p.maxdelay + EXTRATIME, 0);
+                    DateTime lastcheck = ThisAlarm.GetInstrumentStatus().TimeCreated;
+                    if (maxdelay.CompareTo(DateTime.Now.Subtract(lastcheck)) < 0)
+                    {
+                        ReportToAllUsers("The robot software has not reported anything for a time longer than "
+                            + (p.maxdelay + EXTRATIME) + " minutes");
+                        break;
+                    }
+                }
+                Thread.Sleep(CHECK_INTERVAL);
+            }
         }
+        #region Alarm Stuff
+        static SmtpClient createSmtpClient()
+        {
+            //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
+            //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
+            SmtpClient ToSend = new SmtpClient("smtp.gmail.com");//need to fill this in
+            ToSend.UseDefaultCredentials = false;
+            ToSend.Port = 587;
+            ToSend.EnableSsl = true;
+            ToSend.Credentials = new NetworkCredential("cjmarxlab@gmail.com", "marxlab3079");
+            return ToSend;
+
+        }
+        static void ReportToAllUsers(string message = "The robot has an error, and has stopped working")
+        {
+            Console.WriteLine(DateTime.Now.ToString() + " Reported to all users: " + message);
+            EmailErrorMessageToAllUsers(message);
+            if (ShouldCall()) { CallAllUsers(); }
+        }
+        static void EmailErrorMessageToAllUsers(string ErrorMessage = "The robot has an error, and has stopped working")
+        {
+            foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
+            {
+                string[] emails = p.emails.Split(';');
+                foreach (string emailaddress in emails)
+                {
+                    //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
+                    //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
+                    String senderAddress = "cjmarxlab@gmail.com";
+                    try
+                    {
+                        MailMessage email = new MailMessage(senderAddress, emailaddress, "Robot Alert", ErrorMessage);
+                        SmtpClient ToSend = createSmtpClient();
+                        ToSend.Send(email);
+                    }
+                    catch { }
+                }
+            }
+        }
+        static void CallAllUsers()
+        {
+            foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
+            {
+                foreach (string number in p.phones.Split(';'))
+                {
+                    // Todo use boolean return to implement multiple call attempts
+                    ThisAlarm.CallConnects(number);
+                }
+            }
+        }
+        static int CallHourStart = 23;
+        static int CallHourEnd = 8;
+        static bool ShouldCall()
+        {
+            DateTime now = System.DateTime.Now;
+            int nd = now.Day;
+            int nt = now.Hour;
+            return nt >= CallHourStart || nt <= CallHourEnd;
+        }
+        #endregion
     }
 }
