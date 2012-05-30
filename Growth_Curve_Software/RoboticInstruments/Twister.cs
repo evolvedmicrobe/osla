@@ -266,7 +266,7 @@ namespace Growth_Curve_Software
             catch (Exception thrown)
             {
                 RobotServ.Abort();
-                throw new InstrumentError("Could not place material", false, this);
+                throw new InstrumentError("Could not place material: "+thrown.Message, false, this);
             }
         }
         public void PlaceItemInSciclonePosition(int BayNumber)
@@ -287,7 +287,7 @@ namespace Growth_Curve_Software
             catch (Exception thrown)
             {
                 RobotServ.Abort();
-                throw new InstrumentError("Could not place material", false, this);
+                throw new InstrumentError("Could not place material: "+thrown.Message, false, this);
             }
         }
         [UserCallableMethod()]
@@ -300,7 +300,7 @@ namespace Growth_Curve_Software
             catch (Exception thrown)
             {
                 RobotServ.Abort();
-                throw new InstrumentError("Could not move to safe haven", false, this);
+                throw new InstrumentError("Could not move to safe haven: "+thrown.Message, false, this);
             }
         }
         public void DropItemInGarbage()

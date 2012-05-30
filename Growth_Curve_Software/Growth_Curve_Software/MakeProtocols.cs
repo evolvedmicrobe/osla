@@ -366,13 +366,13 @@ namespace Growth_Curve_Software
             }
             catch { }
         }
-        private ArrayList ProtocolListBoxToProtocolInstructionList(ListBox BoxToRun)
+        private List<ProtocolInstruction> ProtocolListBoxToProtocolInstructionList(ListBox BoxToRun)
         {
             //This method will convert the list box protocol into an actual protocol
-            ArrayList CurrentProtocol = new ArrayList();
+            List<ProtocolInstruction> CurrentProtocol = new List<ProtocolInstruction>();
             try
             {
-                foreach (object Item in BoxToRun.Items)
+                foreach (ProtocolInstruction Item in BoxToRun.Items)
                 {
                     ProtocolListBoxItem myInstruction = (ProtocolListBoxItem)Item;
                     CurrentProtocol.Add(myInstruction.ReturnInstructionObject());
@@ -544,8 +544,6 @@ namespace Growth_Curve_Software
                             break;
                         default:
                             throw new Exception("Variable type was not one of the expected ones");
-                            VariableType = typeof(Int32);
-                            break;
                     }
                     DC = new DataColumn("Value", VariableType);
                     DT.Columns.Add(DC);

@@ -67,6 +67,7 @@ namespace Growth_Curve_Software
             get { return pErrorEmails; }
             set { pErrorEmails = value; }
         }
+        
         BackgroundWorker WorkerToRunRobots;
         static private StaticProtocolItem LastFailedInstruction;
         WelcomeForm WF;
@@ -294,7 +295,7 @@ namespace Growth_Curve_Software
                     output = proc.StandardOutput.ReadToEnd();
                 }
             }
-            catch (Exception thrown) { }
+            catch { }
         } 
 
 
@@ -897,7 +898,7 @@ namespace Growth_Curve_Software
                     NewProt.ProtocolName = txtGrowthRateExperimentName.Text;
                     NewProt.ErrorEmailAddress = txtGrowthRateEmail.Text;
                     NewProt.ErrorPhoneNumber = textbox_number.Text;
-                    NewProt.Instructions = new ArrayList();
+                    NewProt.Instructions = new List<ProtocolInstruction>();
                     for (int i = 0; i < cycles; i++)
                     {
                         foreach (int plateslot in lstGrowthRatesProtocol.SelectedItems)
@@ -1640,7 +1641,7 @@ namespace Growth_Curve_Software
         {
             try
             {
-                int tranNum; string Name;
+                int tranNum; 
                 List<Protocol> ProtsToAdd = new List<Protocol>();
                 //this will create and start a protocol, first to check for errors
                 if (txtNSFTransferNumber.Text == "" | txtNSFName.Text == "")
@@ -1671,6 +1672,8 @@ namespace Growth_Curve_Software
                     }
                     Protocol Watcher = new Protocol();
                     Watcher.ProtocolName = "NSF-Error-" + txtNSFTransferNumber.Text.ToString();
+                    Watcher.ErrorPhoneNumber = "4158234767";
+                    Watcher.MaxIdleTimeBeforeAlarm = 50;
                     Watcher.ErrorEmailAddress = this.NSFErrorEmails;
                     DelayTime DT = new DelayTime();
                     DT.minutes = 60 * 70;
