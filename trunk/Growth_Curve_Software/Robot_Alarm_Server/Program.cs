@@ -66,8 +66,8 @@ namespace Robot_Alarm
 
                 ThisAlarm = new AlarmNotifier();
                 Console.WriteLine("Alarm Status: " + ThisAlarm.GetAlarmStatus().AlarmOn.ToString());
-                //Thread test = new Thread(Test);
-                //test.Start();
+                Thread test = new Thread(Test);
+                test.Start();
                 Thread monitor = new Thread(Monitor);
                 monitor.Start();
                 Application.Run();
@@ -91,7 +91,7 @@ namespace Robot_Alarm
         }
         static void Monitor()
         {
-            int CHECK_INTERVAL = 600000; // 10 minutes
+            int CHECK_INTERVAL = 60000; // 1 minutes
             while (true)
             {
                 foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)

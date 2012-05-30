@@ -14,7 +14,7 @@ namespace Growth_Curve_Software
 {
     //This file contains all the code for Creating/Managing Protocols
 
-    public interface ValidInstruction
+    public interface ProtocolInstruction
     {
     }
     public enum ProtocolRunResult
@@ -85,7 +85,7 @@ namespace Growth_Curve_Software
     }
 
     [Serializable]
-    public class StaticProtocolItem : ValidInstruction, ICloneable//not really sure why I made a valid instruction interface
+    public class StaticProtocolItem : ProtocolInstruction, ICloneable//not really sure why I made a valid instruction interface
     {
         //this is an excecution step in the protocol, where the parameters 
         //are determined at the start of the run
@@ -124,7 +124,7 @@ namespace Growth_Curve_Software
 
     }
     [Serializable]
-    public class DelayTime
+    public class DelayTime : ProtocolInstruction
     {
         public int minutes;
         public override string ToString()
@@ -133,7 +133,7 @@ namespace Growth_Curve_Software
         }
     }
     [Serializable]
-    public class LoopInstruction
+    public class LoopInstruction :ProtocolInstruction
     {//this is an instruction that leads to a repeat
         public int StartInstruction;
         public int TimesToRepeat;
@@ -141,9 +141,9 @@ namespace Growth_Curve_Software
     public class ProtocolListBoxItem
     {
         public int InstructionNumber;
-        public virtual object ReturnInstructionObject()
+        public virtual ProtocolInstruction ReturnInstructionObject()
         {
-            return false;
+            return null;
         }
     }
     public class ListBoxProtocolItem : ProtocolListBoxItem
@@ -157,7 +157,7 @@ namespace Growth_Curve_Software
         {
             return InstructionNumber.ToString() + " : " + Instruction.ToString();
         }
-        public override object ReturnInstructionObject()
+        public override ProtocolInstruction ReturnInstructionObject()
         {
             return Instruction;
         }
@@ -173,7 +173,7 @@ namespace Growth_Curve_Software
         {
             return "Pause for " + delay.minutes.ToString() + " minutes";
         }
-        public override object ReturnInstructionObject()
+        public override ProtocolInstruction ReturnInstructionObject()
         {
             return delay;
         }
@@ -190,7 +190,7 @@ namespace Growth_Curve_Software
         {
             return "Repeat from instruction " + RepeatInstruction.StartInstruction.ToString() + " for " + RepeatInstruction.TimesToRepeat.ToString() + " times";
         }
-        public override object ReturnInstructionObject()
+        public override ProtocolInstruction ReturnInstructionObject()
         {
             return RepeatInstruction;
         }
@@ -199,18 +199,40 @@ namespace Growth_Curve_Software
     public class Protocol
     {
         //This class will contain all the instructions for a particular protocol
-        public ArrayList Instructions;//list of instructions in the protocol to return, this is private at all times
+        //public ArrayList Instructions;//list of instructions in the protocol to return, this is private at all times
+        public List<ProtocolInstruction> Instructions;
         public Dictionary<string, ProtocolVariable> Variables;
         public DateTime NextExecutionTimePoint;//when the next execution point needs to  be run (for example, if there is a 45 minute delay, this time will be in 45 minutes)
         public string ProtocolName;//the name of the protocol
         public string ErrorEmailAddress;//if more then one email, can be seperated by semicolon
         public string ErrorPhoneNumber;
+        private int? pMaxIdleTimeBeforeAlarm;
+        public int MaxIdleTimeBeforeAlarm
+        {
+            set { pMaxIdleTimeBeforeAlarm = value; }
+            get
+            {
+                if (!pMaxIdleTimeBeforeAlarm.HasValue)
+                {
+                    if (Instructions.Count > 0)
+                    {
+                        var delays = from x in Instructions where x is DelayTime select x as DelayTime;
+                        if (delays.Count() > 0)
+                        { return (from x in delays select x.minutes).Max(); }
+                    }
+                    return 200;//Default time
+                }
+                else { return pMaxIdleTimeBeforeAlarm.Value; }
+            }
+
+        }
         public int NextItemToRun;//the index in the protocol array where the next item should run
         public ProtocolPriority Priority;//not actually used right now, will be implemented in the future
         public Protocol()
         {
             //empty constructor, needs to be filled in
-            Instructions = new ArrayList();
+
+            Instructions = new List<ProtocolInstruction>();
             ProtocolName = "";
             Variables = new Dictionary<string, ProtocolVariable>();
         }
@@ -352,6 +374,7 @@ namespace Growth_Curve_Software
         public List<Protocol> Protocols;//This will be the collection of all protocols that are in use,it should not be altered outside of this class
         public Protocol CurrentProtocolInUse;//
         public InstrumentManager manager;
+       
         public ProtocolManager(InstrumentManager manager)
         {
             this.manager = manager;
@@ -373,19 +396,7 @@ namespace Growth_Curve_Software
             var newData = new List<Tuple<string, string, string, int>>();
             foreach (Protocol p in Protocols)
             {
-                int delaytime = 30; // This effectively sets the minimum delay time
-                // Now find the maximum instruction delay time
-                foreach (object o in p.Instructions)
-                {
-                    if (o is DelayTime)
-                    {
-                        var dt = (DelayTime)o;
-                        if (dt.minutes > delaytime)
-                        {
-                            delaytime = dt.minutes;
-                        }
-                    }
-                }
+                int delaytime = p.MaxIdleTimeBeforeAlarm;
                 //until all protocols have phone numbers:
                 try
                 {
@@ -601,19 +612,14 @@ namespace Growth_Curve_Software
             {
                 case "System.String":
                     return Value;
-                    break;
                 case "System.Int32":
                     return Convert.ToInt32(Value);
-                    break;
                 case "System.Double":
                     return Convert.ToDouble(Value);
-                    break;
                 case "System.Single":
                     return Convert.ToSingle(Value);
-                    break;
                 case "System.DateTime":
                     return Convert.ToDateTime(Value);
-                    break;
                 case "System.Boolean":
                     return Convert.ToBoolean(Value);
                 case "Growth_Curve_Software.ReferenceToProtocolVariable":
@@ -688,7 +694,7 @@ namespace Growth_Curve_Software
                         FI.SetValue(ProtocolInstruction, ValuetoSet);
                     }
                 }
-                NewProtocol.Instructions.Add(ProtocolInstruction);
+                NewProtocol.Instructions.Add(ProtocolInstruction as ProtocolInstruction);
             }
             XReader.Close();
             return NewProtocol;
@@ -779,19 +785,19 @@ namespace Growth_Curve_Software
             XWriter.WriteEndDocument();
             XWriter.Close();
         }
-        private static ArrayList ProtocolWithRepsRecurscion(ArrayList Instructions, LoopInstruction Repeat, int RepeatIndex)
+        private static List<ProtocolInstruction> ProtocolWithRepsRecurscion(List<ProtocolInstruction> Instructions, LoopInstruction Repeat, int RepeatIndex)
         {
             //this protocol should be called by the one below it to expand out a loop
-            ArrayList ProtToAppend = new ArrayList();//this will be returned
+            List<ProtocolInstruction> ProtToAppend = new List<ProtocolInstruction>();//this will be returned
             for (int j = 0; j < Repeat.TimesToRepeat; j++)
             {
                 for (int i = Repeat.StartInstruction - 1; i < RepeatIndex; i++)
                 {
-                    object Item = Instructions[i];
+                    ProtocolInstruction Item = Instructions[i];
                     if (Item is LoopInstruction)
                     {
                         LoopInstruction NewRepeat = (LoopInstruction)Item;
-                        ArrayList NewListToAdd = ProtocolWithRepsRecurscion(Instructions, NewRepeat, i);
+                        List<ProtocolInstruction> NewListToAdd = ProtocolWithRepsRecurscion(Instructions, NewRepeat, i);
                         ProtToAppend.AddRange(NewListToAdd);
                     }
                     else
@@ -803,20 +809,20 @@ namespace Growth_Curve_Software
             }
             return ProtToAppend;
         }
-        public static ArrayList ProtocolWithRepeatsToProtocolWithout(ArrayList Instructions)
+        public static List<ProtocolInstruction> ProtocolWithRepeatsToProtocolWithout(List<ProtocolInstruction> Instructions)
         {
             //This method will convert an arraylist that contains protocols with loop instructions into an arraylist
             //that contains no repeat instructions, should combine it with the method above later
-            ArrayList CurrentProtocol = new ArrayList();
+            List<ProtocolInstruction> CurrentProtocol = new List<ProtocolInstruction>();
             try
             {
                 int currentIndex = 0;
-                foreach (object Item in Instructions)
+                foreach (ProtocolInstruction Item in Instructions)
                 {
                     if (Item is LoopInstruction)
                     {
                         LoopInstruction Repeat = (LoopInstruction)Item;
-                        ArrayList NewList = ProtocolWithRepsRecurscion(Instructions, Repeat, currentIndex);
+                        List<ProtocolInstruction> NewList = ProtocolWithRepsRecurscion(Instructions, Repeat, currentIndex);
                         CurrentProtocol.AddRange(NewList);
                     }
                     else
@@ -829,14 +835,14 @@ namespace Growth_Curve_Software
             catch (Exception thrown) { throw new Exception("Could not convert the protocol, inner error is:\n" + thrown.Message); }
             return CurrentProtocol;
         }
-        public static void ProtocolItemsToListBoxProtocolItems(ArrayList Instructions, System.Windows.Forms.ListBox ListBoxToFill, bool AddToCurrent)
+        public static void ProtocolItemsToListBoxProtocolItems(List<ProtocolInstruction> Instructions, System.Windows.Forms.ListBox ListBoxToFill, bool AddToCurrent)
         {
             int index = 1;
             if (AddToCurrent)
             {
                 index = ListBoxToFill.Items.Count + 1;
             }
-            foreach (object Instruction in Instructions)
+            foreach (ProtocolInstruction Instruction in Instructions)
             {
                 if (Instruction is StaticProtocolItem)
                 {

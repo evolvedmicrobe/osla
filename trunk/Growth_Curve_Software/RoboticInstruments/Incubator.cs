@@ -57,7 +57,7 @@ namespace Growth_Curve_Software
        // public const int STARTING_SPEED = 650;
         const string Password = "donkey";
         
-        bool Run48WellRacks = true;
+       
         
         public IncubatorServ()
         { }
@@ -110,8 +110,6 @@ namespace Growth_Curve_Software
             if (ShakerSpeed > 1200 | ShakerSpeed < 0)
             {
                 throw new InstrumentError("Your Shaking Speed Was Not Appropriate", true, this);
-                return;
-                ShakerSpeed = 650;
             }
             ShakerSpeed = ShakerSpeed / 10;//RPMS to goofy liconic notation
             if (StatusOK)
@@ -270,7 +268,7 @@ namespace Growth_Curve_Software
 
             }
             throw new InstrumentError("Plate not lifted off the incubator station in an appropriate amount of time",false,this);
-            return false;
+
         }
         private bool CheckIfPlateReady()
         {
@@ -336,7 +334,7 @@ namespace Growth_Curve_Software
                 StatusOK = false;
                 throw new InstrumentError("Status not okay or instrument could not be made ready for sensor command", false, this);
             }
-            return false;
+
         }
         [UserCallableMethod()]
         public string PerformCommand(string Command)
@@ -410,7 +408,6 @@ namespace Growth_Curve_Software
                 if (ShakerSpeed > 1200 | ShakerSpeed < 0)
                 {
                     throw new InstrumentError("Your Shaking Speed Was Not Appropriate Using A Default of 600 RPMs", true, this);
-                    return; ShakerSpeed = 600;
                 }
                
                 Initialize(ShakerSpeed);
@@ -744,7 +741,7 @@ namespace Growth_Curve_Software
             catch (Exception thrown)
             {
                 StatusOK = false;
-                throw new InstrumentError("Could not reset the dang thing", false, this);
+                throw new InstrumentError("Could not reset the dang thing: "+thrown.Message, false, this);
             }
         }
         public override bool AttemptRecovery()
