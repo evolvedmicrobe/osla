@@ -55,7 +55,7 @@ namespace Robot_Alarm
             }
             catch (Exception thrown)
             {
-                Console.WriteLine(DateTime.Now.ToString() + "Could not start skype or create DTMF event. " + thrown.Message);
+                Console.WriteLine(DateTime.Now.ToString() + " Could not start skype or create DTMF event. " + thrown.Message);
             }
         }
 
@@ -70,12 +70,12 @@ namespace Robot_Alarm
         public void TurnOnAlarm()
         {
             CurrentAlarmState = new AlarmState(true);
-            Console.WriteLine(DateTime.Now.ToString() + "Alarm Turned On");
+            Console.WriteLine(DateTime.Now.ToString() + " Alarm Turned On");
         }
         public void TurnOffAlarm()
         {
             CurrentAlarmState = new AlarmState(false);
-            Console.WriteLine(DateTime.Now.ToString() + "Alarm Turned Off");
+            Console.WriteLine(DateTime.Now.ToString() + " Alarm Turned Off");
         }
         public void UpdateStatus(string Status)
         {

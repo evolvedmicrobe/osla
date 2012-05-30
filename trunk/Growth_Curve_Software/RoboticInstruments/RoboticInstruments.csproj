@@ -125,24 +125,27 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\DataSources\System.Drawing.Bitmap.datasource" />
-    <None Include="Service References\AlarmServer\AlarmNotifier2.wsdl" />
-    <None Include="Service References\AlarmServer\AlarmNotifier21.wsdl" />
+    <None Include="Service References\AlarmServer\AlarmNotifier.wsdl" />
+    <None Include="Service References\AlarmServer\AlarmNotifier.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier1.wsdl" />
+    <None Include="Service References\AlarmServer\AlarmNotifier1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\AlarmServer\AlarmNotifier5.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\AlarmServer\AlarmNotifier6.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\AlarmServer\AlarmNotifier61.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\AlarmServer\AlarmNotifier62.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\AlarmServer\AlarmNotifier63.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\AlarmServer\AlarmNotifier64.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\AlarmServer\AlarmNotifier65.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\AlarmServer\Growth_Curve_Software.AlarmServer.AlarmState.datasource">
@@ -156,6 +159,9 @@
     <WCFMetadataStorage Include="Service References\AlarmServer\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\AlarmServer\AlarmNotifier.disco" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Service References\AlarmServer\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -166,9 +172,6 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\AlarmServer\AlarmNotifier1.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
