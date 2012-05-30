@@ -1638,66 +1638,66 @@ namespace Growth_Curve_Software
         }
         private void btnGenerateNSFData_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    int tranNum;                 string Name;
-            //    List<Protocol> ProtsToAdd = new List<Protocol>();
-            //    //this will create and start a protocol, first to check for errors
-            //    if (txtNSFTransferNumber.Text == "" | txtNSFName.Text == "")
-            //    {
-            //        ShowError("You did not fill out all of the required fields");
-            //    }
-            //    else if (lstNSFPlates.SelectedIndex == -1)
-            //    {
-            //        ShowError("You did not select any slots");
-            //    }
-            //    else
-            //    {
-            //        try { tranNum = Convert.ToInt32(txtNSFTransferNumber.Text); }
-            //        catch { ShowError("Could not convert your transfer number into an integer, please enter an appropriate value"); return; }
-            //        NSFExperiment tmp = new NSFExperiment();
-            //        foreach (int plateslot in lstNSFPlates.SelectedItems)
-            //        {
-            //            Protocol NewProt = new Protocol();
-            //            NewProt.ErrorEmailAddress = "";
-            //            string baseName = "NSF-" + txtNSFName.Text + "-" + txtNSFTransferNumber.Text.ToString();
-            //            NewProt.ProtocolName = baseName + "_" + plateslot.ToString();
-            //            StaticProtocolItem SP = new StaticProtocolItem();
-            //            SP.MethodName = "CreateProtocol";
-            //            SP.InstrumentName = tmp.Name;
-            //            SP.Parameters = new object[2] { baseName, plateslot };
-            //            NewProt.Instructions.Add(SP);
-            //            ProtsToAdd.Add(NewProt);
-            //        }
-            //            Protocol Watcher = new Protocol();
-            //            Watcher.ProtocolName = "NSF-Error-" + txtNSFTransferNumber.Text.ToString();
-            //            Watcher.ErrorEmailAddress = this.NSFErrorEmails;
-            //            DelayTime DT = new DelayTime();
-            //            DT.minutes = 60 * 70;
-            //            Watcher.Instructions.Add(DT);
-            //            ProtsToAdd.Add(Watcher);
-            //        }
-            //        DialogResult DR = MessageBox.Show("Are you sure you have entered the right values and are ready to load this protocol?", "Final Check", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            //        if (DR == DialogResult.Yes)
-            //        {
-            //            foreach(Protocol p in ProtsToAdd)
-            //            {
-            //            LoadedProtocols.AddProtocol(p);
-            //            }
-            //                UpdateLoadedProtocols();
-            //            if (NextInstructionTimer.Enabled == true)//this timer is running while a protocol is waiting to go
-            //            {
-            //                DialogResult DR2 = MessageBox.Show("Would you like to start your protocols immediately?", "Begin Protocol", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            //                if (DR2 == DialogResult.Yes)
-            //                {
-            //                    LoadedProtocols.CurrentProtocolInUse = ProtsToAdd.First();
-            //                    StopClockWaitAndExecute();
-            //                }
-            //            }
-            //        }
-            //    }
-            
-            //catch { ShowError("Weird error occurred"); }
+            try
+            {
+                int tranNum; string Name;
+                List<Protocol> ProtsToAdd = new List<Protocol>();
+                //this will create and start a protocol, first to check for errors
+                if (txtNSFTransferNumber.Text == "" | txtNSFName.Text == "")
+                {
+                    ShowError("You did not fill out all of the required fields");
+                }
+                else if (lstNSFPlates.SelectedIndex == -1)
+                {
+                    ShowError("You did not select any slots");
+                }
+                else
+                {
+                    try { tranNum = Convert.ToInt32(txtNSFTransferNumber.Text); }
+                    catch { ShowError("Could not convert your transfer number into an integer, please enter an appropriate value"); return; }
+                    NSFExperiment tmp = new NSFExperiment();
+                    foreach (int plateslot in lstNSFPlates.SelectedItems)
+                    {
+                        Protocol NewProt = new Protocol();
+                        NewProt.ErrorEmailAddress = "";
+                        string baseName = "NSF-" + txtNSFName.Text + "-" + txtNSFTransferNumber.Text.ToString();
+                        NewProt.ProtocolName = baseName + "_" + plateslot.ToString();
+                        StaticProtocolItem SP = new StaticProtocolItem();
+                        SP.MethodName = "CreateProtocol";
+                        SP.InstrumentName = tmp.Name;
+                        SP.Parameters = new object[2] { baseName, plateslot };
+                        NewProt.Instructions.Add(SP);
+                        ProtsToAdd.Add(NewProt);
+                    }
+                    Protocol Watcher = new Protocol();
+                    Watcher.ProtocolName = "NSF-Error-" + txtNSFTransferNumber.Text.ToString();
+                    Watcher.ErrorEmailAddress = this.NSFErrorEmails;
+                    DelayTime DT = new DelayTime();
+                    DT.minutes = 60 * 70;
+                    Watcher.Instructions.Add(DT);
+                    ProtsToAdd.Add(Watcher);
+                }
+                DialogResult DR = MessageBox.Show("Are you sure you have entered the right values and are ready to load this protocol?", "Final Check", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (DR == DialogResult.Yes)
+                {
+                    foreach (Protocol p in ProtsToAdd)
+                    {
+                        LoadedProtocols.AddProtocol(p);
+                    }
+                    UpdateLoadedProtocols();
+                    if (NextInstructionTimer.Enabled == true)//this timer is running while a protocol is waiting to go
+                    {
+                        DialogResult DR2 = MessageBox.Show("Would you like to start your protocols immediately?", "Begin Protocol", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (DR2 == DialogResult.Yes)
+                        {
+                            LoadedProtocols.CurrentProtocolInUse = ProtsToAdd.First();
+                            StopClockWaitAndExecute();
+                        }
+                    }
+                }
+            }
+
+            catch { ShowError("Weird error occurred"); }
         }
         private void btnInstrumentRefresh_Click(object sender, EventArgs e)
         {
