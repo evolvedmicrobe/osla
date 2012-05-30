@@ -23,7 +23,7 @@ namespace Robot_Alarm
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static int EXTRATIME = 0;
+        static int EXTRATIME = 20; //In Minutes
         public static AlarmNotifier ThisAlarm;
         [STAThread]
         static void Main()
@@ -91,8 +91,7 @@ namespace Robot_Alarm
         }
         static void Monitor()
         {
-            //int CHECK_INTERVAL = 1200000; // 20 minutes
-            int CHECK_INTERVAL = 12000;
+            int CHECK_INTERVAL = 600000; // 10 minutes
             while (true)
             {
                 Console.Write(".");
