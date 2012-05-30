@@ -263,8 +263,7 @@ namespace Growth_Curve_Software
     [Serializable]
     public class ProtocolManager
     {
-        int CallHourStart = 23;
-        int CallHourEnd = 8;
+
         //Static methods
         public static bool IsVariableInList(string VariableName, IList ListOfVariables)
         {
@@ -371,9 +370,34 @@ namespace Growth_Curve_Software
         }
         public void UpdateAlarmProtocols()
         {
-            List<string> newNames = Protocols.Select(x => x.ProtocolName).ToList();
+            var newData = new List<Tuple<string, string, string, int>>();
+            foreach (Protocol p in Protocols)
+            {
+                int delaytime = 30; // This effectively sets the minimum delay time
+                // Now find the maximum instruction delay time
+                foreach (object o in p.Instructions)
+                {
+                    if (o is DelayTime)
+                    {
+                        var dt = (DelayTime)o;
+                        if (dt.minutes > delaytime)
+                        {
+                            delaytime = dt.minutes;
+                        }
+                    }
+                }
+                //until all protocols have phone numbers:
+                try
+                {
+                    newData.Add(Tuple.Create(p.ProtocolName, p.ErrorEmailAddress, p.ErrorPhoneNumber, delaytime));
+                }
+                catch
+                {
+                    newData.Add(Tuple.Create(p.ProtocolName, p.ErrorEmailAddress, "", delaytime));
+                }
+            }
             Alarm a = manager.GiveAlarmReference();
-            if (a != null && a.Connected) a.SetProtocolNames(newNames);
+            if (a != null && a.Connected) a.SetProtocolData(newData);
 
         }
         public void RemoveProtocol(Protocol ProtocolToRemove)
@@ -492,6 +516,7 @@ namespace Growth_Curve_Software
                 throw new Exception("The NextProtocol method received some unexpected behavior");
             }
         }
+        #region DELETE SOON
         private SmtpClient createSmtpClient()
         {
             //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
@@ -504,6 +529,8 @@ namespace Growth_Curve_Software
             return ToSend;
 
         }
+        int CallHourStart = 23;
+        int CallHourEnd = 8;
         public void ReportToAllUsers(string message = "The robot has an error, and has stopped working")
         {
             EmailErrorMessageToAllUsers(message);
@@ -560,6 +587,7 @@ namespace Growth_Curve_Software
             int nt = now.Hour;
             return nt >= CallHourStart || nt <= CallHourEnd;
         }
+        #endregion
         public double GetMilliSecondsTillNextRunTime()
         {
             return this.FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();

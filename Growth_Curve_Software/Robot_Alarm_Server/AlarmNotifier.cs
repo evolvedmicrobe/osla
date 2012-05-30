@@ -13,7 +13,18 @@ using System.Text.RegularExpressions;
 
 namespace Robot_Alarm
 {
-
+    public struct ProtocolData
+    {
+        public string name, emails, phones;
+        public int maxdelay;
+        public ProtocolData(Tuple<string, string, string, int> t)
+        {
+            this.name = t.Item1;
+            this.emails = t.Item2;
+            this.phones = t.Item3;
+            this.maxdelay = t.Item4;
+        }
+    }
     [Serializable]
     [ServiceBehaviorAttribute(InstanceContextMode = InstanceContextMode.Single)]
     public class AlarmNotifier : IAlarm
@@ -22,7 +33,6 @@ namespace Robot_Alarm
         public const int IMAGE_WIDTH = 300;
         public static Bitmap Image1;
         public static Bitmap Image2;
-        public static List<string> CurrentlyLoadedProtocolNames;
         public string Image1UpdateTime;
         public string Image2UpdateTime;
         public string CurrentOperation = "None Set";
@@ -45,7 +55,7 @@ namespace Robot_Alarm
             }
             catch (Exception thrown)
             {
-                Console.WriteLine("Could not start skype or create DTMF event. " + thrown.Message);
+                Console.WriteLine(DateTime.Now.ToString() + "Could not start skype or create DTMF event. " + thrown.Message);
             }
         }
 
@@ -60,14 +70,17 @@ namespace Robot_Alarm
         public void TurnOnAlarm()
         {
             CurrentAlarmState = new AlarmState(true);
+            Console.WriteLine(DateTime.Now.ToString() + "Alarm Turned On");
         }
         public void TurnOffAlarm()
         {
             CurrentAlarmState = new AlarmState(false);
+            Console.WriteLine(DateTime.Now.ToString() + "Alarm Turned Off");
         }
         public void UpdateStatus(string Status)
         {
             CurrentInstrumentStatus = new InstrumentStatus(Status);
+            Console.WriteLine(DateTime.Now.ToString() + " Updated Instrument Status");
         }
 
 
@@ -121,16 +134,21 @@ namespace Robot_Alarm
         {
             return IMAGE_WIDTH;
         }
-        public List<string> GetCurrentlyLoadedProtocolNames()
-        {
-            return CurrentlyLoadedProtocolNames;
-        }
-        public void SetCurrentlyLoadedProtocolNames(List<string> Names)
-        {
-            CurrentlyLoadedProtocolNames = Names;
-        }
         public void UpdateOperation(string Operation) { CurrentOperation = Operation; }
         public string GetOperation() { return CurrentOperation; }
+
+        // Each protocol is associated with a name, email list, phone number, and max delay time list
+        public static List<ProtocolData> CurrentlyLoadedProtocolData = new List<ProtocolData>();
+        public List<string> GetCurrentlyLoadedProtocolNames()
+        {
+            return CurrentlyLoadedProtocolData.Select(x => x.name).ToList();
+        }
+        public void SetCurrentlyLoadedProtocolData(List<Tuple<string, string, string, int>> Data)
+        {
+            CurrentlyLoadedProtocolData = Data.Select(x => new ProtocolData(x)).ToList();
+            Console.WriteLine(DateTime.Now.ToString() + " Set Protocol Data");
+        }   
+
         #region SkypeAlarm
         private static Skype skype = new Skype();
         private static string number_re = @"^([0-9]{10};? *)+$";
@@ -219,13 +237,13 @@ namespace Robot_Alarm
         [OperationContract]
         List<string> GetCurrentlyLoadedProtocolNames();
         [OperationContract]
-        void SetCurrentlyLoadedProtocolNames(List<string> Names);
+        void SetCurrentlyLoadedProtocolData(List<Tuple<string, string, string, int>> Data);
         [OperationContract]
         void UpdateOperation(string Operation);
         [OperationContract]
         string GetOperation();
-        #region SkypeAlarm
 
+        #region SkypeAlarm
         [OperationContract]
         bool ValidNumbers(string numbers);
         [OperationContract]
