@@ -31,8 +31,8 @@ namespace Robot_Alarm
             #region Set up selfHost
             // To get this to work you need to:
             //     netsh http add urlacl url=`URL` user=`DOMAIN\user`
-            Uri httpAddress = new Uri("http://localhost:8001/AlarmNotifier");
-            //Uri httpAddress = new Uri("http://140.247.90.36:8001/AlarmNotifier");
+            //Uri httpAddress = new Uri("http://localhost:8001/AlarmNotifier");
+            Uri httpAddress = new Uri("http://140.247.90.36:8001/AlarmNotifier");
             ServiceHost selfHost = new ServiceHost(typeof(AlarmNotifier), httpAddress);
             BasicHttpBinding myBinding = new BasicHttpBinding();
 
@@ -81,20 +81,19 @@ namespace Robot_Alarm
         }
         static void Test()
         {
-            Console.WriteLine(DateTime.Now.ToString() + "Testing... ");
+            Console.WriteLine(DateTime.Now.ToString() + " Testing... ");
             Thread.Sleep(1000);
             if (ThisAlarm.CallConnects("9712228263"))
             {
-                Console.WriteLine(DateTime.Now.ToString() + "Test succeeded");
+                Console.WriteLine(DateTime.Now.ToString() + " Test succeeded");
             }
-            else { Console.WriteLine(DateTime.Now.ToString() + "Test failed"); }
+            else { Console.WriteLine(DateTime.Now.ToString() + " Test failed"); }
         }
         static void Monitor()
         {
             int CHECK_INTERVAL = 600000; // 10 minutes
             while (true)
             {
-                Console.Write(".");
                 foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
                 {
                     TimeSpan maxdelay = new TimeSpan(0, p.maxdelay + EXTRATIME, 0);
