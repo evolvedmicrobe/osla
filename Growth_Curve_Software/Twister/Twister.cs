@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using ZyRobot_ICP;
 using ZyRobotAdapter;
-//using System.Windows.Forms;
-//using ZyRobotAdapter;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
