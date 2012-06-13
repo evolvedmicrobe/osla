@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     public delegate void delVoidVoid();
     public delegate void del_InstrumentError(BaseInstrumentClass BEC, string Error);

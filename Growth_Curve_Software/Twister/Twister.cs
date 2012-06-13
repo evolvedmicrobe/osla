@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     //As a broad note, the most important method in the twister robot class seems to be 
     //the execute method, this method takes the following.

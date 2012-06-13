@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     /// <summary>
     /// This class is responsible for running protocols that are currently in use

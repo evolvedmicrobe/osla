@@ -10,7 +10,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Net;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     //This file contains all the code for Creating/Managing Protocols
 
@@ -622,7 +622,7 @@ namespace Growth_Curve_Software
                     return Convert.ToDateTime(Value);
                 case "System.Boolean":
                     return Convert.ToBoolean(Value);
-                case "Growth_Curve_Software.ReferenceToProtocolVariable":
+                case "Clarity.ReferenceToProtocolVariable":
                     return new ReferenceToProtocolVariable(Value);
                 default:
                     throw new Exception("Could not identify value type during parsing, value type was: " + ValueType);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     /// <summary>
     /// For methods that need arguments available at runtime 

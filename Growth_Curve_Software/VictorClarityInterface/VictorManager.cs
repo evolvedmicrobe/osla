@@ -12,7 +12,7 @@ using System.Threading;
 using VictorRemoteServer;
 using System.Diagnostics;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
 
 

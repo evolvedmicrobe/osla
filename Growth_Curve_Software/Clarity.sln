@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clarity_GUI", "Growth_Curve_Software\Clarity_GUI.csproj", "{59801CC7-20C3-4F59-BE3D-28EF39C7A61D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clarity_Engine", "RoboticInstruments\Clarity_Engine.csproj", "{999BD960-00C5-4429-82EE-9F5C25DA8410}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clarity_BackEnd_Engine", "RoboticInstruments\Clarity_BackEnd_Engine.csproj", "{999BD960-00C5-4429-82EE-9F5C25DA8410}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwisterTeacher", "TwisterTeacher\TwisterTeacher.csproj", "{FD9A0BE8-ADCB-4502-89CB-53C0965534E1}"
 EndProject
@@ -29,6 +29,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransferStation", "TransferStation\TransferStation.csproj", "{6447BCA5-3AD0-45DE-97FB-08BE51C4E134}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VictorClarityInterface", "VictorClarityInterface\VictorClarityInterface.csproj", "{F59D7CA6-95CA-4A5A-8CD9-278007C36227}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clarity_FrontEnd_Template", "Clarity_FrontEnd_Template\Clarity_FrontEnd_Template.csproj", "{49298920-679D-414C-84BA-3C7B38975963}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
@@ -164,6 +166,16 @@ Global
 		{F59D7CA6-95CA-4A5A-8CD9-278007C36227}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F59D7CA6-95CA-4A5A-8CD9-278007C36227}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F59D7CA6-95CA-4A5A-8CD9-278007C36227}.Release|x86.ActiveCfg = Release|Any CPU
+		{49298920-679D-414C-84BA-3C7B38975963}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{49298920-679D-414C-84BA-3C7B38975963}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{49298920-679D-414C-84BA-3C7B38975963}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{49298920-679D-414C-84BA-3C7B38975963}.Debug|x86.ActiveCfg = Debug|x86
+		{49298920-679D-414C-84BA-3C7B38975963}.Debug|x86.Build.0 = Debug|x86
+		{49298920-679D-414C-84BA-3C7B38975963}.Release|Any CPU.ActiveCfg = Release|x86
+		{49298920-679D-414C-84BA-3C7B38975963}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{49298920-679D-414C-84BA-3C7B38975963}.Release|Mixed Platforms.Build.0 = Release|x86
+		{49298920-679D-414C-84BA-3C7B38975963}.Release|x86.ActiveCfg = Release|x86
+		{49298920-679D-414C-84BA-3C7B38975963}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

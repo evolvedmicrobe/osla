@@ -1,4 +1,4 @@
-﻿namespace Growth_Curve_Software
+﻿namespace Clarity
 {
     partial class MakeProtocols
     {

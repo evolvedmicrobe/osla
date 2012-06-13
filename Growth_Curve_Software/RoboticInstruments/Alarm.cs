@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Growth_Curve_Software.AlarmServer;
-namespace Growth_Curve_Software
+using Clarity.AlarmServer;
+namespace Clarity
 {
     /// <summary>
     /// To make a client:
