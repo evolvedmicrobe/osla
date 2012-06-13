@@ -24,7 +24,7 @@ using System.Net.Mail;
 using System.Net;
 using Clarity;
 
-namespace Clarity 
+namespace Clarity
 {    
     public partial class ClarityForm : Form, InstrumentManager
     {
@@ -45,10 +45,10 @@ namespace Clarity
         //supposedly another way to terminate
         static public List<BaseInstrumentClass> InstrumentCollection;
         Dictionary<string, BaseInstrumentClass> NamesToBICs;
-        private IncubatorServ Incubator;
-        private Twister Robot;
-        private TransferStation TransStation;
-        private VictorManager PlateReader;
+        //private IncubatorServ Incubator;
+        //private Twister Robot;
+        //private TransferStation TransStation;
+        //private VictorManager PlateReader;
         
         static public ProtocolManager LoadedProtocols;
         static public ProtocolEventCaller ProtocolEvents;

@@ -6,7 +6,7 @@ using System.Xml;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-namespace Growth_Curve_Software
+namespace Clarity
 {
     
     [Serializable]

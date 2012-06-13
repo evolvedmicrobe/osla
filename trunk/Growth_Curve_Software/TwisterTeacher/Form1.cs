@@ -15,11 +15,11 @@ using System.Xml;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
-using Growth_Curve_Software;
+using Clarity;
 using ZyRobot_ICP;
 
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     
     public sealed partial class TwisterTeacher : Form

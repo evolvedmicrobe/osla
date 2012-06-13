@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DCU;
-using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     
     public class TransferStation:BaseInstrumentClass

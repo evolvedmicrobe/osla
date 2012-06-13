@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO.Ports;
-using System.Windows.Forms;
 using System.Threading;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     public class IncubatorServ:BaseInstrumentClass
     {
@@ -556,8 +555,9 @@ namespace Growth_Curve_Software
             response = IncubatorPort.ReadLine();
             if (response == "1")
             {
-                MessageBox.Show("Something is on the plate");
-                return;
+                throw new InstrumentError("Something is on the plate");
+                //MessageBox.Show("Something is on the plate");
+                //return;
             }
         }
         private void CheckCommandReady()

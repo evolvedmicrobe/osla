@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Growth_Curve_Software.AlarmServer {
+namespace Clarity.AlarmServer {
     using System.Runtime.Serialization;
     using System;
     
@@ -136,10 +136,10 @@ namespace Growth_Curve_Software.AlarmServer {
     public interface IAlarm {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetInstrumentStatus", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/GetInstrumentStatusResponse")]
-        Growth_Curve_Software.AlarmServer.InstrumentStatus GetInstrumentStatus();
+        Clarity.AlarmServer.InstrumentStatus GetInstrumentStatus();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/GetAlarmStatus", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/GetAlarmStatusResponse")]
-        Growth_Curve_Software.AlarmServer.AlarmState GetAlarmStatus();
+        Clarity.AlarmServer.AlarmState GetAlarmStatus();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://Microsoft.ServiceModel.Samples/IAlarm/TurnOnAlarm", ReplyAction="http://Microsoft.ServiceModel.Samples/IAlarm/TurnOnAlarmResponse")]
         void TurnOnAlarm();
@@ -196,12 +196,12 @@ namespace Growth_Curve_Software.AlarmServer {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IAlarmChannel : Growth_Curve_Software.AlarmServer.IAlarm, System.ServiceModel.IClientChannel {
+    public interface IAlarmChannel : Clarity.AlarmServer.IAlarm, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class AlarmClient : System.ServiceModel.ClientBase<Growth_Curve_Software.AlarmServer.IAlarm>, Growth_Curve_Software.AlarmServer.IAlarm {
+    public partial class AlarmClient : System.ServiceModel.ClientBase<Clarity.AlarmServer.IAlarm>, Clarity.AlarmServer.IAlarm {
         
         public AlarmClient() {
         }
@@ -222,11 +222,11 @@ namespace Growth_Curve_Software.AlarmServer {
                 base(binding, remoteAddress) {
         }
         
-        public Growth_Curve_Software.AlarmServer.InstrumentStatus GetInstrumentStatus() {
+        public Clarity.AlarmServer.InstrumentStatus GetInstrumentStatus() {
             return base.Channel.GetInstrumentStatus();
         }
         
-        public Growth_Curve_Software.AlarmServer.AlarmState GetAlarmStatus() {
+        public Clarity.AlarmServer.AlarmState GetAlarmStatus() {
             return base.Channel.GetAlarmStatus();
         }
         

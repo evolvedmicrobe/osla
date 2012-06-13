@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     /// <summary>
     /// This class is used to examine the parent namespace and return all the classes

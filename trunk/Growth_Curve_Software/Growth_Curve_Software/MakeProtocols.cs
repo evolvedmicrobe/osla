@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Reflection;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
 
     public partial class MakeProtocols : Form

@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Office.Interop.Excel;
 using System.IO;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     public class NSFExperiment : VirtualInstrument
     {

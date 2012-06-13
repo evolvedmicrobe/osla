@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     public class Macros : VirtualInstrument
     {

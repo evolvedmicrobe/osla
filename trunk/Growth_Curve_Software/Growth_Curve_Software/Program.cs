@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
 
-namespace Growth_Curve_Software
+namespace Clarity
 {
     static class Program
     {
