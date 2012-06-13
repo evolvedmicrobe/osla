@@ -96,13 +96,20 @@ namespace Robot_Alarm
             {
                 foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
                 {
-                    TimeSpan maxdelay = new TimeSpan(0, p.maxdelay + EXTRATIME, 0);
-                    DateTime lastcheck = ThisAlarm.GetInstrumentStatus().TimeCreated;
-                    if (maxdelay.CompareTo(DateTime.Now.Subtract(lastcheck)) < 0)
+                    try
                     {
-                        ReportToAllUsers("The robot software has not reported anything for a time longer than "
-                            + (p.maxdelay + EXTRATIME) + " minutes");
-                        break;
+                        TimeSpan maxdelay = new TimeSpan(0, p.maxdelay + EXTRATIME, 0);
+                        DateTime lastcheck = ThisAlarm.GetInstrumentStatus().TimeCreated;
+                        if (maxdelay.CompareTo(DateTime.Now.Subtract(lastcheck)) < 0)
+                        {
+                            ReportToAllUsers("The robot software has not reported anything for a time longer than "
+                                + (p.maxdelay + EXTRATIME) + " minutes");
+                            break;
+                        }
+                    }
+                    catch (Exception thrown)
+                    {
+                        Console.WriteLine(thrown.Message);
                     }
                 }
                 Thread.Sleep(CHECK_INTERVAL);

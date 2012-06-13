@@ -61,7 +61,7 @@ namespace Growth_Curve_Software
             return true;
         }
         [UserCallableMethod(RequiresInstrumentManager = true)]
-        public bool MovePlateFromVictorToIncubatorWithLidOnTransferStation(int PlateSlot,AdditionalMethodArguments eargs)
+        public bool MovePlateFromVictorToIncubatorWithLidOnTransferStation(int PlateSlot, AdditionalMethodArguments eargs)
         {
 
             IncubatorServ Incubator = eargs.InstrumentCollection.ReturnInstrumentType<IncubatorServ>();
