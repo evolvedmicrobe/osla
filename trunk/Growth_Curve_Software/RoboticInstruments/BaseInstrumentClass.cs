@@ -92,6 +92,8 @@ namespace Clarity
         /// <param name="instrumentNode"></param>
         public virtual void InitializeFromParsedXML(XmlNode instrumentNode)
         {
+            //First remove anything old
+            
             SetPropertiesByXML(instrumentNode, this);
             this.Initialize();          
         }

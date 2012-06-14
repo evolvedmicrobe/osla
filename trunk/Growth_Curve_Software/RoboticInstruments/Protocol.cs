@@ -281,7 +281,8 @@ namespace Clarity
     }
     [Serializable]
     public delegate void ProtocolPauseEventHandler(TimeSpan TS);
-
+    public delegate void InstrumentManagerEventHandler(InstrumentManager Source,EventArgs e);
+    public delegate void InstrumentManagerErrorHandler(InstrumentManager Source,Exception thrown);
     [Serializable]
     public class ProtocolManager
     {

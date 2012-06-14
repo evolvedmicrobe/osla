@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,9 +48,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Incubator\Incubator.csproj">
+      <Project>{DFA1E8D7-FD84-4EDA-9C59-0BE72A28142F}</Project>
+      <Name>Incubator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RoboticInstruments\Clarity_BackEnd_Engine.csproj">
       <Project>{999BD960-00C5-4429-82EE-9F5C25DA8410}</Project>
       <Name>Clarity_BackEnd_Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TransferStation\TransferStation.csproj">
+      <Project>{6447BCA5-3AD0-45DE-97FB-08BE51C4E134}</Project>
+      <Name>TransferStation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Twister\Twister.csproj">
+      <Project>{D21CE15D-A133-40F7-BAA8-1D69F2D33293}</Project>
+      <Name>Twister</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

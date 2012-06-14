@@ -8,7 +8,7 @@
     <ProjectGuid>{59801CC7-20C3-4F59-BE3D-28EF39C7A61D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Growth_Curve_Software</RootNamespace>
+    <RootNamespace>Clarity</RootNamespace>
     <AssemblyName>Growth_Curve_Software</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

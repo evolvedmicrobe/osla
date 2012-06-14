@@ -34,6 +34,7 @@
             // 
             // webBrowser1
             // 
+            this.webBrowser1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webBrowser1.Location = new System.Drawing.Point(0, 0);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
@@ -50,9 +51,8 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "WelcomeForm";
             this.Text = "Program Starting";
-            this.ResumeLayout(false);
             this.Load += new System.EventHandler(this.WelcomeForm_Load);
-            
+            this.ResumeLayout(false);
 
         }
 

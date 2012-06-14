@@ -20,8 +20,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clarity_Alarm_Monitor", "Al
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incubator", "Incubator\Incubator.csproj", "{DFA1E8D7-FD84-4EDA-9C59-0BE72A28142F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VictorPlateReader", "VictorPlateReader\VictorPlateReader.csproj", "{64EF156A-7687-4B7D-8C03-06E5A066ABBC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicAndVirtualInstruments", "DynamicAndVirtualInstruments\DynamicAndVirtualInstruments.csproj", "{AF228932-48CA-4653-903D-8841B6EEF6C3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twister", "Twister\Twister.csproj", "{D21CE15D-A133-40F7-BAA8-1D69F2D33293}"
@@ -116,16 +114,6 @@ Global
 		{DFA1E8D7-FD84-4EDA-9C59-0BE72A28142F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{DFA1E8D7-FD84-4EDA-9C59-0BE72A28142F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{DFA1E8D7-FD84-4EDA-9C59-0BE72A28142F}.Release|x86.ActiveCfg = Release|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{64EF156A-7687-4B7D-8C03-06E5A066ABBC}.Release|x86.ActiveCfg = Release|Any CPU
 		{AF228932-48CA-4653-903D-8841B6EEF6C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF228932-48CA-4653-903D-8841B6EEF6C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF228932-48CA-4653-903D-8841B6EEF6C3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

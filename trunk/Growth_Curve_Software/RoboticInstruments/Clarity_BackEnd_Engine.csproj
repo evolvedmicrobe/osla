@@ -8,7 +8,7 @@
     <ProjectGuid>{999BD960-00C5-4429-82EE-9F5C25DA8410}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Growth_Curve_Software</RootNamespace>
+    <RootNamespace>Clarity</RootNamespace>
     <AssemblyName>RoboticInstruments</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -97,6 +97,7 @@
     <Compile Include="InstrumentError.cs" />
     <Compile Include="InstrumentFinder.cs" />
     <Compile Include="InstrumentManager.cs" />
+    <Compile Include="InstrumentManagerClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol.cs" />
     <Compile Include="ProtocolExecutor.cs" />
