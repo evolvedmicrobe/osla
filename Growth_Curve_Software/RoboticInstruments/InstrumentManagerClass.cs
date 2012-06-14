@@ -23,11 +23,13 @@ namespace Clarity
     /// </summary>
     public class InstrumentManagerClass : InstrumentManager
     {
+        //Various, hopefully self explanatory events that a GUI
+        //working with this manager should subscribe to.
         public event InstrumentManagerEventHandler OnProtocolStarted;
         public event ProtocolPauseEventHandler OnProtocolPaused;
         public event InstrumentManagerEventHandler OnProtocolEnded;
         public event InstrumentManagerErrorHandler OnError;
-        
+        System.Windows.Forms.Timer NextInstructionTimer= new System.Windows.Forms.Timer();
         public string RecoveryProtocolFile;
         private string pAppDataDirectory = Directory.GetCurrentDirectory()+"\\";
         BackgroundWorker WorkerToRunRobots;
@@ -54,7 +56,7 @@ namespace Clarity
                 Clarity_Alarm.ChangeStatus("Protocol Running");
             }
             if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
-            { ShowError("A Protocol Is Already Running"); }
+            { ThrowError("Tried to start a protocol when one was already running"); }
             else
             {
                 InitializeWorkerToRunRobots();
@@ -67,6 +69,11 @@ namespace Clarity
             {
                 OnError(this, thrown);
             }
+        }
+        private void ThrowError(string ErrorMessage)
+        {
+            Exception GenericException = new Exception(ErrorMessage);
+            ThrowError(GenericException);
         }
         private bool RunInstrumentMethod(string InstrumentName, string MethodName, object[] Parameters, bool RequireStatusOK, Protocol curProtocol = null)
         {
@@ -401,7 +408,7 @@ namespace Clarity
         private void StopClockWaitAndExecute()
         {
             NextInstructionTimer.Stop();
-            TimeToGo.Stop();
+            
             StartProtocolExecution();
         }
         private void NextInstructionTimer_Tick(object sender, EventArgs e)
@@ -476,6 +483,7 @@ namespace Clarity
             InstrumentCollection = new List<BaseInstrumentClass>();
             LoadedProtocols = new ProtocolManager(this);
             ProtocolEvents = new ProtocolEventCaller();
+            NextInstructionTimer.Tick+=new EventHandler(NextInstructionTimer_Tick);
             LoadUpInstruments();
 
         }

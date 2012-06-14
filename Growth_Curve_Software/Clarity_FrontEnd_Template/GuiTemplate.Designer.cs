@@ -110,12 +110,12 @@
             this.reconnectToAlarmServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.NextInstructionTimer = new System.Windows.Forms.Timer(this.components);
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.txtErrorLog = new System.Windows.Forms.RichTextBox();
             this.TimeToGo = new Clarity.CountdownTimer();
+            this.NextInstructionTimer = new System.Windows.Forms.Timer(this.components);
             this.MainTab.SuspendLayout();
             this.tabSubMain.SuspendLayout();
             this.pnlFailure.SuspendLayout();
@@ -321,7 +321,6 @@
             this.btnCancelProtocolExecution.TabIndex = 5;
             this.btnCancelProtocolExecution.Text = "Cancel Protocol Execution";
             this.btnCancelProtocolExecution.UseVisualStyleBackColor = true;
-            this.btnCancelProtocolExecution.Click += new System.EventHandler(this.btnCancelProtocolExecution_Click);
             // 
             // btnExecuteProtocols
             // 
@@ -331,7 +330,6 @@
             this.btnExecuteProtocols.TabIndex = 4;
             this.btnExecuteProtocols.Text = "Start Protocol Execution";
             this.btnExecuteProtocols.UseVisualStyleBackColor = true;
-            this.btnExecuteProtocols.Click += new System.EventHandler(this.btnExecuteProtocols_Click);
             // 
             // lstCurrentProtocol
             // 
@@ -665,7 +663,7 @@
             this.chkGBO.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkGBO.Location = new System.Drawing.Point(645, 93);
             this.chkGBO.Name = "chkGBO";
-            this.chkGBO.Size = new System.Drawing.Size(117, 17);
+            this.chkGBO.Size = new System.Drawing.Size(129, 19);
             this.chkGBO.TabIndex = 18;
             this.chkGBO.Text = "48 Well Excel Data";
             this.chkGBO.UseVisualStyleBackColor = true;
@@ -676,7 +674,7 @@
             this.chk48WellPlate.AutoSize = true;
             this.chk48WellPlate.Location = new System.Drawing.Point(645, 71);
             this.chk48WellPlate.Name = "chk48WellPlate";
-            this.chk48WellPlate.Size = new System.Drawing.Size(89, 17);
+            this.chk48WellPlate.Size = new System.Drawing.Size(98, 19);
             this.chk48WellPlate.TabIndex = 14;
             this.chk48WellPlate.Text = "48 Well Plate";
             this.chk48WellPlate.UseVisualStyleBackColor = true;
@@ -951,10 +949,6 @@
             this.StatusLabel.Size = new System.Drawing.Size(115, 17);
             this.StatusLabel.Text = "System Status: None";
             // 
-            // NextInstructionTimer
-            // 
-            this.NextInstructionTimer.Tick += new System.EventHandler(this.NextInstructionTimer_Tick);
-            // 
             // txtPassword
             // 
             this.txtPassword.Location = new System.Drawing.Point(876, 642);
@@ -1068,7 +1062,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
         private System.Windows.Forms.Button btnCancelProtocolExecution;
-        private System.Windows.Forms.Timer NextInstructionTimer;
         private System.Windows.Forms.Label lblCurrentRunningProtocol;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label7;
@@ -1119,6 +1112,7 @@
         private System.Windows.Forms.TextBox textbox_number;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Timer NextInstructionTimer;
 
     }
 }

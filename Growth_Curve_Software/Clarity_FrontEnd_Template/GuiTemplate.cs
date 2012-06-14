@@ -112,6 +112,7 @@ namespace Clarity
             btnRetryLastInstruction.Enabled = false;
             //probably should try some checks here
             TimeToGo.Text = "Protocol Running";
+            TimeToGo.Stop();
         }
         /// <summary>
         /// Shows a splash screen during load to explain that the instruments are working.
