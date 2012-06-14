@@ -1,0 +1,43 @@
+Clarity's Documentation
+=======================
+
+Clarity is...
+
+- a software manager for lab automating robots.
+- free and open source.
+- actively developed.
+
+Questions? We're available at the clarity-dev_ google group.
+
+.. _clarity-dev: https://groups.google.com/group/clarity-dev
+
+
+For users:
+
+.. toctree::
+    :maxdepth: 2
+    
+    getting_started
+    
+For developers:
+
+
+.. toctree::
+    :maxdepth: 2
+    
+    overview
+
+
+Reference:
+
+.. toctree::
+    :maxdepth: 2
+    
+    ref
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+
