@@ -1,0 +1,45 @@
+An Overview Clarity
+===================
+
+
+
+Instrument Management
++++++++++++++++++++++
+
+
+
+Protocol execution
+++++++++++++++++++
+
+
+
+Graphical interface
++++++++++++++++++++
+
+
+
+Alarm server and monitors
++++++++++++++++++++++++++
+
+
+
+Customizing Clarity
+===================
+
+
+
+Configuration File
+++++++++++++++++++
+
+
+
+Implementing New Instruments
+++++++++++++++++++++++++++++
+
+
+
+Adding GUI Elements
++++++++++++++++++++
+
+
+
