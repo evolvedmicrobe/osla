@@ -1,3 +1,8 @@
+.. _Doxygen: http://www.stack.nl/~dimitri/doxygen/
+
+
+.. _Source Browser: http://www.people.fas.harvard.edu/~rojasechenique/claritydocs/sourcecode/html/
+
 Clarity's Documentation
 =======================
 
@@ -30,10 +35,9 @@ For developers:
 
 Reference:
 
-.. toctree::
-    :maxdepth: 2
-    
-    ref
+* `Source Browser`_
+
+	(We use Doxygen_ to generate indepth documentation from the source code.)
 
 Indices and tables
 ==================
