@@ -92,13 +92,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.lstGrowthRatesProtocol = new System.Windows.Forms.ListBox();
             this.wBrowGrowthRate = new System.Windows.Forms.WebBrowser();
-            this.tabNSF = new System.Windows.Forms.TabPage();
-            this.label17 = new System.Windows.Forms.Label();
-            this.txtNSFName = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.txtNSFTransferNumber = new System.Windows.Forms.TextBox();
-            this.btnGenerateNSFData = new System.Windows.Forms.Button();
-            this.lstNSFPlates = new System.Windows.Forms.ListBox();
             this.lstInstrumentStatus = new System.Windows.Forms.ListBox();
             this.lblErrorLog = new System.Windows.Forms.Label();
             this.btnViewAdvancedControls = new System.Windows.Forms.Button();
@@ -130,7 +123,6 @@
             this.IncubatorTab.SuspendLayout();
             this.tabRecovery.SuspendLayout();
             this.tabMakeGrowthInstructions.SuspendLayout();
-            this.tabNSF.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -141,7 +133,6 @@
             this.MainTab.Controls.Add(this.IncubatorTab);
             this.MainTab.Controls.Add(this.tabRecovery);
             this.MainTab.Controls.Add(this.tabMakeGrowthInstructions);
-            this.MainTab.Controls.Add(this.tabNSF);
             this.MainTab.Location = new System.Drawing.Point(14, 30);
             this.MainTab.Name = "MainTab";
             this.MainTab.SelectedIndex = 0;
@@ -674,7 +665,7 @@
             this.chkGBO.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkGBO.Location = new System.Drawing.Point(645, 93);
             this.chkGBO.Name = "chkGBO";
-            this.chkGBO.Size = new System.Drawing.Size(129, 19);
+            this.chkGBO.Size = new System.Drawing.Size(117, 17);
             this.chkGBO.TabIndex = 18;
             this.chkGBO.Text = "48 Well Excel Data";
             this.chkGBO.UseVisualStyleBackColor = true;
@@ -685,7 +676,7 @@
             this.chk48WellPlate.AutoSize = true;
             this.chk48WellPlate.Location = new System.Drawing.Point(645, 71);
             this.chk48WellPlate.Name = "chk48WellPlate";
-            this.chk48WellPlate.Size = new System.Drawing.Size(98, 19);
+            this.chk48WellPlate.Size = new System.Drawing.Size(89, 17);
             this.chk48WellPlate.TabIndex = 14;
             this.chk48WellPlate.Text = "48 Well Plate";
             this.chk48WellPlate.UseVisualStyleBackColor = true;
@@ -807,73 +798,6 @@
             this.wBrowGrowthRate.Name = "wBrowGrowthRate";
             this.wBrowGrowthRate.Size = new System.Drawing.Size(364, 643);
             this.wBrowGrowthRate.TabIndex = 0;
-            // 
-            // tabNSF
-            // 
-            this.tabNSF.Controls.Add(this.label17);
-            this.tabNSF.Controls.Add(this.txtNSFName);
-            this.tabNSF.Controls.Add(this.label16);
-            this.tabNSF.Controls.Add(this.txtNSFTransferNumber);
-            this.tabNSF.Controls.Add(this.btnGenerateNSFData);
-            this.tabNSF.Controls.Add(this.lstNSFPlates);
-            this.tabNSF.Location = new System.Drawing.Point(4, 24);
-            this.tabNSF.Name = "tabNSF";
-            this.tabNSF.Size = new System.Drawing.Size(788, 649);
-            this.tabNSF.TabIndex = 4;
-            this.tabNSF.Text = "NSF Data Collection";
-            this.tabNSF.UseVisualStyleBackColor = true;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(302, 464);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(140, 15);
-            this.label17.TabIndex = 7;
-            this.label17.Text = "Todays Date, eg 110926";
-            // 
-            // txtNSFName
-            // 
-            this.txtNSFName.Location = new System.Drawing.Point(450, 461);
-            this.txtNSFName.Name = "txtNSFName";
-            this.txtNSFName.Size = new System.Drawing.Size(288, 21);
-            this.txtNSFName.TabIndex = 6;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(302, 417);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(100, 15);
-            this.label16.TabIndex = 5;
-            this.label16.Text = "Transfer Number";
-            // 
-            // txtNSFTransferNumber
-            // 
-            this.txtNSFTransferNumber.Location = new System.Drawing.Point(450, 411);
-            this.txtNSFTransferNumber.Name = "txtNSFTransferNumber";
-            this.txtNSFTransferNumber.Size = new System.Drawing.Size(82, 21);
-            this.txtNSFTransferNumber.TabIndex = 4;
-            // 
-            // btnGenerateNSFData
-            // 
-            this.btnGenerateNSFData.Location = new System.Drawing.Point(305, 521);
-            this.btnGenerateNSFData.Name = "btnGenerateNSFData";
-            this.btnGenerateNSFData.Size = new System.Drawing.Size(240, 46);
-            this.btnGenerateNSFData.TabIndex = 3;
-            this.btnGenerateNSFData.Text = "Create Experiment";
-            this.btnGenerateNSFData.UseVisualStyleBackColor = true;
-            this.btnGenerateNSFData.Click += new System.EventHandler(this.btnGenerateNSFData_Click);
-            // 
-            // lstNSFPlates
-            // 
-            this.lstNSFPlates.FormattingEnabled = true;
-            this.lstNSFPlates.ItemHeight = 15;
-            this.lstNSFPlates.Location = new System.Drawing.Point(305, 14);
-            this.lstNSFPlates.Name = "lstNSFPlates";
-            this.lstNSFPlates.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstNSFPlates.Size = new System.Drawing.Size(240, 364);
-            this.lstNSFPlates.TabIndex = 2;
             // 
             // lstInstrumentStatus
             // 
@@ -1081,8 +1005,8 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ClarityForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Clarity - Robot Management Program";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Text = "Clarity - Template -  Robot Management Program";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.MainTab.ResumeLayout(false);
             this.tabSubMain.ResumeLayout(false);
@@ -1097,8 +1021,6 @@
             this.tabRecovery.PerformLayout();
             this.tabMakeGrowthInstructions.ResumeLayout(false);
             this.tabMakeGrowthInstructions.PerformLayout();
-            this.tabNSF.ResumeLayout(false);
-            this.tabNSF.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -1192,13 +1114,6 @@
         private System.Windows.Forms.CheckBox chk48WellPlate;
         private System.Windows.Forms.Button btnDeleteProtocol;
         private System.Windows.Forms.CheckBox chkGBO;
-        private System.Windows.Forms.TabPage tabNSF;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox txtNSFTransferNumber;
-        private System.Windows.Forms.Button btnGenerateNSFData;
-        private System.Windows.Forms.ListBox lstNSFPlates;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox txtNSFName;
         private System.Windows.Forms.Button btnInstrumentRefresh;
         private System.Windows.Forms.Button btnResetLid;
         private System.Windows.Forms.TextBox textbox_number;

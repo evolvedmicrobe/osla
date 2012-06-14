@@ -330,7 +330,7 @@ namespace Clarity
 
         void DCUServer_TaskEnd(ref string strMessage)
         {
-            MessageBox.Show("END "+ strMessage);
+            //MessageBox.Show("END "+ strMessage);
         }
         ~TransferStation()
         {
@@ -372,11 +372,11 @@ namespace Clarity
         }
         void DCUServer_TaskWarning(ref string strMessage)
         {
-            MessageBox.Show("DCU WARNING: "+strMessage);
+            //MessageBox.Show("DCU WARNING: "+strMessage);
         }
         void DCUServer_TaskMessage(ref string strMessage)
         {
-            MessageBox.Show("Task "+strMessage);
+            //MessageBox.Show("Task "+strMessage);
         }
         void DCUServer_TaskError(ref string strMessage)
         {

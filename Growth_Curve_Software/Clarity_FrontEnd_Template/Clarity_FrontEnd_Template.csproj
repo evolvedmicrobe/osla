@@ -69,11 +69,17 @@
     <Compile Include="CountDownTimer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="GuiTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="GuiTemplate.Designer.cs">
+      <DependentUpon>GuiTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MakeProtocols.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MakeProtocols.Designer.cs">
+      <DependentUpon>MakeProtocols.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,8 +89,12 @@
     <Compile Include="WelcomeForm.Designer.cs">
       <DependentUpon>WelcomeForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="GuiTemplate.resx">
+      <DependentUpon>GuiTemplate.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MakeProtocols.resx">
+      <DependentUpon>MakeProtocols.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -135,13 +145,13 @@
       <Project>{F59D7CA6-95CA-4A5A-8CD9-278007C36227}</Project>
       <Name>VictorClarityInterface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VictorPlateReader\VictorPlateReader.csproj">
-      <Project>{64EF156A-7687-4B7D-8C03-06E5A066ABBC}</Project>
-      <Name>VictorPlateReader</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Clarity.ico" />
+    <Content Include="ConfigurationFile.xml" />
+    <EmbeddedResource Include="WelcomeInstructions.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

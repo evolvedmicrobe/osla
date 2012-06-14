@@ -28,7 +28,8 @@ namespace Clarity
             string nameSpace = TypeToFind.Namespace; 
             //create a list for the instrument classes to be returned
             List<BaseInstrumentClass> instrumentClasses = new List<BaseInstrumentClass>();
-            foreach (Type type in asm.GetTypes())
+            List<Type> baseTypes = findTypesFromDLLs(Environment.CurrentDirectory,TypeToFind);
+            foreach (Type type in baseTypes) //asm.GetTypes())
             {
                 //check if it is in the same namespace and if so create an instance of it
                 if (type.Namespace == nameSpace && !type.IsAbstract && type.IsSubclassOf(TypeToFind))
@@ -44,6 +45,42 @@ namespace Clarity
             //them to our classesName list
             return instrumentClasses;
         }
+        /// <summary>
+        /// This method looks through a path and finds all Dll files to load 
+        /// anything that is derived from the given type to find.
+        /// </summary>
+        /// <param name="searchPath">Path to search</param>
+        /// <param name="typeToFind">Type to find</param>
+        /// <returns>A list of types found in the .dll</returns>
+        private static System.Collections.Generic.List<System.Type> findTypesFromDLLs(string searchPath, System.Type typeToFind)
+        {
+            System.Collections.Generic.List<System.Type> TypesFound = new System.Collections.Generic.List<System.Type>();
+            string[] files = System.IO.Directory.GetFiles(searchPath, "*.dll");
+            List<Type> toReturn = new List<Type>();
+            for (int i = 0; i < files.Length; i++)
+            {
+                string cFile = files[i];
+                //Now to try and load the .dll file, first verify it is a 
+                try
+                {
+                    System.Reflection.AssemblyName.GetAssemblyName(searchPath + cFile);
+                    Assembly toLoad = System.Reflection.Assembly.LoadFile(searchPath + cFile);
+                    System.Type[] types = toLoad.GetTypes();
+                    List<Type> validTypes = new List<Type>();
+                    foreach (Type t in validTypes)
+                    {
+                        if (!t.IsAbstract && typeToFind.IsSubclassOf(t) && !t.Equals(typeToFind))
+                        {
+                            toReturn.Add(t);
+                        }
+                    }
+                }
+                catch { }//not a .NET assembly presumably, we could log errors here if desired
+
+            }
+            return toReturn;
+        }
+        
 
     }
 }

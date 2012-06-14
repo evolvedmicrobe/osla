@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +43,16 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VictorManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RoboticInstruments\Clarity_BackEnd_Engine.csproj">
+      <Project>{999BD960-00C5-4429-82EE-9F5C25DA8410}</Project>
+      <Name>Clarity_BackEnd_Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VictorStandAloneForm\VictorStandAloneForm.csproj">
+      <Project>{BD582F22-A96C-49B0-9769-E601F12FFD09}</Project>
+      <Name>VictorStandAloneForm</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

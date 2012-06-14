@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Clarity_FrontEnd_Template
+namespace Clarity
 {
     static class Program
     {
@@ -15,7 +15,7 @@ namespace Clarity_FrontEnd_Template
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new ClarityForm());
         }
     }
 }

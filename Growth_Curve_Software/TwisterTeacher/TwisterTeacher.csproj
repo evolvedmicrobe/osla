@@ -95,6 +95,10 @@
       <Project>{999BD960-00C5-4429-82EE-9F5C25DA8410}</Project>
       <Name>Clarity_BackEnd_Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Twister\Twister.csproj">
+      <Project>{D21CE15D-A133-40F7-BAA8-1D69F2D33293}</Project>
+      <Name>Twister</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Electronic Arts.ico" />
