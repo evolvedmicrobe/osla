@@ -30,8 +30,7 @@ namespace Clarity
     /// There is a third tab the "Incubator tab" which allows for GUI control of an instrument.
     /// This can be useful for various tasks.
     /// </summary>
-    public partial class ClarityForm : Form, InstrumentManager
-    {
+    public partial class ClarityForm : Form    {
 
         InstrumentManager Instrument;
         private IncubatorServ Incubator;
@@ -54,7 +53,7 @@ namespace Clarity
         }
         private static InstrumentManagerClass ClarityEngine;
         //Form Loading/Closing methods 
-        public void LoadUpForm1()
+        public void LoadUpClarityGUI()
         {
             try
             {
@@ -72,11 +71,14 @@ namespace Clarity
                 ClarityEngine = new InstrumentManagerClass();
 
                 ClarityEngine.OnProtocolStarted += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolStarted);
-                ClarityEngine.OnProtocolPaused += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolPaused);
-                ClarityEngine.OnProtocolEnded += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolEnded);
-                Incubator = this.ReturnInstrumentType<IncubatorServ>();
-                TransStation = this.ReturnInstrumentType<TransferStation>();
-                PlateReader = this.ReturnInstrumentType<VictorManager>();
+                ClarityEngine.OnProtocolPaused += new ProtocolPauseEventHandler(ClarityEngine_OnProtocolPaused);
+                ClarityEngine.OnAllRunningProtocolsEnded += new InstrumentManagerEventHandler(ClarityEngine_OnAllProtocolsEnded);
+                ClarityEngine.OnGenericError += new InstrumentManagerErrorHandler(ClarityEngine_OnGenericError);
+                ClarityEngine.OnProtocolSuccessfullyCancelled += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolSuccessfullyCancelled);
+                ClarityEngine.OnErrorDuringProtocolExecution += new InstrumentManagerErrorHandler(ClarityEngine_OnErrorDuringProtocolExecution);
+                Incubator = ClarityEngine.ReturnInstrumentType<IncubatorServ>();
+                TransStation = ClarityEngine.ReturnInstrumentType<TransferStation>();
+                PlateReader = ClarityEngine.ReturnInstrumentType<VictorManager>();
             }
             catch (Exception thrown)
             {
@@ -94,14 +96,57 @@ namespace Clarity
             
         }
 
-        void ClarityEngine_OnProtocolEnded(InstrumentManager Source, EventArgs e)
+        void ClarityEngine_OnErrorDuringProtocolExecution(InstrumentManager Source, Exception thrown)
         {
-            throw new NotImplementedException();
+            StatusLabel.Text = "Procedure ended with errors";
+            btnRetryLastInstruction.Enabled = true;
+            ShowError("Failed To Run Protocol", thrown);
+            pnlFailure.Visible = true;
+            lblFailure.Text = "The Last Instruction Failed To Run, Please recover the machines and retry or delete the protocol, Do not reattempt a macro instruction";
+            if (Source.LastFailedInstruction != null)
+            {
+                lblFailureInstructionName.Text = "Would you like to reattempt: " + Source.LastFailedInstruction.ToString();
+            }
+            else
+            {
+                btnRetryLastInstruction.Enabled = false;
+                StringDel newDel = this.AddErrorLogText;
+                object[] myarr = new object[1] { "\nWeird command failure, the last instruction is not available" };
+                this.Invoke(newDel, myarr);
+            }
+            btnExecuteProtocols.Enabled = true;
+            btnCancelProtocolExecution.Enabled = false;
         }
 
-        void ClarityEngine_OnProtocolPaused(InstrumentManager Source, EventArgs e)
+        void ClarityEngine_OnProtocolSuccessfullyCancelled(InstrumentManager Source, EventArgs e)
         {
-            throw new NotImplementedException();
+            btnCancelProtocolExecution.Enabled = false;
+            btnExecuteProtocols.Enabled = true;
+            StatusLabel.Text = "Cancelled Protocol";
+            TimeToGo.Text = "Nothing Running";
+            UpdateForm();
+        }
+
+        void ClarityEngine_OnGenericError(InstrumentManager Source, Exception thrown)
+        {   
+            TimeToGo.Text = "Nothing Running";
+            btnExecuteProtocols.Enabled = true;
+            btnCancelProtocolExecution.Enabled = false;
+            ShowError("Unspecified Error", thrown);
+            UpdateForm();
+        }
+
+        void ClarityEngine_OnAllProtocolsEnded(InstrumentManager Source, EventArgs e)
+        {
+            StatusLabel.Text = "Finished Running Protocols";
+            TimeToGo.Text = "";
+        }
+
+        void ClarityEngine_OnProtocolPaused(InstrumentManager Source, TimeSpan TS)
+        {
+            StatusLabel.Text = "Waiting Until It Is Time To Run The Next Protocol Instruction";
+            TimeToGo.Start((int)TS.TotalMilliseconds);
+            UpdateForm();
         }
 
         void ClarityEngine_OnProtocolStarted(InstrumentManager Source, EventArgs e)
@@ -114,6 +159,7 @@ namespace Clarity
             TimeToGo.Text = "Protocol Running";
             TimeToGo.Stop();
         }
+
         /// <summary>
         /// Shows a splash screen during load to explain that the instruments are working.
         /// The splash screen simply displays the html file WelcomInstructions.htm
@@ -126,10 +172,7 @@ namespace Clarity
         private void Form1_Load(object sender, EventArgs e)
         {
             
-            if (UseAlarm)
-            {
-                Clarity_Alarm = new Alarm();
-            }
+        
             
             //Show the welcome form
             Thread LoadingThread = new Thread(ShowWelcomeForm);
@@ -139,23 +182,12 @@ namespace Clarity
 
             //if this delegate is set before the instance is initialized it will fail
             Thread.Sleep(1000);//give it time to initialize the WF              
-            LoadUpForm1();            
+            LoadUpClarityGUI();            
             WF.StayAlive = false; 
            
             UpdateInstrumentStatus();
 
-            for (int i = 38; i > 0; i--)
-            {
-                if (ExcludedIncubatorPositions.Contains(i))
-                { continue; }
-                else
-                {
-                    lstIncubatorSlots.Items.Add(i);
-                  
-                    lstGrowthRatesProtocol.Items.Add(i);
-                }
-            }
-            cmbShakeSpeed.SelectedIndex = 6;
+            
             CreateRecoveryPanel();
 
             try
@@ -170,6 +202,17 @@ namespace Clarity
             catch { }
 
         }
+        private void CreateIncubatorCommands()
+        {
+            for (int i = 38; i > 0; i--)
+            {
+                lstIncubatorSlots.Items.Add(i);
+                lstGrowthRatesProtocol.Items.Add(i);
+
+            }
+            cmbShakeSpeed.SelectedIndex = 6;
+
+        }
         /// <summary>
         /// Method called on exit, reports to everyone that the GUI has been closed, and 
         /// releases all the instrument resources
@@ -178,67 +221,10 @@ namespace Clarity
         /// <param name="e"></param>
         private void GUI_FormClosing(object sender, FormClosingEventArgs e)
         {
-                try { LoadedProtocols.ReportToAllUsers("The Robot Software Has Been Closed"); }
-                catch { }
-            try { if (UseAlarm) { Clarity_Alarm.TurnOnAlarm("The software was closed"); } }
-            catch { }
-                this.Cursor = Cursors.WaitCursor;
-                try
-                {
-                    foreach (object o in InstrumentCollection)
-                    {
-                        BaseInstrumentClass BC = (BaseInstrumentClass)o;
-                        try
-                        {
-                            BC.CloseAndFreeUpResources();
-                        }
-                        catch
-                        { }
-                    }
-                }
-                catch
-                { }
-                finally { this.Cursor = Cursors.Default; }
-            
+            this.Cursor = Cursors.WaitCursor;
+            ClarityEngine.ShutdownEngine();
+            this.Cursor = Cursors.Default;
         }
-        private void KillOldProcesses()
-        {
-            //really not the best here, but out with the old so the new can load
-            string[] ToKill = { "Device Control Unit", "TwisterII Robot ICP", "DCU", "CommDispatcher","ZymarkRobotICP","ScicloneICP","SciPEM","SciRabbitVexta","CavroDeviceController","Consumables" };
-            foreach (string str in ToKill)
-            {
-                try { KillProcessAttempt(str); }
-                catch { }
-
-            }
-        }
-        public static void KillProcessAttempt(string ProcessNameWithoutExeEnding)
-        {
-            try
-            {
-                Process[] processList = Process.GetProcesses();
-                var x = from p in processList select p.ProcessName;
-                if (x.Contains(ProcessNameWithoutExeEnding))
-                {
-                    string output = String.Empty;
-                    System.Diagnostics.Process proc = new Process();
-                    ProcessStartInfo myStartInfo = new ProcessStartInfo();
-                    myStartInfo.RedirectStandardInput = false;
-                    myStartInfo.UseShellExecute = false;
-                    myStartInfo.RedirectStandardOutput = false;
-                    myStartInfo.Arguments = "/IM " + ProcessNameWithoutExeEnding + ".exe";
-                    myStartInfo.CreateNoWindow = true;
-                    myStartInfo.FileName = @"C:\WINDOWS\SYSTEM32\TASKKILL.EXE ";
-                    proc.StartInfo = myStartInfo;
-
-                    proc.Start();
-                    proc.WaitForExit(3000);
-                    output = proc.StandardOutput.ReadToEnd();
-                }
-            }
-            catch { }
-        } 
-
 
         // Incubator Controls    
         private void btnStartShaking_Click(object sender, EventArgs e)
@@ -266,6 +252,7 @@ namespace Clarity
                 ShowError("Could not stop shaker\n\n",thrown);            }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
         }
+
         private void btnLoadPlate_Click(object sender, EventArgs e)
         {
             try
@@ -699,7 +686,11 @@ namespace Clarity
             {
                 ShowError(ErrorMessage += "\n" + Error.Message);
             }
-        }       
+        }
+        private void btnExecuteProtocols_Click(object sender, EventArgs e)
+        {
+            ClarityEngine.StartProtocolExecution();
+        }
         private void btnMakeProtocols_Click(object sender, EventArgs e)
         {
             Thread MakeProtocolsThread = new Thread(DisplayMakeProtocolsForm);
@@ -1140,7 +1131,30 @@ namespace Clarity
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
             
         }
-
+        private void btnCancelProtocolExecution_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (ClarityEngine.CurrentRunningState==RunningStates.Running)
+                {
+                    ClarityEngine.RequestProtocolCancellation();
+                    btnCancelProtocolExecution.Enabled = false;
+                    StatusLabel.Text = "Status is: Attempting To Cancel Operation";
+                }
+                else if (ClarityEngine.CurrentRunningState==RunningStates.WaitingForNextExecutionTimePoint)
+                {
+                    StatusLabel.Text = "Cancelled Operation";
+                    btnExecuteProtocols.Enabled = true;
+                    btnCancelProtocolExecution.Enabled = false;
+                }
+                else { btnCancelProtocolExecution.Enabled = false; btnExecuteProtocols.Enabled = true; }
+                TimeToGo.Stop();
+            }
+            catch (Exception thrown)
+            {
+                MessageBox.Show("Could not cancel operation.\n\n" + thrown.Message);
+            }
+        }
         
 
         public delegate void StringDel(string firstArg);
@@ -1149,54 +1163,7 @@ namespace Clarity
         {
             MessageBox.Show("Version : 5.0");
         }
-        //Backup and Recovery Stuff
-        private void OutputRecoveryFile(string FileNameToWrite)
-        {
-            try
-            {
-                if (LoadedProtocols.Protocols.Count > 0)
-                {
-                    FileStream f = new FileStream(FileNameToWrite, FileMode.Create);
-                    BinaryFormatter b = new BinaryFormatter();
-                    LoadedProtocols.manager = null;
-                    b.Serialize(f, LoadedProtocols);
-                    LoadedProtocols.manager = this;
-                    f.Close();
-                }
 
-            }
-            catch (Exception thrown)
-            {
-                string ErrorMessage = "Could Not Write Recovery Data File\n\nError is:" + thrown.Message;
-                StringDel newDel = this.AddErrorLogText;
-                object[] myarr = new object[1] { ErrorMessage };
-                this.Invoke(newDel, myarr);
-            }
-        }
-        private void InputRecoveryFile(string FileNameToRead)
-        {
-            FileStream f=null;
-            try
-            {
-                    f = new FileStream(FileNameToRead, FileMode.Open);
-                    BinaryFormatter b = new BinaryFormatter();
-                //This next bit seems odd to me, got it off a forum as a way to correct an end of stream error
-                    f.Seek(0, 0);
-                    ProtocolManager ReplacementProtocols=(ProtocolManager)b.Deserialize(f);
-                    LoadedProtocols = ReplacementProtocols;
-                    LoadedProtocols.manager = this;
-                    f.Close();      
-            }
-            catch (Exception thrown)
-            {
-                string ErrorMessage = "Could Not Load Previous File\n\nError is:" + thrown.Message;
-                StringDel newDel = this.AddErrorLogText;
-                object[] myarr = new object[1] { ErrorMessage };
-                this.Invoke(newDel, myarr);
-                try { f.Close(); }
-                catch { }
-            }
-        }
         private void btnDeleteProtocol_Click(object sender, EventArgs e)
         {
             RemoveSelectedProtocol();

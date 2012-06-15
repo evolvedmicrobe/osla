@@ -73,9 +73,9 @@ namespace Clarity
                     myStartInfo.RedirectStandardOutput = false;
                     myStartInfo.Arguments = "/IM " + ProcessNameWithoutExeEnding + ".exe";
                     myStartInfo.CreateNoWindow = true;
+                    //TODO: Change task killing so it is not specific to computer
                     myStartInfo.FileName = @"C:\WINDOWS\SYSTEM32\TASKKILL.EXE ";
                     proc.StartInfo = myStartInfo;
-
                     proc.Start();
                     proc.WaitForExit(3000);
                     output = proc.StandardOutput.ReadToEnd();
