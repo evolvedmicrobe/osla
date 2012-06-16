@@ -423,21 +423,31 @@ namespace Clarity
         /// </summary>
         public void ShutdownEngine()
         {
-            try { pLoadedProtocols.ReportToAllUsers("The Robot Software Has Been Closed"); }
+            try {
+                if(pLoadedProtocols!=null)
+                pLoadedProtocols.ReportToAllUsers("The Robot Software Has Been Closed");
+            }
             catch { }
-            try { if (UseAlarm) { pClarity_Alarm.TurnOnAlarm("The software was closed"); } }
+            try { if (UseAlarm &&pClarity_Alarm!=null) { pClarity_Alarm.TurnOnAlarm("The software was closed"); } }
             catch { }
             try
             {
-                foreach (object o in InstrumentCollection)
+                if (InstrumentCollection != null)
                 {
-                    BaseInstrumentClass BC = (BaseInstrumentClass)o;
-                    try
+
+                    foreach (object o in InstrumentCollection)
                     {
-                        BC.CloseAndFreeUpResources();
+                        if (o != null)
+                        {
+                            BaseInstrumentClass BC = (BaseInstrumentClass)o;
+                            try
+                            {
+                                BC.CloseAndFreeUpResources();
+                            }
+                            catch
+                            { }
+                        }
                     }
-                    catch
-                    { }
                 }
             }
             catch
@@ -676,6 +686,7 @@ namespace Clarity
         /// </summary>
         public void LoadUpInstruments()
         {
+            //TODO: Much better error handling and reporting here
             //First get an instance of every possible base instrument class by searching for DLLs in the
             //current directory
             List<BaseInstrumentClass> BICs = InstrumentFinder.GetAllInstrumentClasses();

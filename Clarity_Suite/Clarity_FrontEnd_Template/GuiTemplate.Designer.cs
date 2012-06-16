@@ -120,9 +120,9 @@
             this.btnGenerateNSFData = new System.Windows.Forms.Button();
             this.txtNSFTransferNumber = new System.Windows.Forms.TextBox();
             this.txtNSFName = new System.Windows.Forms.TextBox();
-            this.TimeToGo = new Clarity.CountdownTimer();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
+            this.TimeToGo = new Clarity.CountdownTimer();
             this.MainTab.SuspendLayout();
             this.tabSubMain.SuspendLayout();
             this.pnlFailure.SuspendLayout();
@@ -1025,17 +1025,6 @@
             this.txtNSFName.Size = new System.Drawing.Size(135, 21);
             this.txtNSFName.TabIndex = 3;
             // 
-            // TimeToGo
-            // 
-            this.TimeToGo.AutoSize = true;
-            this.TimeToGo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TimeToGo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.TimeToGo.Location = new System.Drawing.Point(812, 160);
-            this.TimeToGo.Name = "TimeToGo";
-            this.TimeToGo.Size = new System.Drawing.Size(153, 40);
-            this.TimeToGo.TabIndex = 0;
-            this.TimeToGo.Text = "No Processes \r\nCurrently Running";
-            // 
             // label16
             // 
             this.label16.AutoSize = true;
@@ -1053,6 +1042,17 @@
             this.label17.Size = new System.Drawing.Size(33, 15);
             this.label17.TabIndex = 5;
             this.label17.Text = "Date";
+            // 
+            // TimeToGo
+            // 
+            this.TimeToGo.AutoSize = true;
+            this.TimeToGo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TimeToGo.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.TimeToGo.Location = new System.Drawing.Point(812, 160);
+            this.TimeToGo.Name = "TimeToGo";
+            this.TimeToGo.Size = new System.Drawing.Size(153, 40);
+            this.TimeToGo.TabIndex = 0;
+            this.TimeToGo.Text = "No Processes \r\nCurrently Running";
             // 
             // ClarityForm
             // 

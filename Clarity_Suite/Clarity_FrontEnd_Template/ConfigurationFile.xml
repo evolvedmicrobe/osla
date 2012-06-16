@@ -1,59 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Clarity>
-  <!--This is the node for the interface settings, that is the GUI front end.  Any field in the programmatic class can be set by
-  specifying the type of field it is and the value for it.  -->
   <InterfaceSettings>
     <WELL48_PLATE_PROTOCOL_ID Type="System.Int32">2000106</WELL48_PLATE_PROTOCOL_ID>
-	  <GBO_PLATE_PROTOCOL_ID Type="System.Int32">2000103</GBO_PLATE_PROTOCOL_ID>
+    <GBO_PLATE_PROTOCOL_ID Type="System.Int32">2000103</GBO_PLATE_PROTOCOL_ID>
     <NSFErrorEmails Type="System.String">ndelaney@fas.harvard.edu;4158234767@vtext.com;marshki87@gmail.com</NSFErrorEmails>
-    
+
   </InterfaceSettings>
-  <!-- This is the settings node for the engine-->
   <EngineSettings>
     <RequireProtocolValidation Type="System.Boolean">True</RequireProtocolValidation>
     <AppDataDirectory Type="System.String">C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\</AppDataDirectory>
     <UseAlarm Type="System.Boolean">True</UseAlarm>
   </EngineSettings>
-  <!--Finally, each instrument can be set here. Below are just examples used for some of the instruments used by the original developers. -->
   <Instruments>
-<NSFExperiment>
+    <NSFExperiment>
       <OD600ProtocolID Type="System.Int32">2000103</OD600ProtocolID>
       <MinBetweenReads Type="System.Int32">50</MinBetweenReads>
       <VenusProtocolID Type="System.Int32">2000105</VenusProtocolID>
       <MedianODToStartMeasurement Type="System.Double">.2</MedianODToStartMeasurement>
     </NSFExperiment>
-    <Incubator SkipLoad="True">
+    <Incubator SkipLoad="False">
       <STARTING_SPEED Type="System.Int32">650</STARTING_SPEED>
       <COM_PORT Type="System.String">COM3</COM_PORT>
-<InitCommands Type="System.String">
-WR DM89 10000;NO IDEA WHAT THIS DOES; IN ORIGNIAL FILE THOUGH
-WS T61 20000;ALSO NO IDEA; SENT BY ZYMARK THOUGH
-WR DM48 100;set speed to 100; should go to 120 but wes was unsure if it now read as a percent or as rpm
-WR DM23 2261;STACKER PITCH; 2255 SET BY ZYMARK;
-WR DM25 19;max levels
-WR DM21 400;pitch
-WR DM20 1010;
-WR DM35 1100;This thing sets the base position for the left rack (looking from front)
-WR DM80 80;#right stack position
-WR DM81 932;left stack position
-WR DM82 3517;read handler transfer position; default 3500; ALSO 3510 IN ANOTHER FILE; OCT7 this value was 3555;
-WR DM27 200;set bcr z-lift read position
-WR DM22 1300;set transfer station out z position, used to be 1520, it seems DM22 and DM24 should be the same
-WR DM24 1300;
-WR DM26 1200;#dz for transfer station was 900, upped it
-</InitCommands>
+      <InitCommands Type="System.String">
+        WR DM89 10000;NO IDEA WHAT THIS DOES; IN ORIGNIAL FILE THOUGH
+        WS T61 20000;ALSO NO IDEA; SENT BY ZYMARK THOUGH
+        WR DM48 100;set speed to 100; should go to 120 but wes was unsure if it now read as a percent or as rpm
+        WR DM23 2261;STACKER PITCH; 2255 SET BY ZYMARK;
+        WR DM25 19;max levels
+        WR DM21 400;pitch
+        WR DM20 1010;
+        WR DM35 1100;This thing sets the base position for the left rack (looking from front)
+        WR DM80 80;#right stack position
+        WR DM81 932;left stack position
+        WR DM82 3517;read handler transfer position; default 3500; ALSO 3510 IN ANOTHER FILE; OCT7 this value was 3555;
+        WR DM27 200;set bcr z-lift read position
+        WR DM22 1300;set transfer station out z position, used to be 1520, it seems DM22 and DM24 should be the same
+        WR DM24 1300;
+        WR DM26 1200;#dz for transfer station was 900, upped it
+      </InitCommands>
     </Incubator>
     <!--The skipload attribute can either be used or the instrument can simply be deleted from the xml, either prevents loading-->
     <Sciclone SkipLoad="TRUE">
       <ConfigurationFile Type="System.String">C:\Program Files\Zymark\Instruments\Sciclone\ICP\Configurations\ScicloneALH3000_renmaed.txt</ConfigurationFile>
     </Sciclone>
     <Evolution_Protocols />
-    <TransferStation SkipLoad="True" />
-    <Twister SkipLoad="True">
+    <TransferStation SkipLoad="False" />
+    <Twister SkipLoad="false">
       <IncubatorPositionsFile Type="System.String">C:\Clarity\TwistPos.nfd</IncubatorPositionsFile>
-	    <MinutesRequiredForVerticalMotorShutdown Type="System.Int32">1</MinutesRequiredForVerticalMotorShutdown>
+      <MinutesRequiredForVerticalMotorShutdown Type="System.Int32">1</MinutesRequiredForVerticalMotorShutdown>
     </Twister>
-    <PlateReader SkipLoad="True">
+    <PlateReader SkipLoad="False">
     </PlateReader>
     <Macros />
   </Instruments>
