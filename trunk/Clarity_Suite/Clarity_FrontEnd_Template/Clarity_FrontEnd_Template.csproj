@@ -151,9 +151,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AttemptRecoveryDocument.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Clarity.ico" />
     <Content Include="ConfigurationFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GrowthRateInstructionsl.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="WelcomeInstructions.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
