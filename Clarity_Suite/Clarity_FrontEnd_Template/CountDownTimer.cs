@@ -41,8 +41,8 @@ namespace Clarity
         }
         public void WriteString()
         {
-            //TimeSpan TS = DateTime.Now.Subtract(NextEventTime);
-            TimeSpan TS = NextEventTime.Subtract(DateTime.Now);
+            TimeSpan TS = DateTime.Now.Subtract(NextEventTime);
+            //TimeSpan TS = NextEventTime.Subtract(DateTime.Now);
             if (TS.TotalMinutes < 10)
             { this.ForeColor = Color.Red; }
             else { this.ForeColor = Color.Black; }
