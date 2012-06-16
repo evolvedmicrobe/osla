@@ -184,11 +184,14 @@ namespace Clarity
 
 
         }
+
+
         private void TwisterTeacher_Load(object sender, EventArgs e)
         {
             try
             {
-                Twister Robot = new Twister();
+
+                Robot= new Twister();
                 Robot.Initialize();
 
                 //set up the file

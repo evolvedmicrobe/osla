@@ -18,7 +18,7 @@
       <VenusProtocolID Type="System.Int32">2000105</VenusProtocolID>
       <MedianODToStartMeasurement Type="System.Double">.2</MedianODToStartMeasurement>
     </NSFExperiment>
-    <Incubator SkipLoad="True">
+    <Incubator SkipLoad="False">
       <STARTING_SPEED Type="System.Int32">650</STARTING_SPEED>
       <COM_PORT Type="System.String">COM3</COM_PORT>
       <InitCommands Type="System.String">
@@ -43,8 +43,8 @@
     <Sciclone SkipLoad="TRUE">
       <ConfigurationFile Type="System.String">C:\Program Files\Zymark\Instruments\Sciclone\ICP\Configurations\ScicloneALH3000_renmaed.txt</ConfigurationFile>
     </Sciclone>
-    <TransferStation SkipLoad="True" />
-    <Twister SkipLoad="True">
+    <TransferStation SkipLoad="False" />
+    <Twister SkipLoad="False">
       <IncubatorPositionsFile Type="System.String">C:\Clarity\TwistPos.nfd</IncubatorPositionsFile>
       <MinutesRequiredForVerticalMotorShutdown Type="System.Int32">1</MinutesRequiredForVerticalMotorShutdown>
     </Twister>

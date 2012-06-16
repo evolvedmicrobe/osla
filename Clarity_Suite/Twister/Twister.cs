@@ -141,15 +141,15 @@ namespace Clarity
             //only position one will have the move absolute rule enforced
             //Note that the first spot is the "safe" position, and the second is the "down" position
             //also note that I am defining one "safety position" for all sciclone moves" 
-            ScicloneSafe = TwistDict["Sci Safe"];
-            SciCloneSpots = new Twister.TwisterPosition[4, 2];
-            for (int i = 0; i < 4; i++)
-            {
-                string Key2 = "SciClone " + (i + 1).ToString();
-                string Key1 = Key2 + " Clearance";
-                SciCloneSpots[i, 0] = TwistDict[Key1];
-                SciCloneSpots[i, 1] = TwistDict[Key2];
-            }
+            //ScicloneSafe = TwistDict["Sci Safe"];
+            //SciCloneSpots = new Twister.TwisterPosition[4, 2];
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    string Key2 = "SciClone " + (i + 1).ToString();
+            //    string Key1 = Key2 + " Clearance";
+            //    SciCloneSpots[i, 0] = TwistDict[Key1];
+            //    SciCloneSpots[i, 1] = TwistDict[Key2];
+            //}
             
         }
 
@@ -161,7 +161,7 @@ namespace Clarity
         }
         public override void Initialize()
         {
-            //initializeTwisterPositions();
+            initializeTwisterPositions();
             try
             {  
                           
