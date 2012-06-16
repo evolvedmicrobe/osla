@@ -424,8 +424,9 @@ namespace Clarity
             btnCancelProtocolExecution.Enabled = true;
             btnRetryLastInstruction.Enabled = false;
             //probably should try some checks here
-            TimeToGo.Text = "Protocol Running";
             TimeToGo.Stop();
+            TimeToGo.Text = "Protocol Running";
+            
         } 
         #endregion
 
@@ -729,13 +730,15 @@ namespace Clarity
                 lstCurrentProtocol.Items.Clear();
                 if (ClarityEngine.CurrentRunningState == RunningStates.Running)
                 {
-                    TimeToGo.Text = "Protocol Running";
                     TimeToGo.Stop();
+                    TimeToGo.Text = "Protocol Running";
+                    
                 }
                 if (ClarityEngine.CurrentRunningState == RunningStates.Idle)
                 {
-                    TimeToGo.Text = "Nothing Running";
                     TimeToGo.Stop();
+                    TimeToGo.Text = "Nothing Running";
+                    
                 }
                 if (ClarityEngine.LoadedProtocols.CurrentProtocolInUse != null)
                 {
