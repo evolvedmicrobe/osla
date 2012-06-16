@@ -124,7 +124,7 @@ namespace Robot_Alarm
             ToSend.UseDefaultCredentials = false;
             ToSend.Port = 587;
             ToSend.EnableSsl = true;
-            ToSend.Credentials = new NetworkCredential("cjmarxlab@gmail.com", "marxlab3079");
+            ToSend.Credentials = new NetworkCredential("clarity.lab.automation@gmail.com", "icontrolrobots");
             return ToSend;
 
         }
@@ -143,7 +143,7 @@ namespace Robot_Alarm
                 {
                     //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
                     //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
-                    String senderAddress = "cjmarxlab@gmail.com";
+                    String senderAddress = "clarity.lab.automation@gmail.com";
                     try
                     {
                         MailMessage email = new MailMessage(senderAddress, emailaddress, "Robot Alert", ErrorMessage);

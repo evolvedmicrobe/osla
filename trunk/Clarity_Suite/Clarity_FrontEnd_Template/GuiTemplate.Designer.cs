@@ -28,11 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClarityForm));
             this.MainTab = new System.Windows.Forms.TabControl();
             this.tabSubMain = new System.Windows.Forms.TabPage();
-            this.btnResetLid = new System.Windows.Forms.Button();
             this.btnInstrumentRefresh = new System.Windows.Forms.Button();
             this.pnlFailure = new System.Windows.Forms.Panel();
             this.lblFailureInstructionName = new System.Windows.Forms.Label();
@@ -117,10 +115,8 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.txtPassword = new System.Windows.Forms.TextBox();
-            this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.txtErrorLog = new System.Windows.Forms.RichTextBox();
-            this.NextInstructionTimer = new System.Windows.Forms.Timer(this.components);
             this.TimeToGo = new Clarity.CountdownTimer();
             this.MainTab.SuspendLayout();
             this.tabSubMain.SuspendLayout();
@@ -137,8 +133,8 @@
             // MainTab
             // 
             this.MainTab.Controls.Add(this.tabSubMain);
-            this.MainTab.Controls.Add(this.IncubatorTab);
             this.MainTab.Controls.Add(this.tabRecovery);
+            this.MainTab.Controls.Add(this.IncubatorTab);
             this.MainTab.Controls.Add(this.tabMakeGrowthInstructions);
             this.MainTab.Controls.Add(this.tabNSFExperiment);
             this.MainTab.Location = new System.Drawing.Point(14, 30);
@@ -149,7 +145,6 @@
             // 
             // tabSubMain
             // 
-            this.tabSubMain.Controls.Add(this.btnResetLid);
             this.tabSubMain.Controls.Add(this.btnInstrumentRefresh);
             this.tabSubMain.Controls.Add(this.pnlFailure);
             this.tabSubMain.Controls.Add(this.lblCurrentRunningProtocol);
@@ -165,15 +160,6 @@
             this.tabSubMain.TabIndex = 0;
             this.tabSubMain.Text = "Run Protocols";
             this.tabSubMain.UseVisualStyleBackColor = true;
-            // 
-            // btnResetLid
-            // 
-            this.btnResetLid.Location = new System.Drawing.Point(8, 232);
-            this.btnResetLid.Name = "btnResetLid";
-            this.btnResetLid.Size = new System.Drawing.Size(184, 23);
-            this.btnResetLid.TabIndex = 11;
-            this.btnResetLid.Text = "Reset Lid";
-            this.btnResetLid.UseVisualStyleBackColor = true;
             // 
             // btnInstrumentRefresh
             // 
@@ -202,9 +188,9 @@
             this.lblFailureInstructionName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFailureInstructionName.Location = new System.Drawing.Point(33, 32);
             this.lblFailureInstructionName.Name = "lblFailureInstructionName";
-            this.lblFailureInstructionName.Size = new System.Drawing.Size(46, 17);
+            this.lblFailureInstructionName.Size = new System.Drawing.Size(226, 17);
             this.lblFailureInstructionName.TabIndex = 10;
-            this.lblFailureInstructionName.Text = "label8";
+            this.lblFailureInstructionName.Text = "The Failed Instruction Will Be Here";
             // 
             // lblFailure
             // 
@@ -212,9 +198,9 @@
             this.lblFailure.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFailure.Location = new System.Drawing.Point(4, 4);
             this.lblFailure.Name = "lblFailure";
-            this.lblFailure.Size = new System.Drawing.Size(35, 13);
+            this.lblFailure.Size = new System.Drawing.Size(322, 13);
             this.lblFailure.TabIndex = 9;
-            this.lblFailure.Text = "label8";
+            this.lblFailure.Text = "I will show an option to retry an instruction if it fails during a protocol";
             // 
             // btnRetryLastInstruction
             // 
@@ -659,7 +645,7 @@
             this.chkGBO.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkGBO.Location = new System.Drawing.Point(645, 93);
             this.chkGBO.Name = "chkGBO";
-            this.chkGBO.Size = new System.Drawing.Size(117, 17);
+            this.chkGBO.Size = new System.Drawing.Size(129, 19);
             this.chkGBO.TabIndex = 18;
             this.chkGBO.Text = "48 Well Excel Data";
             this.chkGBO.UseVisualStyleBackColor = true;
@@ -670,7 +656,7 @@
             this.chk48WellPlate.AutoSize = true;
             this.chk48WellPlate.Location = new System.Drawing.Point(645, 71);
             this.chk48WellPlate.Name = "chk48WellPlate";
-            this.chk48WellPlate.Size = new System.Drawing.Size(89, 17);
+            this.chk48WellPlate.Size = new System.Drawing.Size(98, 19);
             this.chk48WellPlate.TabIndex = 14;
             this.chk48WellPlate.Text = "48 Well Plate";
             this.chk48WellPlate.UseVisualStyleBackColor = true;
@@ -1015,10 +1001,11 @@
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(876, 642);
+            this.txtPassword.Location = new System.Drawing.Point(842, 632);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(100, 21);
+            this.txtPassword.Size = new System.Drawing.Size(153, 21);
             this.txtPassword.TabIndex = 9;
+            this.txtPassword.Text = "Type Password Here";
             // 
             // openFileDialog1
             // 
@@ -1037,7 +1024,7 @@
             this.TimeToGo.AutoSize = true;
             this.TimeToGo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TimeToGo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.TimeToGo.Location = new System.Drawing.Point(812, 160);
+            this.TimeToGo.Location = new System.Drawing.Point(838, 161);
             this.TimeToGo.Name = "TimeToGo";
             this.TimeToGo.Size = new System.Drawing.Size(153, 40);
             this.TimeToGo.TabIndex = 0;
@@ -1144,7 +1131,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ListBox lstGrowthRatesProtocol;
         private System.Windows.Forms.WebBrowser wBrowGrowthRate;
-        private System.ServiceProcess.ServiceController serviceController1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TextBox txtGrowthRateExperimentName;
         private System.Windows.Forms.Label label11;
@@ -1173,11 +1159,9 @@
         private System.Windows.Forms.Button btnDeleteProtocol;
         private System.Windows.Forms.CheckBox chkGBO;
         private System.Windows.Forms.Button btnInstrumentRefresh;
-        private System.Windows.Forms.Button btnResetLid;
         private System.Windows.Forms.TextBox textbox_number;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Timer NextInstructionTimer;
         private System.Windows.Forms.TabPage tabNSFExperiment;
         private System.Windows.Forms.ListBox lstNSFPlates;
         private System.Windows.Forms.Button btnGenerateNSFData;

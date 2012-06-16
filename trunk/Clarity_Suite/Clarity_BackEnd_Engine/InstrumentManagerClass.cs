@@ -34,7 +34,6 @@ namespace Clarity
         public RunningStates CurrentRunningState;
         //Various, hopefully self explanatory events that a GUI
         //working with this manager should subscribe to.
-        public event InstrumentManagerEventHandler OnProtocolStarted;
         /// <summary>
         /// This event happens when all protocols have completed their current tasks
         /// and are just waiting for another time point.
@@ -46,6 +45,7 @@ namespace Clarity
         public event InstrumentManagerEventHandler OnProtocolSuccessfullyCancelled;
         public event InstrumentManagerEventHandler OnProtocolExecutionUpdates;
         public event InstrumentManagerEventHandler OnInstrumentStatusUpdate;
+        public event InstrumentManagerEventHandler OnProtocolsStarted;
 
         private bool CurrentlyAttemptingInstrumentRecovery = false;
         System.Windows.Forms.Timer NextInstructionTimer= new System.Windows.Forms.Timer();
@@ -92,8 +92,14 @@ namespace Clarity
         }
         public List<BaseInstrumentClass> InstrumentCollection;
         Dictionary<string, BaseInstrumentClass> NamesToBICs;
-        
-        
+
+        private void FireProtocolExecutionStarted()
+        {
+            if (OnProtocolsStarted != null)
+            {
+                OnProtocolsStarted(this, null);
+            }
+        }
         private void FireGenericError(Exception thrown)
         {   
             if (OnGenericError != null)
@@ -106,6 +112,93 @@ namespace Clarity
             Exception GenericException = new Exception(ErrorMessage);
             FireGenericError(GenericException);
         }
+        private void FireErrorDuringProtocolExecution(Exception thrown)
+        {
+            this.CurrentRunningState = RunningStates.Idle;
+            if (OnErrorDuringProtocolExecution != null)
+            {
+                OnErrorDuringProtocolExecution(this, thrown);
+            }
+            pLoadedProtocols.ReportToAllUsers();
+            if (UseAlarm)
+            {
+                pClarity_Alarm.ChangeStatus("Nothing Running");
+                pClarity_Alarm.TurnOnAlarm("Procedure ended with errors");
+            }
+        }
+        private void FireSuccessfulCancellation()
+        {
+            this.CurrentRunningState = RunningStates.Idle;
+            if (UseAlarm)
+            {
+                pClarity_Alarm.ChangeStatus("Nothing Running");
+            }
+            if (OnProtocolSuccessfullyCancelled != null)
+            {
+                OnProtocolSuccessfullyCancelled(this, null);
+            }
+        }
+        private void FireAllProtocolsCompleted()
+        {
+            CurrentRunningState = RunningStates.Idle;
+            if (UseAlarm)
+            {
+                pClarity_Alarm.ChangeStatus("Protocols Finished");
+            }
+            if (OnAllRunningProtocolsEnded != null)
+            { OnAllRunningProtocolsEnded(this, null); }
+        }
+        private void FireProtocolDelayEvent(int Delay)
+        {
+            CurrentRunningState = RunningStates.WaitingForNextExecutionTimePoint;
+            if (Delay <= 0)
+            {
+                throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
+            }
+           if (UseAlarm)
+            {
+                pClarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
+            }
+            NextInstructionTimer.Interval = Delay;
+            NextInstructionTimer.Start();
+            TimeSpan ts = new TimeSpan((long)Delay);
+            
+            ProtocolEvents.FirePauseEvent(this, ts);
+                    
+            if (OnProtocolPaused != null)
+            {   
+                OnProtocolPaused(this, ts);
+            }
+          
+        }
+        private void FireProtocolUpdate()
+        {
+            if (UseAlarm && LoadedProtocols.CurrentProtocolInUse!=null)
+            {
+                pClarity_Alarm.ChangeStatus("Current Running Protocol - " + LoadedProtocols.CurrentProtocolInUse.ToString());
+            }
+            
+            if (OnProtocolExecutionUpdates != null)
+                OnProtocolExecutionUpdates(this, null);
+        }
+
+        private void FireInstrumentStatusUpdate()
+        {
+            if (OnInstrumentStatusUpdate != null)
+            {
+                OnInstrumentStatusUpdate(this, null);
+            }
+        }
+        private void InitializeWorkerToRunRobots()
+        {
+            WorkerToRunRobots = new BackgroundWorker();
+            WorkerToRunRobots.WorkerReportsProgress = true;
+            WorkerToRunRobots.WorkerSupportsCancellation = true;
+            WorkerToRunRobots.DoWork += new DoWorkEventHandler(WorkerToRunRobots_DoWork);
+            WorkerToRunRobots.ProgressChanged += new ProgressChangedEventHandler(WorkerToRunRobots_ProgressChanged);
+            WorkerToRunRobots.RunWorkerCompleted += new RunWorkerCompletedEventHandler(WorkerToRunRobots_RunWorkerCompleted);
+        }
+
         public bool RunInstrumentMethod(string InstrumentName, string MethodName, object[] Parameters, bool RequireStatusOK, Protocol curProtocol = null)
         {
             //flips through the instruments, until it finds the appropriate method/name, then invokes it
@@ -177,95 +270,11 @@ namespace Clarity
                 //thrown should always be of type System.Reflection.TargetInvocationException
                 //the inner exception can be the instrument error if this was the cause
                 FireErrorDuringProtocolExecution(thrown);
-                
+
             }
             return false;
         }
-        private void FireErrorDuringProtocolExecution(Exception thrown)
-        {
-            this.CurrentRunningState = RunningStates.Idle;
-            if (OnErrorDuringProtocolExecution != null)
-            {
-                OnErrorDuringProtocolExecution(this, thrown);
-            }
-            pLoadedProtocols.ReportToAllUsers();
-            if (UseAlarm)
-            {
-                pClarity_Alarm.ChangeStatus("Nothing Running");
-                pClarity_Alarm.TurnOnAlarm("Procedure ended with errors");
-            }
-        }
-        private void FireSuccessfulCancellation()
-        {
-            this.CurrentRunningState = RunningStates.Idle;
-            if (UseAlarm)
-            {
-                pClarity_Alarm.ChangeStatus("Nothing Running");
-            }
-            if (OnProtocolSuccessfullyCancelled != null)
-            {
-                OnProtocolSuccessfullyCancelled(this, null);
-            }
-        }
-        private void FireAllProtocolsCompleted()
-        {
-            CurrentRunningState = RunningStates.Idle;
-            if (UseAlarm)
-            {
-                pClarity_Alarm.ChangeStatus("Protocols Finished");
-            }
-            if (OnAllRunningProtocolsEnded != null)
-            { OnAllRunningProtocolsEnded(this, null); }
-        }
-        private void FireProtocolDelayEvent(int Delay)
-        {
-            CurrentRunningState = RunningStates.WaitingForNextExecutionTimePoint;
-            if (Delay <= 0)
-            {
-                throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
-            }
-           if (UseAlarm)
-            {
-                pClarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
-            }
-            NextInstructionTimer.Interval = Delay;
-            NextInstructionTimer.Start();
-            TimeSpan ts = new TimeSpan((long)Delay);
-            
-            ProtocolEvents.FirePauseEvent(this, ts);
-                    
-            if (OnProtocolPaused != null)
-            {   
-                OnProtocolPaused(this, ts);
-            }
-          
-        }
-        private void FireProtocolUpdate()
-        {
-            if (UseAlarm && LoadedProtocols.CurrentProtocolInUse!=null)
-            {
-                pClarity_Alarm.ChangeStatus("Current Running Protocol - " + LoadedProtocols.CurrentProtocolInUse.ToString());
-            }
-            
-            if (OnProtocolExecutionUpdates != null)
-                OnProtocolExecutionUpdates(this, null);
-        }
-        private void FireInstrumentStatusUpdate()
-        {
-            if (OnInstrumentStatusUpdate != null)
-            {
-                OnInstrumentStatusUpdate(this, null);
-            }
-        }
-        private void InitializeWorkerToRunRobots()
-        {
-            WorkerToRunRobots = new BackgroundWorker();
-            WorkerToRunRobots.WorkerReportsProgress = true;
-            WorkerToRunRobots.WorkerSupportsCancellation = true;
-            WorkerToRunRobots.DoWork += new DoWorkEventHandler(WorkerToRunRobots_DoWork);
-            WorkerToRunRobots.ProgressChanged += new ProgressChangedEventHandler(WorkerToRunRobots_ProgressChanged);
-            WorkerToRunRobots.RunWorkerCompleted += new RunWorkerCompletedEventHandler(WorkerToRunRobots_RunWorkerCompleted);
-        }
+        
         void WorkerToRunRobots_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
        {
            try
@@ -389,6 +398,7 @@ namespace Clarity
                 CurrentRunningState = RunningStates.Running;
                 WorkerToRunRobots.RunWorkerAsync();
             }
+            FireProtocolExecutionStarted();
         }
         /// <summary>
         /// Request that any running protocols stop running
