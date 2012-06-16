@@ -6,11 +6,12 @@
     <WELL48_PLATE_PROTOCOL_ID Type="System.Int32">2000106</WELL48_PLATE_PROTOCOL_ID>
 	  <GBO_PLATE_PROTOCOL_ID Type="System.Int32">2000103</GBO_PLATE_PROTOCOL_ID>
     <NSFErrorEmails Type="System.String">ndelaney@fas.harvard.edu;4158234767@vtext.com;marshki87@gmail.com</NSFErrorEmails>
-    <RequireProtocolValidation Type="System.Boolean">True</RequireProtocolValidation>
-    <AppDataDirectory Type="System.String">C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\</AppDataDirectory>
+    
   </InterfaceSettings>
   <!-- This is the settings node for the engine-->
   <EngineSettings>
+    <RequireProtocolValidation Type="System.Boolean">True</RequireProtocolValidation>
+    <AppDataDirectory Type="System.String">C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\</AppDataDirectory>
     <UseAlarm Type="System.Boolean">True</UseAlarm>
   </EngineSettings>
   <!--Finally, each instrument can be set here. Below are just examples used for some of the instruments used by the original developers. -->

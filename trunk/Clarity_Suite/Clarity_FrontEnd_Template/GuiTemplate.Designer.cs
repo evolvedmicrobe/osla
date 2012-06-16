@@ -114,8 +114,15 @@
             this.serviceController1 = new System.ServiceProcess.ServiceController();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.txtErrorLog = new System.Windows.Forms.RichTextBox();
-            this.TimeToGo = new Clarity.CountdownTimer();
             this.NextInstructionTimer = new System.Windows.Forms.Timer(this.components);
+            this.tabNSFExperiment = new System.Windows.Forms.TabPage();
+            this.lstNSFPlates = new System.Windows.Forms.ListBox();
+            this.btnGenerateNSFData = new System.Windows.Forms.Button();
+            this.txtNSFTransferNumber = new System.Windows.Forms.TextBox();
+            this.txtNSFName = new System.Windows.Forms.TextBox();
+            this.TimeToGo = new Clarity.CountdownTimer();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.MainTab.SuspendLayout();
             this.tabSubMain.SuspendLayout();
             this.pnlFailure.SuspendLayout();
@@ -125,6 +132,7 @@
             this.tabMakeGrowthInstructions.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.tabNSFExperiment.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTab
@@ -133,6 +141,7 @@
             this.MainTab.Controls.Add(this.IncubatorTab);
             this.MainTab.Controls.Add(this.tabRecovery);
             this.MainTab.Controls.Add(this.tabMakeGrowthInstructions);
+            this.MainTab.Controls.Add(this.tabNSFExperiment);
             this.MainTab.Location = new System.Drawing.Point(14, 30);
             this.MainTab.Name = "MainTab";
             this.MainTab.SelectedIndex = 0;
@@ -607,7 +616,7 @@
             this.wBrowRecovInstructions.MinimumSize = new System.Drawing.Size(20, 20);
             this.wBrowRecovInstructions.Name = "wBrowRecovInstructions";
             this.wBrowRecovInstructions.ScriptErrorsSuppressed = true;
-            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 643);
+            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 645);
             this.wBrowRecovInstructions.TabIndex = 0;
             this.wBrowRecovInstructions.WebBrowserShortcutsEnabled = false;
             // 
@@ -793,7 +802,7 @@
             this.wBrowGrowthRate.Location = new System.Drawing.Point(3, 3);
             this.wBrowGrowthRate.MinimumSize = new System.Drawing.Size(20, 20);
             this.wBrowGrowthRate.Name = "wBrowGrowthRate";
-            this.wBrowGrowthRate.Size = new System.Drawing.Size(364, 643);
+            this.wBrowGrowthRate.Size = new System.Drawing.Size(364, 645);
             this.wBrowGrowthRate.TabIndex = 0;
             // 
             // lstInstrumentStatus
@@ -967,6 +976,55 @@
             this.txtErrorLog.TabIndex = 10;
             this.txtErrorLog.Text = "";
             // 
+            // tabNSFExperiment
+            // 
+            this.tabNSFExperiment.Controls.Add(this.label17);
+            this.tabNSFExperiment.Controls.Add(this.label16);
+            this.tabNSFExperiment.Controls.Add(this.txtNSFName);
+            this.tabNSFExperiment.Controls.Add(this.txtNSFTransferNumber);
+            this.tabNSFExperiment.Controls.Add(this.btnGenerateNSFData);
+            this.tabNSFExperiment.Controls.Add(this.lstNSFPlates);
+            this.tabNSFExperiment.Location = new System.Drawing.Point(4, 24);
+            this.tabNSFExperiment.Name = "tabNSFExperiment";
+            this.tabNSFExperiment.Padding = new System.Windows.Forms.Padding(3);
+            this.tabNSFExperiment.Size = new System.Drawing.Size(788, 649);
+            this.tabNSFExperiment.TabIndex = 4;
+            this.tabNSFExperiment.Text = "NSF Experiment";
+            this.tabNSFExperiment.UseVisualStyleBackColor = true;
+            // 
+            // lstNSFPlates
+            // 
+            this.lstNSFPlates.FormattingEnabled = true;
+            this.lstNSFPlates.ItemHeight = 15;
+            this.lstNSFPlates.Location = new System.Drawing.Point(320, 17);
+            this.lstNSFPlates.Name = "lstNSFPlates";
+            this.lstNSFPlates.Size = new System.Drawing.Size(274, 424);
+            this.lstNSFPlates.TabIndex = 0;
+            // 
+            // btnGenerateNSFData
+            // 
+            this.btnGenerateNSFData.Location = new System.Drawing.Point(320, 559);
+            this.btnGenerateNSFData.Name = "btnGenerateNSFData";
+            this.btnGenerateNSFData.Size = new System.Drawing.Size(274, 23);
+            this.btnGenerateNSFData.TabIndex = 1;
+            this.btnGenerateNSFData.Text = "Make NSF Data";
+            this.btnGenerateNSFData.UseVisualStyleBackColor = true;
+            this.btnGenerateNSFData.Click += new System.EventHandler(this.btnGenerateNSFData_Click);
+            // 
+            // txtNSFTransferNumber
+            // 
+            this.txtNSFTransferNumber.Location = new System.Drawing.Point(429, 496);
+            this.txtNSFTransferNumber.Name = "txtNSFTransferNumber";
+            this.txtNSFTransferNumber.Size = new System.Drawing.Size(135, 21);
+            this.txtNSFTransferNumber.TabIndex = 2;
+            // 
+            // txtNSFName
+            // 
+            this.txtNSFName.Location = new System.Drawing.Point(429, 460);
+            this.txtNSFName.Name = "txtNSFName";
+            this.txtNSFName.Size = new System.Drawing.Size(135, 21);
+            this.txtNSFName.TabIndex = 3;
+            // 
             // TimeToGo
             // 
             this.TimeToGo.AutoSize = true;
@@ -977,6 +1035,24 @@
             this.TimeToGo.Size = new System.Drawing.Size(153, 40);
             this.TimeToGo.TabIndex = 0;
             this.TimeToGo.Text = "No Processes \r\nCurrently Running";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(320, 503);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(100, 15);
+            this.label16.TabIndex = 4;
+            this.label16.Text = "Transfer Number";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(317, 460);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(33, 15);
+            this.label17.TabIndex = 5;
+            this.label17.Text = "Date";
             // 
             // ClarityForm
             // 
@@ -1018,6 +1094,8 @@
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.tabNSFExperiment.ResumeLayout(false);
+            this.tabNSFExperiment.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1112,6 +1190,13 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Timer NextInstructionTimer;
+        private System.Windows.Forms.TabPage tabNSFExperiment;
+        private System.Windows.Forms.ListBox lstNSFPlates;
+        private System.Windows.Forms.Button btnGenerateNSFData;
+        private System.Windows.Forms.TextBox txtNSFName;
+        private System.Windows.Forms.TextBox txtNSFTransferNumber;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
 
     }
 }

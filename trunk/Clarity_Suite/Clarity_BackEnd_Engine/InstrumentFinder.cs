@@ -56,6 +56,7 @@ namespace Clarity
         {
             System.Collections.Generic.List<System.Type> TypesFound = new System.Collections.Generic.List<System.Type>();
             string[] files = System.IO.Directory.GetFiles(searchPath, "*.dll");
+            string[] files2 = System.IO.Directory.GetFiles(searchPath);
             List<Type> toReturn = new List<Type>();
             for (int i = 0; i < files.Length; i++)
             {
@@ -63,13 +64,12 @@ namespace Clarity
                 //Now to try and load the .dll file, first verify it is a 
                 try
                 {
-                    System.Reflection.AssemblyName.GetAssemblyName(searchPath + cFile);
-                    Assembly toLoad = System.Reflection.Assembly.LoadFile(searchPath + cFile);
+                    System.Reflection.AssemblyName.GetAssemblyName(cFile);
+                    Assembly toLoad = System.Reflection.Assembly.LoadFile(cFile);
                     System.Type[] types = toLoad.GetTypes();
-                    List<Type> validTypes = new List<Type>();
-                    foreach (Type t in validTypes)
+                    foreach (Type t in types)
                     {
-                        if (!t.IsAbstract && typeToFind.IsSubclassOf(t) && !t.Equals(typeToFind))
+                        if (!t.IsAbstract && t.IsSubclassOf(typeToFind) && !t.Equals(typeToFind))
                         {
                             toReturn.Add(t);
                         }

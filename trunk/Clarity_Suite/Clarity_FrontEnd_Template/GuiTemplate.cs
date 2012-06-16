@@ -37,18 +37,84 @@ namespace Clarity
         private Twister Robot;
         private TransferStation TransStation;
         private VictorManager PlateReader;
-        /// <summary>
-        /// This can be set by the files XML, this is the directory to look for data.
-        /// </summary>
-        public string AppDataDirectory
+
+        #region ToRemove
+        private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
+        public string NSFErrorEmails
         {
-            get { return pAppDataDirectory; }
-            set { pAppDataDirectory = value; }
+            get { return pErrorEmails; }
+            set { pErrorEmails = value; }
         }
+        int[] ExcludedIncubatorPositions = { 19, 38 };
+        private void btnGenerateNSFData_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int tranNum;
+                List<Protocol> ProtsToAdd = new List<Protocol>();
+                //this will create and start a protocol, first to check for errors
+                if (txtNSFTransferNumber.Text == "" | txtNSFName.Text == "")
+                {
+                    ShowError("You did not fill out all of the required fields");
+                }
+                else if (lstNSFPlates.SelectedIndex == -1)
+                {
+                    ShowError("You did not select any slots");
+                }
+                else
+                {
+                    try { tranNum = Convert.ToInt32(txtNSFTransferNumber.Text); }
+                    catch { ShowError("Could not convert your transfer number into an integer, please enter an appropriate value"); return; }
+                    NSFExperiment tmp = new NSFExperiment();
+                    foreach (int plateslot in lstNSFPlates.SelectedItems)
+                    {
+                        Protocol NewProt = new Protocol();
+                        NewProt.ErrorEmailAddress = "";
+                        string baseName = "NSF-" + txtNSFName.Text + "-" + txtNSFTransferNumber.Text.ToString();
+                        NewProt.ProtocolName = baseName + "_" + plateslot.ToString();
+                        StaticProtocolItem SP = new StaticProtocolItem();
+                        SP.MethodName = "CreateProtocol";
+                        SP.InstrumentName = tmp.Name;
+                        SP.Parameters = new object[2] { baseName, plateslot };
+                        NewProt.Instructions.Add(SP);
+                        ProtsToAdd.Add(NewProt);
+                    }
+                    Protocol Watcher = new Protocol();
+                    Watcher.ProtocolName = "NSF-Error-" + txtNSFTransferNumber.Text.ToString();
+                    Watcher.ErrorPhoneNumber = "4158234767";
+                    Watcher.MaxIdleTimeBeforeAlarm = 50;
+                    Watcher.ErrorEmailAddress = this.NSFErrorEmails;
+                    DelayTime DT = new DelayTime();
+                    DT.minutes = 60 * 70;
+                    Watcher.Instructions.Add(DT);
+                    ProtsToAdd.Add(Watcher);
+                }
+                DialogResult DR = MessageBox.Show("Are you sure you have entered the right values and are ready to load this protocol?", "Final Check", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (DR == DialogResult.Yes)
+                {
+                    foreach (Protocol p in ProtsToAdd)
+                    {
+                        ClarityEngine.AddProtocol(p);
+                    }
+                    UpdateLoadedProtocols();
+                    if (ClarityEngine.CurrentRunningState==RunningStates.Idle)//this timer is running while a protocol is waiting to go
+                    {
+                        DialogResult DR2 = MessageBox.Show("Would you like to start your protocols immediately?", "Begin Protocol", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (DR2 == DialogResult.Yes)
+                        {
+                            ClarityEngine.StartProtocolExecution();
+                        }
+                    }
+                }
+            }
+
+            catch { ShowError("Weird error occurred"); }
+        }
+        #endregion
         WelcomeForm WF;
         public ClarityForm()
         {   
-            RecoveryProtocolFile = AppDataDirectory + "Last_Protocol.nfd";
+            
             InitializeComponent();  
         }
         private static InstrumentManagerClass ClarityEngine;
@@ -77,6 +143,8 @@ namespace Clarity
                 ClarityEngine.OnProtocolSuccessfullyCancelled += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolSuccessfullyCancelled);
                 ClarityEngine.OnErrorDuringProtocolExecution += new InstrumentManagerErrorHandler(ClarityEngine_OnErrorDuringProtocolExecution);
                 ClarityEngine.OnProtocolExecutionUpdates += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolExecutionUpdates);
+
+                ClarityEngine.LoadUpInstruments();
 
                 Incubator = ClarityEngine.ReturnInstrumentType<IncubatorServ>();
                 TransStation = ClarityEngine.ReturnInstrumentType<TransferStation>();
@@ -230,6 +298,18 @@ namespace Clarity
            
             UpdateInstrumentStatus();
 
+            for (int i = 38; i > 0; i--)
+            {
+                if (ExcludedIncubatorPositions.Contains(i))
+                { continue; }
+                else
+                {
+                    lstIncubatorSlots.Items.Add(i);
+                    lstNSFPlates.Items.Add(i);
+                    lstGrowthRatesProtocol.Items.Add(i);
+                }
+            }
+            cmbShakeSpeed.SelectedIndex = 6;
             
             CreateRecoveryPanel();
 
@@ -415,34 +495,34 @@ namespace Clarity
         }
 
         //Form update and addition methods
-        public const string INSTRUMENT_NAME_DELIMITER = "_";
+        public const char INSTRUMENT_NAME_DELIMITER = '_';
         private void CreateRecoveryPanel()
         {
-             //this method will create a tab for every instrument, and fill that tab with 
+            //this method will create a tab for every instrument, and fill that tab with 
             System.Drawing.Size DefaultButtonSize = new Size(200, 25);
             int maxDepth = 600;//how far down a button can be placed
             int StartX = 20;
             int StartY = 25;
             System.Drawing.Point StartPoint = new Point(StartX, StartY);
-            foreach (object c in InstrumentCollection)
+            foreach (object c in ClarityEngine.InstrumentCollection)
             {
                 if (c is VirtualInstrument)
                 { continue; }
                 BaseInstrumentClass Instr = (BaseInstrumentClass)c;
                 Type InstType = c.GetType();
-                if (Instr.Name == "Macros") { continue; }
-                
+              
+
                 Button NewButton = new Button();
                 NewButton.Name = Instr.Name + INSTRUMENT_NAME_DELIMITER + "AttemptRecovery";
-                
+
                 NewButton.Size = DefaultButtonSize;
                 NewButton.AutoSize = true;
-                NewButton.Text = "Try to Recover "+Instr.Name;
+                NewButton.Text = "Try to Recover " + Instr.Name;
                 NewButton.Location = new Point(StartPoint.X, StartPoint.Y);
-                NewButton.Click +=new EventHandler(RecoveryButton_Click);
+                NewButton.Click += new EventHandler(RecoveryButton_Click);
                 tabRecovery.Controls.Add(NewButton);
                 this.Refresh();
-                StartPoint.Y += DefaultButtonSize.Height+10;
+                StartPoint.Y += DefaultButtonSize.Height + 10;
                 if (StartPoint.Y >= maxDepth)
                 {
                     StartPoint.Y = StartY;
@@ -450,7 +530,7 @@ namespace Clarity
                 }
             }
             StartPoint.Y += 160;
-            foreach (object c in InstrumentCollection)
+            foreach (object c in ClarityEngine.InstrumentCollection)
             {
                 if (c is VirtualInstrument)
                 { continue; }
@@ -476,10 +556,10 @@ namespace Clarity
         }                   
         private void UpdateInstrumentStatus()
         {
-            lock (InstrumentCollection)
+            lock (ClarityEngine.InstrumentCollection)
             {
                 lstInstrumentStatus.Items.Clear();
-                foreach (object o in InstrumentCollection)
+                foreach (object o in ClarityEngine.InstrumentCollection)
                 {
                     if (o is VirtualInstrument)
                     { continue; }
@@ -498,7 +578,7 @@ namespace Clarity
         private void DisplayMakeProtocolsForm()
         {
             // Use full reference to avoid conflict with Skype
-            System.Windows.Forms.Application.Run(new MakeProtocols(InstrumentCollection));
+            System.Windows.Forms.Application.Run(new MakeProtocols(ClarityEngine.InstrumentCollection));
         }
         private void UpdateLoadedProtocols()
         {
@@ -506,7 +586,7 @@ namespace Clarity
             lstSelectedProtocol.Items.Clear();
             lstLoadedProtocols.Items.Clear();
             lstCurrentProtocol.Items.Clear();
-            foreach (object o in LoadedProtocols.Protocols)
+            foreach (object o in ClarityEngine.LoadedProtocols.Protocols)
             {
                 lstLoadedProtocols.Items.Add(o);
             }
@@ -575,7 +655,7 @@ namespace Clarity
                 int maxDepth = 500;//how far down a button can be placed
                 int StartX = 50;
                 int StartY = 50;
-                foreach (object c in InstrumentCollection)
+                foreach (object c in ClarityEngine.InstrumentCollection)
                 {
                     BaseInstrumentClass Instr = (BaseInstrumentClass)c;
                     TabPage NewTab = new TabPage(Instr.Name);
@@ -629,7 +709,7 @@ namespace Clarity
             //This is the sister method to the one above, for a given button that is named
             //Instrument_Method this will run that method, note only methods with no parameters should be called this way
             Button myButton = (Button)sender;
-            string[] InsMet = myButton.Name.Split(INSTRUMENT_NAME_DELIMITER.ToCharArray()[0]);
+            string[] InsMet = myButton.Name.Split(INSTRUMENT_NAME_DELIMITER);
             string InstrumentName = InsMet[0];
             string MethodName = InsMet[1];
             if (myButton.Name.IndexOf("@") != -1)
@@ -638,12 +718,12 @@ namespace Clarity
                 if (myButton.Name.Split('@')[1] == "IncubatorServ")
                 {
                     object[] Params = new object[1] { Incubator };
-                    RunInstrumentMethod(InstrumentName, MethodName, Params,true);
+                    ClarityEngine.RunInstrumentMethod(InstrumentName, MethodName, Params,true);
                 }
             }
             else
             {
-                RunInstrumentMethod(InstrumentName, MethodName,null,true);
+                ClarityEngine.RunInstrumentMethod(InstrumentName, MethodName,null,true);
             }
             delVoidVoid del_Update = UpdateInstrumentStatus;
             this.Invoke(del_Update);
@@ -733,12 +813,19 @@ namespace Clarity
 
             this.Cursor = Cursors.WaitCursor;
             Button myButton = (Button)sender;
-            string[] InsMet = myButton.Name.Split(INSTRUMENT_NAME_DELIMITER.ToCharArray()[0]);
+            string[] InsMet = myButton.Name.Split(INSTRUMENT_NAME_DELIMITER);
             string InstrumentName = InsMet[0];
-            string MethodName = InsMet[1];
-            RunInstrumentMethod(InstrumentName,MethodName,null,false);
-            delVoidVoid del_Update = UpdateInstrumentStatus;
-            this.Invoke(del_Update);
+            ClarityEngine.TryToRecoverInstrument(InstrumentName);
+            this.Cursor = Cursors.Default;
+        }
+        private void FreeResourceButton_Click(object sender, EventArgs e)
+        {
+
+            this.Cursor = Cursors.WaitCursor;
+            Button myButton = (Button)sender;
+            string[] InsMet = myButton.Name.Split(INSTRUMENT_NAME_DELIMITER);
+            string InstrumentName = InsMet[0];
+            ClarityEngine.FreeResourcesForInstrument(InstrumentName);
             this.Cursor = Cursors.Default;
         }
         private void RemoveSelectedProtocol()
@@ -782,15 +869,7 @@ namespace Clarity
             }
             catch { MessageBox.Show("Last instruction failed"); }
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
 
-            StaticProtocolItem Instruction = LoadedProtocols.GetNextProtocolObject() as StaticProtocolItem;
-            MessageBox.Show(Instruction.InstrumentName + "," + Instruction.Parameters.ToString());
-            //then we run the protocol item
-            bool result = RunInstrumentMethod(Instruction.InstrumentName, Instruction.MethodName, Instruction.Parameters, true);
-
-        }
         private void btnStartGrowthRate_Click(object sender, EventArgs e)
         {
             try
