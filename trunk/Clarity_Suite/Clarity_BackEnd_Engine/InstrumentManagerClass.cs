@@ -613,7 +613,9 @@ namespace Clarity
         {
             if (Delay <= 0)
             {
-                throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
+                StartProtocolExecution();
+                return;
+                //throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
             }
             if (UseAlarm)
             {
