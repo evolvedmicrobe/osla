@@ -198,10 +198,13 @@ namespace Clarity
                 SimulationMode = false;
                 TwistDict = new Dictionary<string, Twister.TwisterPosition>();
                 FilePath = GetPositionsFile();
-                Never_Call_initializeTwisterPositions();
-                //DeSerializeList();                
-                
-                
+               // Never_Call_initializeTwisterPositions();
+                DeSerializeList();
+               Twister.TwisterPosition  RestSafe = new Twister.TwisterPosition("Rest Safe", "Absolute", 2900, 49999, 209223, -5121, 20);
+               Twister.TwisterPosition  RestPosition = new Twister.TwisterPosition("Rest Position", "Absolute", 2900, 49999, 209223, -5121, 20);
+
+               TwistDict["Rest Safe"] = RestSafe;
+               TwistDict["Rest Position"] = RestPosition;
                 //THE TWISTER SERVE MUST BE INITIALIZED BEFORE IT WILL GIVE A ROBOT REF PROPERLY
                 RobotServ = Robot.RobotServ;//this line must follow the server initialization
                 RobotServ.SpeedAsPercentMax = (short)20;
