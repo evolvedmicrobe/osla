@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Collections;
 using System.Reflection;
+using Clarity;
 
 namespace Clarity
 {

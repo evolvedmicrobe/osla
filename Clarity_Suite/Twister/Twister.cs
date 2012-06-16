@@ -238,7 +238,7 @@ namespace Clarity
              base.RegisterEventsWithProtocolManager(PEC);
         }
 
-        void PM_onProtocolPause(TimeSpan TS)
+        void PM_onProtocolPause(InstrumentManager source, TimeSpan TS)
         {
             if (TS.TotalMinutes >= pMinutesRequiredForVerticalMotorShutdown)
             {

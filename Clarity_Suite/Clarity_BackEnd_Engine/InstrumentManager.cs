@@ -17,6 +17,6 @@ namespace Clarity
         StaticProtocolItem GetLastFailedInstruction();
         ProtocolManager LoadedProtocols
         { get; }
-        Alarm ClarityAlarm { get; }
+        Alarm Clarity_Alarm { get; }
     }
 }

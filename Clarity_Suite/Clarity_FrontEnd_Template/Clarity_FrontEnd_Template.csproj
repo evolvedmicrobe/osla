@@ -125,6 +125,10 @@
       <Project>{999BD960-00C5-4429-82EE-9F5C25DA8410}</Project>
       <Name>Clarity_BackEnd_Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DynamicAndVirtualInstruments\DynamicAndVirtualInstruments.csproj">
+      <Project>{AF228932-48CA-4653-903D-8841B6EEF6C3}</Project>
+      <Name>DynamicAndVirtualInstruments</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Incubator\Incubator.csproj">
       <Project>{DFA1E8D7-FD84-4EDA-9C59-0BE72A28142F}</Project>
       <Name>Incubator</Name>

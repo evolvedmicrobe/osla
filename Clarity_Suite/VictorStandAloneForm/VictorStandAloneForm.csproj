@@ -164,6 +164,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Clarity_BackEnd_Engine\Clarity_BackEnd_Engine.csproj">
+      <Project>{999BD960-00C5-4429-82EE-9F5C25DA8410}</Project>
+      <Name>Clarity_BackEnd_Engine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

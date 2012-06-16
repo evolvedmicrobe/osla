@@ -50,7 +50,22 @@ namespace Clarity
         private bool CurrentlyAttemptingInstrumentRecovery = false;
         System.Windows.Forms.Timer NextInstructionTimer= new System.Windows.Forms.Timer();
         public string RecoveryProtocolFile;
-        private string pAppDataDirectory = Directory.GetCurrentDirectory()+"\\";
+        private string pAppDataDirectory = Directory.GetCurrentDirectory() + "\\";
+        /// <summary>
+        /// This can be set by the files XML, this is the directory to look for data.
+        /// </summary>
+        public string AppDataDirectory
+        {
+            get { return pAppDataDirectory; }
+            set { pAppDataDirectory = value; }
+        }
+        private bool pRequireProtocolValidation;
+        public bool RequireProtocolValidation
+        {
+            get { return pRequireProtocolValidation; }
+            set { pRequireProtocolValidation = value; }
+        }
+
         BackgroundWorker WorkerToRunRobots;
         ProtocolManager pLoadedProtocols;
         public ProtocolManager LoadedProtocols
@@ -75,7 +90,7 @@ namespace Clarity
         {
             return LastFailedInstruction;
         }
-        static public List<BaseInstrumentClass> InstrumentCollection;
+        public List<BaseInstrumentClass> InstrumentCollection;
         Dictionary<string, BaseInstrumentClass> NamesToBICs;
         
         
@@ -91,7 +106,7 @@ namespace Clarity
             Exception GenericException = new Exception(ErrorMessage);
             FireGenericError(GenericException);
         }
-        private bool RunInstrumentMethod(string InstrumentName, string MethodName, object[] Parameters, bool RequireStatusOK, Protocol curProtocol = null)
+        public bool RunInstrumentMethod(string InstrumentName, string MethodName, object[] Parameters, bool RequireStatusOK, Protocol curProtocol = null)
         {
             //flips through the instruments, until it finds the appropriate method/name, then invokes it
             //all failed instrument methods should throw an instrument error
@@ -490,6 +505,7 @@ namespace Clarity
             }
             catch (Exception thrown)
             {
+                FireGenericError(thrown);
 
 
             }
@@ -499,14 +515,52 @@ namespace Clarity
             try
             {
                 if (CurrentlyAttemptingInstrumentRecovery)
+                {
                     FireGenericError("Currently attempting a recovery, please wait for the results");
+                }
                 else
                 {
-
+                    Action<string> toRun = AttemptRecoveryMethod;
+                    Thread toRecover = new Thread(() => toRun(InstrumentName));
+                    toRecover.IsBackground = true;
+                    toRecover.Name = "Instrument Recovery thread";
+                    toRecover.Start();
                 }
-
             }
+            catch (Exception thrown)
+            { FireGenericError(thrown); CurrentlyAttemptingInstrumentRecovery = false; }
+        }
+        private void AttemptRecoveryMethod(string InstrumentName)
+        {
+            try
+            {
+                BaseInstrumentClass toRecover = this.NamesToBICs[InstrumentName];
+                toRecover.AttemptRecovery();
+                CurrentlyAttemptingInstrumentRecovery = false;
+            }
+            catch (Exception thrown)
+            {
+                CurrentlyAttemptingInstrumentRecovery = false;
+                FireGenericError(thrown);
+            }
+        }
 
+        public void FreeResourcesForInstrument(string InstrumentName)
+        {
+            if (!this.NamesToBICs.ContainsKey(InstrumentName))
+                FireGenericError("Instrument name " + InstrumentName + " is not loaded");
+            else
+            {
+                try
+                {
+                    BaseInstrumentClass toFree = this.NamesToBICs[InstrumentName];
+                    toFree.CloseAndFreeUpResources();
+                }
+                catch (Exception thrown)
+                {
+                    FireGenericError(thrown);
+                }
+            }
         }
         public void ReinitializeAlarm()
         {
@@ -685,6 +739,7 @@ namespace Clarity
         /// </summary>
         public InstrumentManagerClass()
         {
+            RecoveryProtocolFile = AppDataDirectory + "Last_Protocol.nfd";
             CurrentRunningState = RunningStates.Idle;
             InstrumentCollection = new List<BaseInstrumentClass>();
             pLoadedProtocols = new ProtocolManager(this);
