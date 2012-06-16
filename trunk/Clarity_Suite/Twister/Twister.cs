@@ -126,14 +126,14 @@ namespace Clarity
             RestLocation = TwistDict["Rest Position"];
  
             //Now to give all the coordinates of the rack positions
-            RackPositions = new Twister.TwisterPosition[6, 2];
-            for (int i = 0; i < 6; i++)
-            {
-                string Key2 = "Rack " + (i+1).ToString(); 
-                string Key1 = Key2+ " Clearance";
-                RackPositions[i, 0] = TwistDict[Key1];
-                RackPositions[i, 1] = TwistDict[Key2];
-            }
+            //RackPositions = new Twister.TwisterPosition[6, 2];
+            //for (int i = 0; i < 6; i++)
+            //{
+            //    string Key2 = "Rack " + (i+1).ToString(); 
+            //    string Key1 = Key2+ " Clearance";
+            //    RackPositions[i, 0] = TwistDict[Key1];
+            //    RackPositions[i, 1] = TwistDict[Key2];
+            //}
             //Now for the SciClonePositions
             //Very important!!! This will hold the positions labelled 1-5, with 1 being closest 
             //to the computer.  Position 1 is for the pippette tips, and so will have a special location,
@@ -163,8 +163,7 @@ namespace Clarity
         {
             initializeTwisterPositions();
             try
-            {  
-                          
+            {             
                 TwisterClsServer = new clsServer();
                 string iniFile = TwisterClsServer.ApplicationPath + "\\" + InitiationFile;//"Twister.ini";//hope this is right one
                 TwisterClsServer.ConfigureRobot(iniFile, ref SimulationMode);
