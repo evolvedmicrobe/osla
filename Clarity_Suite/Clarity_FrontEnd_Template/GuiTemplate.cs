@@ -259,8 +259,7 @@ namespace Clarity
                 //Finally, if we wanted our GUI to have control of some instruments for the user,
                 //we can get references to them from the engine like so:
                 Incubator = ClarityEngine.ReturnInstrumentType<IncubatorServ>();
-                TransStation = ClarityEngine.ReturnInstrumentType<TransferStation>();
-                PlateReader = ClarityEngine.ReturnInstrumentType<VictorManager>();
+                
                 return true;
             }
             catch (Exception thrown)
