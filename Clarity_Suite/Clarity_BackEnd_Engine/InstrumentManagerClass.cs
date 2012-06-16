@@ -14,6 +14,7 @@ using System.ComponentModel;
 using System.Xml;
 using System.Net.Mail;
 using System.Net;
+using System.Threading.Tasks;
 
 
 namespace Clarity
@@ -445,19 +446,18 @@ namespace Clarity
                 if (InstrumentCollection != null)
                 {
 
-                    foreach (object o in InstrumentCollection)
+                    Parallel.ForEach(InstrumentCollection, o =>
                     {
                         if (o != null)
                         {
-                            BaseInstrumentClass BC = (BaseInstrumentClass)o;
                             try
                             {
-                                BC.CloseAndFreeUpResources();
+                                o.CloseAndFreeUpResources();
                             }
                             catch
                             { }
                         }
-                    }
+                    });
                 }
             }
             catch
@@ -736,8 +736,9 @@ namespace Clarity
             XmlDoc.Load(XReader);
             //first node is xml, second is the protocol, this is assumed and should be the case
             XmlNode InstrumentsNode = XmlDoc.SelectSingleNode("//Instruments");
-            //Loop through all of the 
-            foreach (XmlNode instNode in InstrumentsNode)
+            //Loop through all of the Instruments
+            //Perhaps would be much faster if done in parrallel
+            foreach(XmlNode instNode in InstrumentsNode)
             {
                 string instName = instNode.Name;
                 if(NamesToBICs.ContainsKey(instName))
