@@ -44,6 +44,7 @@ namespace Clarity_WPF_Front_End_Template
         public MainWindow()
         {
             InitializeComponent();
+            this.start
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)

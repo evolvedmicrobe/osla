@@ -20,7 +20,7 @@ namespace Clarity
             get { return pMedianODToStartMeasurement; }
             set { pMedianODToStartMeasurement = value; }
         }
-
+        
         private int pMinBetweenReads = 50;
         public int MinBetweenReads
         { get { return pMinBetweenReads; } set { pMinBetweenReads = value; } }
@@ -79,6 +79,11 @@ namespace Clarity
             //Last item is passed in by the parser
             ReturnInstruction.Parameters = new object[2] { ExpName, Slot };
             
+        }
+        [UserCallableMethod()]
+        public bool FakeInstruction()
+        {
+            return true;
         }
         [UserCallableMethod(RequiresCurrentProtocol=true)]
         public bool CreateProtocol(string ExpName, int Slot,AdditionalMethodArguments eargs)
