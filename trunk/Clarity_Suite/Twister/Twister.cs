@@ -26,8 +26,8 @@ namespace Clarity
         //not sure which mix of these are needed to run the robot, going to load them all for now, 
         //cls server seems most important, not sure what is up with robotserver
         //ZyLicensing.clsLicensingClass LicenseClass;
-        private ZyRobot_ICP.clsServer TwisterClsServer;
-        private ZyRobot_ICP.RobotServer RobotServ;
+        ZyRobot_ICP.clsServer TwisterClsServer;
+        public ZyRobot_ICP.RobotServer RobotServ;
 
         private float GripTolerance=4;//This is how it is set in the twister macro
         
@@ -163,7 +163,8 @@ namespace Clarity
         {
             initializeTwisterPositions();
             try
-            {                            
+            {  
+                          
                 TwisterClsServer = new clsServer();
                 string iniFile = TwisterClsServer.ApplicationPath + "\\" + InitiationFile;//"Twister.ini";//hope this is right one
                 TwisterClsServer.ConfigureRobot(iniFile, ref SimulationMode);

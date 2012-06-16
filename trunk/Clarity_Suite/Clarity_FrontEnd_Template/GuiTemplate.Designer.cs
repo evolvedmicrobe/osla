@@ -166,7 +166,6 @@
             this.btnResetLid.TabIndex = 11;
             this.btnResetLid.Text = "Reset Lid";
             this.btnResetLid.UseVisualStyleBackColor = true;
-            this.btnResetLid.Click += new System.EventHandler(this.btnResetLid_Click);
             // 
             // btnInstrumentRefresh
             // 

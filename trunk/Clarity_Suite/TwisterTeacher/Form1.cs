@@ -10,13 +10,10 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Xml;
-
-//using ZyRobotAdapter;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Clarity;
-using ZyRobot_ICP;
 
 
 namespace Clarity
@@ -26,9 +23,8 @@ namespace Clarity
     {
         public Dictionary<string,Twister.TwisterPosition> TwistDict;
         Twister Robot;
-        private ZyRobot_ICP.clsServer TwisterClsServer;
-        private ZyRobot_ICP.RobotServer RobotServ;
         bool SimulationMode;
+        ZyRobot_ICP.RobotServer RobotServ;
 
         //This Array will contain all of the Various Postions for the rack, each "row" will have the safety position and the 
         //pick position
@@ -186,23 +182,18 @@ namespace Clarity
         {
             try
             {
+                Twister Robot = new Twister();
+                Robot.Initialize();
+
                 //set up the file
                 SimulationMode = false;
                 TwistDict = new Dictionary<string, Twister.TwisterPosition>();
-                //FilePath = Twister.IncubatorPositionsFile;
                 FilePath = GetPositionsFile();
                 DeSerializeList();                
                 
-                TwisterClsServer = new clsServer();
-                string iniFile = TwisterClsServer.ApplicationPath + "\\Twister.ini";//hope this is right one
-                TwisterClsServer.ConfigureRobot(iniFile, ref SimulationMode);
-                TwisterClsServer.Initialize();
+                
                 //THE TWISTER SERVE MUST BE INITIALIZED BEFORE IT WILL GIVE A ROBOT REF PROPERLY
-                RobotServ = TwisterClsServer.GetRobotRef();//this line must follow the server initialization
-                RobotServ.HomeAllAxes();
-                //BIG ERROR IF NOT FOLLOWED!!!!
-                short windowState = 1;//0 normal, 1 minimized, 2 maximized
-                TwisterClsServer.ShowWindow(ref windowState);
+                RobotServ = Robot.RobotServ;//this line must follow the server initialization
                 RobotServ.SpeedAsPercentMax = (short)20;
             }
             catch (Exception thrown)
@@ -223,7 +214,7 @@ namespace Clarity
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            float target=-2912;
+            float target = -800;
             RobotServ.Grip.set_TargetPosition(ref target);
             RobotServ.TriggerMoveAndWait(20000);
    

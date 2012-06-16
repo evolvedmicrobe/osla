@@ -14,6 +14,9 @@ namespace Clarity
         BaseInstrumentClass ReturnInstrument(string InstrumentName);
         T ReturnInstrumentType<T>() where T : BaseInstrumentClass ;
         Alarm GiveAlarmReference();
-        public StaticProtocolItem LastFailedInstruction;
+        StaticProtocolItem GetLastFailedInstruction();
+        ProtocolManager LoadedProtocols
+        { get; }
+        Alarm ClarityAlarm { get; }
     }
 }

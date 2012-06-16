@@ -876,11 +876,11 @@ namespace Clarity
         public ProtocolEventCaller()
         {
         }
-        public void FirePauseEvent(TimeSpan curDelay)
+        public void FirePauseEvent(InstrumentManager source, TimeSpan curDelay)
         {
             if (onProtocolPause != null)
             {
-                onProtocolPause(curDelay);
+                onProtocolPause(source,curDelay);
             }
         }
 

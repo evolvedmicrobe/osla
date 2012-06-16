@@ -44,28 +44,43 @@ namespace Clarity
         public event InstrumentManagerErrorHandler OnGenericError;
         public event InstrumentManagerErrorHandler OnErrorDuringProtocolExecution;
         public event InstrumentManagerEventHandler OnProtocolSuccessfullyCancelled;
-        
+        public event InstrumentManagerEventHandler OnProtocolExecutionUpdates;
+        public event InstrumentManagerEventHandler OnInstrumentStatusUpdate;
+
+        private bool CurrentlyAttemptingInstrumentRecovery = false;
         System.Windows.Forms.Timer NextInstructionTimer= new System.Windows.Forms.Timer();
         public string RecoveryProtocolFile;
         private string pAppDataDirectory = Directory.GetCurrentDirectory()+"\\";
         BackgroundWorker WorkerToRunRobots;
-        public ProtocolManager LoadedProtocols;
+        ProtocolManager pLoadedProtocols;
+        public ProtocolManager LoadedProtocols
+        {
+            get{return pLoadedProtocols;}
+        }
         public ProtocolEventCaller ProtocolEvents;
         //This should not be static in the future
-        static public Alarm Clarity_Alarm;
+        static public Alarm pClarity_Alarm;
+        public Alarm Clarity_Alarm
+        {
+            get { return pClarity_Alarm; }
+        }
         private bool pUseAlarm = true;
         public bool UseAlarm
         {
             get { return pUseAlarm; }
             set { pUseAlarm = value; }
         }
-        static public StaticProtocolItem LastFailedInstruction;
+        StaticProtocolItem LastFailedInstruction;
+        public StaticProtocolItem GetLastFailedInstruction()
+        {
+            return LastFailedInstruction;
+        }
         static public List<BaseInstrumentClass> InstrumentCollection;
         Dictionary<string, BaseInstrumentClass> NamesToBICs;
         
         
         private void FireGenericError(Exception thrown)
-        {
+        {   
             if (OnGenericError != null)
             {
                 OnGenericError(this, thrown);
@@ -146,33 +161,8 @@ namespace Clarity
             {
                 //thrown should always be of type System.Reflection.TargetInvocationException
                 //the inner exception can be the instrument error if this was the cause
-                string ErrorReport = "Unhandled error occurred during invocation of method " + MethodName
-                + " on instrument " + InstrumentName + "\nException error is: " + thrown.Message + "\n\n";
-                Exception leftToReportOn = thrown.InnerException;
-                if (thrown.InnerException != null)
-                {
-                    object Test = (object)thrown.InnerException;
-                    if (Test is InstrumentError)
-                    {
-                        InstrumentError IE = (InstrumentError)Test;
-                        ErrorReport += "Problem thrown by instrument " + IE.InstrumentInError.ToString() + "\n";
-                        ErrorReport += "Problem occured at " + IE.TimeThrown.ToString() + "\n";
-                        ErrorReport += "During invokation of method " + MethodName + "\n";
-                        ErrorReport += "Exception message is: " + IE.ErrorDescription + "\n";
-                        if (IE.Message != null)
-                        { ErrorReport += "Exception inner messages is: " + IE.Message + "\n\n\n"; }
-
-
-                        leftToReportOn = IE.InnerException;
-                    }
-                    else
-                    {
-                        ErrorReport += thrown.Message;
-                    }
-                }
-                StringDel newDel = this.AddErrorLogText;
-                object[] myarr = new object[1] { ErrorReport };
-                this.Invoke(newDel, myarr);
+                FireErrorDuringProtocolExecution(thrown);
+                
             }
             return false;
         }
@@ -183,11 +173,11 @@ namespace Clarity
             {
                 OnErrorDuringProtocolExecution(this, thrown);
             }
-            LoadedProtocols.ReportToAllUsers();
+            pLoadedProtocols.ReportToAllUsers();
             if (UseAlarm)
             {
-                Clarity_Alarm.ChangeStatus("Nothing Running");
-                Clarity_Alarm.TurnOnAlarm("Procedure ended with errors");
+                pClarity_Alarm.ChangeStatus("Nothing Running");
+                pClarity_Alarm.TurnOnAlarm("Procedure ended with errors");
             }
         }
         private void FireSuccessfulCancellation()
@@ -195,7 +185,7 @@ namespace Clarity
             this.CurrentRunningState = RunningStates.Idle;
             if (UseAlarm)
             {
-                Clarity_Alarm.ChangeStatus("Nothing Running");
+                pClarity_Alarm.ChangeStatus("Nothing Running");
             }
             if (OnProtocolSuccessfullyCancelled != null)
             {
@@ -207,7 +197,7 @@ namespace Clarity
             CurrentRunningState = RunningStates.Idle;
             if (UseAlarm)
             {
-                Clarity_Alarm.ChangeStatus("Protocols Finished");
+                pClarity_Alarm.ChangeStatus("Protocols Finished");
             }
             if (OnAllRunningProtocolsEnded != null)
             { OnAllRunningProtocolsEnded(this, null); }
@@ -221,13 +211,37 @@ namespace Clarity
             }
            if (UseAlarm)
             {
-                Clarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
+                pClarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
             }
             NextInstructionTimer.Interval = Delay;
             NextInstructionTimer.Start();
+            TimeSpan ts = new TimeSpan((long)Delay);
+            
+            ProtocolEvents.FirePauseEvent(this, ts);
+                    
+            if (OnProtocolPaused != null)
+            {   
+                OnProtocolPaused(this, ts);
+            }
           
         }
-
+        private void FireProtocolUpdate()
+        {
+            if (UseAlarm && LoadedProtocols.CurrentProtocolInUse!=null)
+            {
+                pClarity_Alarm.ChangeStatus("Current Running Protocol - " + LoadedProtocols.CurrentProtocolInUse.ToString());
+            }
+            
+            if (OnProtocolExecutionUpdates != null)
+                OnProtocolExecutionUpdates(this, null);
+        }
+        private void FireInstrumentStatusUpdate()
+        {
+            if (OnInstrumentStatusUpdate != null)
+            {
+                OnInstrumentStatusUpdate(this, null);
+            }
+        }
         private void InitializeWorkerToRunRobots()
         {
             WorkerToRunRobots = new BackgroundWorker();
@@ -268,26 +282,15 @@ namespace Clarity
            }
            catch (Exception thrown)
            {
-               LoadedProtocols.ReportToAllUsers("There was an error in the protocol manager, and the system is down.");
+               pLoadedProtocols.ReportToAllUsers("There was an error in the protocol manager, and the system is down.");
                Exception toThrow = new Exception("Problem interpretting the results of an executing protocol, the system is down", thrown);
                FireGenericError(toThrow);
            }
        }
         void WorkerToRunRobots_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            lock (LoadedProtocols)
-            {
-                try
-                {
-                    UpdateForm();
-                    try
-                    {
-                        StatusLabel.Text = "Performing operation: " + LoadedProtocols.CurrentProtocolInUse.Instructions[LoadedProtocols.CurrentProtocolInUse.NextItemToRun - 1].ToString();
-                    }
-                    catch { }
-                }
-                catch { }
-            }
+            FireProtocolUpdate();
+           
         }
         void WorkerToRunRobots_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -299,9 +302,9 @@ namespace Clarity
             //okay this will loop through all the instructions and finish them off one by one
             try
             {
-                while (!Worker.CancellationPending && LoadedProtocols != null)
+                while (!Worker.CancellationPending && pLoadedProtocols != null)
                 {
-                    object NextInstruction = LoadedProtocols.GetNextProtocolObject();
+                    object NextInstruction = pLoadedProtocols.GetNextProtocolObject();
                     {
                         if (NextInstruction is StaticProtocolItem)
                         {
@@ -318,7 +321,7 @@ namespace Clarity
                             else
                             {
                                 OutputRecoveryFile(RecoveryProtocolFile);
-                                Worker.ReportProgress(LoadedProtocols.CurrentProtocolInUse.NextItemToRun);
+                                Worker.ReportProgress(pLoadedProtocols.CurrentProtocolInUse.NextItemToRun);
                             }
                         }
                         else if (NextInstruction is double)
@@ -327,13 +330,13 @@ namespace Clarity
                             e.Result = Convert.ToInt32(NextInstruction) + 1;//always make sure the value is greater then 0
                             OutputRecoveryFile(RecoveryProtocolFile);
                             TimeSpan delay = new TimeSpan(10000 * (Convert.ToInt64(NextInstruction) + 1));
-                            ProtocolEvents.FirePauseEvent(delay);
+                            ProtocolEvents.FirePauseEvent(this,delay);
                             return;
                         }
                         else if (NextInstruction == null)
                         {
                             TimeSpan delay = new TimeSpan(1000000, 0, 0);
-                            ProtocolEvents.FirePauseEvent(delay);
+                            ProtocolEvents.FirePauseEvent(this,delay);
                             e.Result = null;
                             return;
                         }
@@ -348,6 +351,8 @@ namespace Clarity
                 throw thrown;
             }
         }
+
+
         /// <summary>
         /// Starts running the loaded protocols
         /// </summary>
@@ -355,9 +360,11 @@ namespace Clarity
         {
 
             //probably should try some checks here
+            if (NextInstructionTimer != null && NextInstructionTimer.Enabled)
+            { NextInstructionTimer.Stop(); }
             if (UseAlarm)
             {
-                Clarity_Alarm.ChangeStatus("Protocol Running");
+                pClarity_Alarm.ChangeStatus("Protocol Running");
             }
             if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
             { FireGenericError("Tried to start a protocol when one was already running"); }
@@ -384,7 +391,7 @@ namespace Clarity
                     NextInstructionTimer.Enabled = false;
                     if (UseAlarm)
                     {
-                        Clarity_Alarm.ChangeStatus("User stopped protocol execution");
+                        pClarity_Alarm.ChangeStatus("User stopped protocol execution");
                     }
                     CurrentRunningState = RunningStates.Idle;
                 }
@@ -401,9 +408,9 @@ namespace Clarity
         /// </summary>
         public void ShutdownEngine()
         {
-            try { LoadedProtocols.ReportToAllUsers("The Robot Software Has Been Closed"); }
+            try { pLoadedProtocols.ReportToAllUsers("The Robot Software Has Been Closed"); }
             catch { }
-            try { if (UseAlarm) { Clarity_Alarm.TurnOnAlarm("The software was closed"); } }
+            try { if (UseAlarm) { pClarity_Alarm.TurnOnAlarm("The software was closed"); } }
             catch { }
             try
             {
@@ -421,43 +428,163 @@ namespace Clarity
             catch
             { }
         }
-
-        private void StopClockWaitAndExecute()
+        public enum ProtocolRemoveResult {WasCurrentlyRunning,RemovedSuccessfully,Error};
+        public ProtocolRemoveResult RemoveProtocol(Protocol toRemove)
         {
-            NextInstructionTimer.Stop();
-            
-            StartProtocolExecution();
-        }
-        private void NextInstructionTimer_Tick(object sender, EventArgs e)
-        {
-            StopClockWaitAndExecute();
-        }
-
-        //Backup and Recovery Stuff
-        private void OutputRecoveryFile(string FileNameToWrite)
-        {
+            ProtocolRemoveResult toReturn;
             try
             {
-                if (LoadedProtocols.Protocols.Count > 0)
+                bool ResetTimerAfterwards = false;//will be used to determine if we need to reset the timer
+                if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
                 {
-                    FileStream f = new FileStream(FileNameToWrite, FileMode.Create);
-                    BinaryFormatter b = new BinaryFormatter();
-                    LoadedProtocols.manager = null;
-                    b.Serialize(f, LoadedProtocols);
-                    LoadedProtocols.manager = this;
-                    f.Close();
+                    //protocol is running
+                    if (LoadedProtocols.CurrentProtocolInUse == toRemove)
+                    {
+                        toReturn = ProtocolRemoveResult.WasCurrentlyRunning;
+                        return toReturn;
+                    }
                 }
-
+                if (LoadedProtocols.CurrentProtocolInUse == toRemove)
+                {
+                    ResetTimerAfterwards = true;
+                }
+                LoadedProtocols.RemoveProtocol(toRemove);
+                if (ResetTimerAfterwards)
+                {
+                    UpdateDelayUntilNextRun();
+                }
+                toReturn = ProtocolRemoveResult.RemovedSuccessfully;
+                return toReturn;
             }
             catch (Exception thrown)
             {
-                string ErrorMessage = "Could Not Write Recovery Data File\n\nError is:" + thrown.Message;
-                StringDel newDel = this.AddErrorLogText;
-                object[] myarr = new object[1] { ErrorMessage };
-                this.Invoke(newDel, myarr);
+                Exception e = new Exception("Could not remove protcol: " + thrown.Message, thrown);
+                FireGenericError(e);
+                toReturn = ProtocolRemoveResult.Error;
+                return toReturn;
             }
         }
-        private void InputRecoveryFile(string FileNameToRead)
+        public void AddProtocol(Protocol toAdd)
+        {
+            LoadedProtocols.AddProtocol(toAdd);
+            if (CurrentRunningState == RunningStates.WaitingForNextExecutionTimePoint)
+            {
+                UpdateDelayUntilNextRun();
+            }
+
+        }
+        public void RetryLastFailedInstruction()
+        {
+            try
+            {
+                if (CurrentRunningState == RunningStates.Running)
+                    FireGenericError("Can't retry instructions while protocol is running");
+                if (LastFailedInstruction == null)
+                    FireGenericError("No last failed instruction set, can't try again.");
+                else
+                {
+                    CurrentRunningState = RunningStates.Running;
+                    RunInstrumentMethod(LastFailedInstruction.InstrumentName, LastFailedInstruction.MethodName, LastFailedInstruction.Parameters, true, LastFailedInstruction.ContainingProtocol);
+                    CurrentRunningState = RunningStates.Idle;
+                }
+            }
+            catch (Exception thrown)
+            {
+
+
+            }
+        }
+        public void TryToRecoverInstrument(string InstrumentName)
+        {
+            try
+            {
+                if (CurrentlyAttemptingInstrumentRecovery)
+                    FireGenericError("Currently attempting a recovery, please wait for the results");
+                else
+                {
+
+                }
+
+            }
+
+        }
+        public void ReinitializeAlarm()
+        {
+            try
+            {
+                if (UseAlarm)
+                {
+                     pClarity_Alarm = new Alarm();
+                    if (pClarity_Alarm.Connected) { LoadedProtocols.UpdateAlarmProtocols(); }
+                }
+                else
+                    FireGenericError("Alarm disabled at startup");
+            }
+            catch (Exception thrown) { FireGenericError(thrown.Message); }
+        }
+        public void ReportErrorRecovery()
+        {
+            try
+            {
+                LoadedProtocols.ReportToAllUsers("The Clarity System Is Okay Now ");
+                if (UseAlarm)
+                { Clarity_Alarm.TurnOffAlarm(); }
+            }
+            catch (Exception thrown)
+            {
+                FireGenericError("Could not send messages to all: \n" + thrown.Message);
+            }
+        }
+        private void SetDelayAndStartWait(int Delay)
+        {
+            if (Delay <= 0)
+            {
+                throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
+            }
+            if (UseAlarm)
+            {
+                pClarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
+            }
+            NextInstructionTimer.Interval = Delay;
+            NextInstructionTimer.Start();
+            FireProtocolDelayEvent(Delay);
+            
+        }
+        private void UpdateDelayUntilNextRun()
+        {
+            double timeMS = LoadedProtocols.GetMilliSecondsTillNextRunTime();
+            TimeSpan delay = new TimeSpan(10000 * (Convert.ToInt64(timeMS) + 1));
+            int Delay = Convert.ToInt32(timeMS) + 1;//always make sure the value is greater then 0
+            SetDelayAndStartWait(Delay);
+        }
+
+        private void NextInstructionTimer_Tick(object sender, EventArgs e)
+        {
+            StartProtocolExecution();
+        }
+       
+        //Backup and Recovery Stuff
+        public void OutputRecoveryFile(string FileNameToWrite)
+        {
+            try
+            {
+                if (pLoadedProtocols.Protocols.Count > 0)
+                {
+                    FileStream f = new FileStream(FileNameToWrite, FileMode.Create);
+                    BinaryFormatter b = new BinaryFormatter();
+                    pLoadedProtocols.manager = null;
+                    b.Serialize(f, pLoadedProtocols);
+                    pLoadedProtocols.manager = this;
+                    f.Close();
+                }
+            }
+            catch (Exception thrown)
+            {
+                Exception e = new Exception("Could Not Write Recovery Data File\n\nError is:" + thrown.Message,thrown);
+                FireGenericError(e);             
+            }
+        }
+        public void InputRecoveryFile(string FileNameToRead)
         {
             FileStream f = null;
             try
@@ -467,16 +594,14 @@ namespace Clarity
                 //This next bit seems odd to me, got it off a forum as a way to correct an end of stream error
                 f.Seek(0, 0);
                 ProtocolManager ReplacementProtocols = (ProtocolManager)b.Deserialize(f);
-                LoadedProtocols = ReplacementProtocols;
-                LoadedProtocols.manager = this;
+                pLoadedProtocols = ReplacementProtocols;
+                pLoadedProtocols.manager = this;
                 f.Close();
             }
             catch (Exception thrown)
             {
-                string ErrorMessage = "Could Not Load Previous File\n\nError is:" + thrown.Message;
-                StringDel newDel = this.AddErrorLogText;
-                object[] myarr = new object[1] { ErrorMessage };
-                this.Invoke(newDel, myarr);
+                Exception e = new Exception( "Could Not Load Previous File\n\nError is:" + thrown.Message);
+                FireGenericError(e);
                 try { f.Close(); }
                 catch { }
             }
@@ -562,7 +687,7 @@ namespace Clarity
         {
             CurrentRunningState = RunningStates.Idle;
             InstrumentCollection = new List<BaseInstrumentClass>();
-            LoadedProtocols = new ProtocolManager(this);
+            pLoadedProtocols = new ProtocolManager(this);
             ProtocolEvents = new ProtocolEventCaller();
             NextInstructionTimer.Tick+=new EventHandler(NextInstructionTimer_Tick);
             SetEngineSettingsBasedOnXML();
@@ -570,7 +695,7 @@ namespace Clarity
             LoadUpInstruments();
             if (UseAlarm)
             {
-                Clarity_Alarm = new Alarm();
+                pClarity_Alarm = new Alarm();
             }
         }
         #region InstrumentManager Members
@@ -593,7 +718,7 @@ namespace Clarity
         }
         public Alarm GiveAlarmReference()
         {
-            return Clarity_Alarm;
+            return pClarity_Alarm;
         }
         #endregion
 
