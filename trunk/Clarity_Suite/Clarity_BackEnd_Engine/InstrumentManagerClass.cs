@@ -162,7 +162,7 @@ namespace Clarity
             }
             NextInstructionTimer.Interval = Delay;
             NextInstructionTimer.Start();
-            TimeSpan ts = new TimeSpan((long)Delay);
+            TimeSpan ts = new TimeSpan((long)Delay*10000);
             
             ProtocolEvents.FirePauseEvent(this, ts);
                     
