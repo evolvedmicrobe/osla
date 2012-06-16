@@ -92,6 +92,13 @@
             this.label10 = new System.Windows.Forms.Label();
             this.lstGrowthRatesProtocol = new System.Windows.Forms.ListBox();
             this.wBrowGrowthRate = new System.Windows.Forms.WebBrowser();
+            this.tabNSFExperiment = new System.Windows.Forms.TabPage();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.txtNSFName = new System.Windows.Forms.TextBox();
+            this.txtNSFTransferNumber = new System.Windows.Forms.TextBox();
+            this.btnGenerateNSFData = new System.Windows.Forms.Button();
+            this.lstNSFPlates = new System.Windows.Forms.ListBox();
             this.lstInstrumentStatus = new System.Windows.Forms.ListBox();
             this.lblErrorLog = new System.Windows.Forms.Label();
             this.btnViewAdvancedControls = new System.Windows.Forms.Button();
@@ -115,13 +122,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.txtErrorLog = new System.Windows.Forms.RichTextBox();
             this.NextInstructionTimer = new System.Windows.Forms.Timer(this.components);
-            this.tabNSFExperiment = new System.Windows.Forms.TabPage();
-            this.lstNSFPlates = new System.Windows.Forms.ListBox();
-            this.btnGenerateNSFData = new System.Windows.Forms.Button();
-            this.txtNSFTransferNumber = new System.Windows.Forms.TextBox();
-            this.txtNSFName = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
             this.TimeToGo = new Clarity.CountdownTimer();
             this.MainTab.SuspendLayout();
             this.tabSubMain.SuspendLayout();
@@ -130,9 +130,9 @@
             this.IncubatorTab.SuspendLayout();
             this.tabRecovery.SuspendLayout();
             this.tabMakeGrowthInstructions.SuspendLayout();
+            this.tabNSFExperiment.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.tabNSFExperiment.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTab
@@ -616,7 +616,7 @@
             this.wBrowRecovInstructions.MinimumSize = new System.Drawing.Size(20, 20);
             this.wBrowRecovInstructions.Name = "wBrowRecovInstructions";
             this.wBrowRecovInstructions.ScriptErrorsSuppressed = true;
-            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 645);
+            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 643);
             this.wBrowRecovInstructions.TabIndex = 0;
             this.wBrowRecovInstructions.WebBrowserShortcutsEnabled = false;
             // 
@@ -671,7 +671,7 @@
             this.chkGBO.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkGBO.Location = new System.Drawing.Point(645, 93);
             this.chkGBO.Name = "chkGBO";
-            this.chkGBO.Size = new System.Drawing.Size(129, 19);
+            this.chkGBO.Size = new System.Drawing.Size(117, 17);
             this.chkGBO.TabIndex = 18;
             this.chkGBO.Text = "48 Well Excel Data";
             this.chkGBO.UseVisualStyleBackColor = true;
@@ -682,7 +682,7 @@
             this.chk48WellPlate.AutoSize = true;
             this.chk48WellPlate.Location = new System.Drawing.Point(645, 71);
             this.chk48WellPlate.Name = "chk48WellPlate";
-            this.chk48WellPlate.Size = new System.Drawing.Size(98, 19);
+            this.chk48WellPlate.Size = new System.Drawing.Size(89, 17);
             this.chk48WellPlate.TabIndex = 14;
             this.chk48WellPlate.Text = "48 Well Plate";
             this.chk48WellPlate.UseVisualStyleBackColor = true;
@@ -802,8 +802,76 @@
             this.wBrowGrowthRate.Location = new System.Drawing.Point(3, 3);
             this.wBrowGrowthRate.MinimumSize = new System.Drawing.Size(20, 20);
             this.wBrowGrowthRate.Name = "wBrowGrowthRate";
-            this.wBrowGrowthRate.Size = new System.Drawing.Size(364, 645);
+            this.wBrowGrowthRate.Size = new System.Drawing.Size(364, 643);
             this.wBrowGrowthRate.TabIndex = 0;
+            // 
+            // tabNSFExperiment
+            // 
+            this.tabNSFExperiment.Controls.Add(this.label17);
+            this.tabNSFExperiment.Controls.Add(this.label16);
+            this.tabNSFExperiment.Controls.Add(this.txtNSFName);
+            this.tabNSFExperiment.Controls.Add(this.txtNSFTransferNumber);
+            this.tabNSFExperiment.Controls.Add(this.btnGenerateNSFData);
+            this.tabNSFExperiment.Controls.Add(this.lstNSFPlates);
+            this.tabNSFExperiment.Location = new System.Drawing.Point(4, 24);
+            this.tabNSFExperiment.Name = "tabNSFExperiment";
+            this.tabNSFExperiment.Padding = new System.Windows.Forms.Padding(3);
+            this.tabNSFExperiment.Size = new System.Drawing.Size(788, 649);
+            this.tabNSFExperiment.TabIndex = 4;
+            this.tabNSFExperiment.Text = "NSF Experiment";
+            this.tabNSFExperiment.UseVisualStyleBackColor = true;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(317, 460);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(33, 15);
+            this.label17.TabIndex = 5;
+            this.label17.Text = "Date";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(320, 503);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(100, 15);
+            this.label16.TabIndex = 4;
+            this.label16.Text = "Transfer Number";
+            // 
+            // txtNSFName
+            // 
+            this.txtNSFName.Location = new System.Drawing.Point(429, 460);
+            this.txtNSFName.Name = "txtNSFName";
+            this.txtNSFName.Size = new System.Drawing.Size(135, 21);
+            this.txtNSFName.TabIndex = 3;
+            // 
+            // txtNSFTransferNumber
+            // 
+            this.txtNSFTransferNumber.Location = new System.Drawing.Point(429, 496);
+            this.txtNSFTransferNumber.Name = "txtNSFTransferNumber";
+            this.txtNSFTransferNumber.Size = new System.Drawing.Size(135, 21);
+            this.txtNSFTransferNumber.TabIndex = 2;
+            // 
+            // btnGenerateNSFData
+            // 
+            this.btnGenerateNSFData.Location = new System.Drawing.Point(320, 559);
+            this.btnGenerateNSFData.Name = "btnGenerateNSFData";
+            this.btnGenerateNSFData.Size = new System.Drawing.Size(274, 23);
+            this.btnGenerateNSFData.TabIndex = 1;
+            this.btnGenerateNSFData.Text = "Make NSF Data";
+            this.btnGenerateNSFData.UseVisualStyleBackColor = true;
+            this.btnGenerateNSFData.Click += new System.EventHandler(this.btnGenerateNSFData_Click);
+            // 
+            // lstNSFPlates
+            // 
+            this.lstNSFPlates.FormattingEnabled = true;
+            this.lstNSFPlates.ItemHeight = 15;
+            this.lstNSFPlates.Location = new System.Drawing.Point(320, 17);
+            this.lstNSFPlates.Name = "lstNSFPlates";
+            this.lstNSFPlates.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.lstNSFPlates.Size = new System.Drawing.Size(274, 424);
+            this.lstNSFPlates.TabIndex = 0;
             // 
             // lstInstrumentStatus
             // 
@@ -864,41 +932,41 @@
             this.loadPreviousSystemStateToolStripMenuItem,
             this.recoverLastProtcolInstructionToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // loadProtocolToolStripMenuItem
             // 
             this.loadProtocolToolStripMenuItem.Name = "loadProtocolToolStripMenuItem";
-            this.loadProtocolToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.loadProtocolToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
             this.loadProtocolToolStripMenuItem.Text = "Load Protocol";
             this.loadProtocolToolStripMenuItem.Click += new System.EventHandler(this.loadProtocolToolStripMenuItem_Click);
             // 
             // saveCurrentProtocolsToolStripMenuItem
             // 
             this.saveCurrentProtocolsToolStripMenuItem.Name = "saveCurrentProtocolsToolStripMenuItem";
-            this.saveCurrentProtocolsToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.saveCurrentProtocolsToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
             this.saveCurrentProtocolsToolStripMenuItem.Text = "Save Current System State";
             this.saveCurrentProtocolsToolStripMenuItem.Click += new System.EventHandler(this.saveCurrentProtocolsToolStripMenuItem_Click);
             // 
             // loadPreviousSystemStateToolStripMenuItem
             // 
             this.loadPreviousSystemStateToolStripMenuItem.Name = "loadPreviousSystemStateToolStripMenuItem";
-            this.loadPreviousSystemStateToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.loadPreviousSystemStateToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
             this.loadPreviousSystemStateToolStripMenuItem.Text = "Load Previous System State";
             this.loadPreviousSystemStateToolStripMenuItem.Click += new System.EventHandler(this.loadPreviousSystemStateToolStripMenuItem_Click);
             // 
             // recoverLastProtcolInstructionToolStripMenuItem
             // 
             this.recoverLastProtcolInstructionToolStripMenuItem.Name = "recoverLastProtcolInstructionToolStripMenuItem";
-            this.recoverLastProtcolInstructionToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.recoverLastProtcolInstructionToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
             this.recoverLastProtcolInstructionToolStripMenuItem.Text = "Recover From System Failure, Load Last System State";
             this.recoverLastProtcolInstructionToolStripMenuItem.Click += new System.EventHandler(this.recoverLastProtcolInstructionToolStripMenuItem_Click);
             // 
             // versionToolStripMenuItem
             // 
             this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
-            this.versionToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.versionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.versionToolStripMenuItem.Text = "Version";
             this.versionToolStripMenuItem.Click += new System.EventHandler(this.versionToolStripMenuItem_Click);
             // 
@@ -910,34 +978,34 @@
             this.getAlarmStateToolStripMenuItem,
             this.reconnectToAlarmServerToolStripMenuItem});
             this.alarmStateToolStripMenuItem.Name = "alarmStateToolStripMenuItem";
-            this.alarmStateToolStripMenuItem.Size = new System.Drawing.Size(125, 20);
+            this.alarmStateToolStripMenuItem.Size = new System.Drawing.Size(111, 20);
             this.alarmStateToolStripMenuItem.Text = "Alarm Management";
             // 
             // turnOnAlarmToolStripMenuItem
             // 
             this.turnOnAlarmToolStripMenuItem.Name = "turnOnAlarmToolStripMenuItem";
-            this.turnOnAlarmToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.turnOnAlarmToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.turnOnAlarmToolStripMenuItem.Text = "Turn On Alarm";
             this.turnOnAlarmToolStripMenuItem.Click += new System.EventHandler(this.turnOnAlarmToolStripMenuItem_Click);
             // 
             // turnOffAlarmToolStripMenuItem
             // 
             this.turnOffAlarmToolStripMenuItem.Name = "turnOffAlarmToolStripMenuItem";
-            this.turnOffAlarmToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.turnOffAlarmToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.turnOffAlarmToolStripMenuItem.Text = "Turn Off Alarm";
             this.turnOffAlarmToolStripMenuItem.Click += new System.EventHandler(this.turnOffAlarmToolStripMenuItem_Click);
             // 
             // getAlarmStateToolStripMenuItem
             // 
             this.getAlarmStateToolStripMenuItem.Name = "getAlarmStateToolStripMenuItem";
-            this.getAlarmStateToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.getAlarmStateToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.getAlarmStateToolStripMenuItem.Text = "Get Alarm State";
             this.getAlarmStateToolStripMenuItem.Click += new System.EventHandler(this.getAlarmStateToolStripMenuItem_Click);
             // 
             // reconnectToAlarmServerToolStripMenuItem
             // 
             this.reconnectToAlarmServerToolStripMenuItem.Name = "reconnectToAlarmServerToolStripMenuItem";
-            this.reconnectToAlarmServerToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.reconnectToAlarmServerToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.reconnectToAlarmServerToolStripMenuItem.Text = "Reconnect To Alarm Server";
             this.reconnectToAlarmServerToolStripMenuItem.Click += new System.EventHandler(this.reconnectToAlarmServerToolStripMenuItem_Click);
             // 
@@ -954,7 +1022,7 @@
             // StatusLabel
             // 
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(115, 17);
+            this.StatusLabel.Size = new System.Drawing.Size(108, 17);
             this.StatusLabel.Text = "System Status: None";
             // 
             // txtPassword
@@ -975,73 +1043,6 @@
             this.txtErrorLog.Size = new System.Drawing.Size(210, 369);
             this.txtErrorLog.TabIndex = 10;
             this.txtErrorLog.Text = "";
-            // 
-            // tabNSFExperiment
-            // 
-            this.tabNSFExperiment.Controls.Add(this.label17);
-            this.tabNSFExperiment.Controls.Add(this.label16);
-            this.tabNSFExperiment.Controls.Add(this.txtNSFName);
-            this.tabNSFExperiment.Controls.Add(this.txtNSFTransferNumber);
-            this.tabNSFExperiment.Controls.Add(this.btnGenerateNSFData);
-            this.tabNSFExperiment.Controls.Add(this.lstNSFPlates);
-            this.tabNSFExperiment.Location = new System.Drawing.Point(4, 24);
-            this.tabNSFExperiment.Name = "tabNSFExperiment";
-            this.tabNSFExperiment.Padding = new System.Windows.Forms.Padding(3);
-            this.tabNSFExperiment.Size = new System.Drawing.Size(788, 649);
-            this.tabNSFExperiment.TabIndex = 4;
-            this.tabNSFExperiment.Text = "NSF Experiment";
-            this.tabNSFExperiment.UseVisualStyleBackColor = true;
-            // 
-            // lstNSFPlates
-            // 
-            this.lstNSFPlates.FormattingEnabled = true;
-            this.lstNSFPlates.ItemHeight = 15;
-            this.lstNSFPlates.Location = new System.Drawing.Point(320, 17);
-            this.lstNSFPlates.Name = "lstNSFPlates";
-            this.lstNSFPlates.Size = new System.Drawing.Size(274, 424);
-            this.lstNSFPlates.TabIndex = 0;
-            // 
-            // btnGenerateNSFData
-            // 
-            this.btnGenerateNSFData.Location = new System.Drawing.Point(320, 559);
-            this.btnGenerateNSFData.Name = "btnGenerateNSFData";
-            this.btnGenerateNSFData.Size = new System.Drawing.Size(274, 23);
-            this.btnGenerateNSFData.TabIndex = 1;
-            this.btnGenerateNSFData.Text = "Make NSF Data";
-            this.btnGenerateNSFData.UseVisualStyleBackColor = true;
-            this.btnGenerateNSFData.Click += new System.EventHandler(this.btnGenerateNSFData_Click);
-            // 
-            // txtNSFTransferNumber
-            // 
-            this.txtNSFTransferNumber.Location = new System.Drawing.Point(429, 496);
-            this.txtNSFTransferNumber.Name = "txtNSFTransferNumber";
-            this.txtNSFTransferNumber.Size = new System.Drawing.Size(135, 21);
-            this.txtNSFTransferNumber.TabIndex = 2;
-            // 
-            // txtNSFName
-            // 
-            this.txtNSFName.Location = new System.Drawing.Point(429, 460);
-            this.txtNSFName.Name = "txtNSFName";
-            this.txtNSFName.Size = new System.Drawing.Size(135, 21);
-            this.txtNSFName.TabIndex = 3;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(320, 503);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(100, 15);
-            this.label16.TabIndex = 4;
-            this.label16.Text = "Transfer Number";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(317, 460);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(33, 15);
-            this.label17.TabIndex = 5;
-            this.label17.Text = "Date";
             // 
             // TimeToGo
             // 
@@ -1090,12 +1091,12 @@
             this.tabRecovery.PerformLayout();
             this.tabMakeGrowthInstructions.ResumeLayout(false);
             this.tabMakeGrowthInstructions.PerformLayout();
+            this.tabNSFExperiment.ResumeLayout(false);
+            this.tabNSFExperiment.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.tabNSFExperiment.ResumeLayout(false);
-            this.tabNSFExperiment.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
