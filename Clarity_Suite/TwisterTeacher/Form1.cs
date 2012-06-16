@@ -111,20 +111,26 @@ namespace Clarity
             ListOfSpots.Add(ScicloneSafe);
     
 
-            SciCloneSpots = new Twister.TwisterPosition[4, 2];
-            SciCloneSpots[0, 0] = new Twister.TwisterPosition("SciClone 1 Clearance", "Absolute", 2759, 210403, 239658, -93685, 20);
-            SciCloneSpots[0, 1] = new Twister.TwisterPosition("SciClone 1", "Absolute", -85132, 210403, 239658, -93685, 5);
-            SciCloneSpots[1, 0] = new Twister.TwisterPosition("SciClone 2 Clearance", "Absolute", -48051, 160782, 255749, -115764, 20);
-            SciCloneSpots[1, 1] = new Twister.TwisterPosition("SciClone 2", "Absolute", -125830, 1160782, 255749, -115764, 20);
-            SciCloneSpots[2, 0] = new Twister.TwisterPosition("SciClone 3 Clearance", "Absolute", -53682, 153407, 273898, -142338, 20);
-            SciCloneSpots[2, 1] = new Twister.TwisterPosition("SciClone 3", "Absolute", -128136, 153407, 273898, -142338, 5);
-            //Now the shaker
-            SciCloneSpots[3, 0] = new Twister.TwisterPosition("SciClone 4 Clearance", "Absolute", -48057, 192265, 290704, -166918, 20);
-            SciCloneSpots[3, 1] = new Twister.TwisterPosition("SciClone 4", "Absolute", -95143, 192265, 290704, -166918, 5);
-            foreach(Twister.TwisterPosition pos in SciCloneSpots)
+            //SciCloneSpots = new Twister.TwisterPosition[4, 2];
+            //SciCloneSpots[0, 0] = new Twister.TwisterPosition("SciClone 1 Clearance", "Absolute", 2759, 210403, 239658, -93685, 20);
+            //SciCloneSpots[0, 1] = new Twister.TwisterPosition("SciClone 1", "Absolute", -85132, 210403, 239658, -93685, 5);
+            //SciCloneSpots[1, 0] = new Twister.TwisterPosition("SciClone 2 Clearance", "Absolute", -48051, 160782, 255749, -115764, 20);
+            //SciCloneSpots[1, 1] = new Twister.TwisterPosition("SciClone 2", "Absolute", -125830, 1160782, 255749, -115764, 20);
+            //SciCloneSpots[2, 0] = new Twister.TwisterPosition("SciClone 3 Clearance", "Absolute", -53682, 153407, 273898, -142338, 20);
+            //SciCloneSpots[2, 1] = new Twister.TwisterPosition("SciClone 3", "Absolute", -128136, 153407, 273898, -142338, 5);
+            ////Now the shaker
+            //SciCloneSpots[3, 0] = new Twister.TwisterPosition("SciClone 4 Clearance", "Absolute", -48057, 192265, 290704, -166918, 20);
+            //SciCloneSpots[3, 1] = new Twister.TwisterPosition("SciClone 4", "Absolute", -95143, 192265, 290704, -166918, 5);
+            //foreach(Twister.TwisterPosition pos in SciCloneSpots)
+            //{
+            //    ListOfSpots.Add(pos);
+            //}  
+            TwistDict = new Dictionary<string, Twister.TwisterPosition>();
+            foreach (Twister.TwisterPosition pos in ListOfSpots)
             {
-                ListOfSpots.Add(pos);
-            }            
+                lstPositions.Items.Add(pos);
+                TwistDict[pos.Name]= pos;
+            }
         }
         private void DeSerializeList()
         {           
@@ -189,7 +195,8 @@ namespace Clarity
                 SimulationMode = false;
                 TwistDict = new Dictionary<string, Twister.TwisterPosition>();
                 FilePath = GetPositionsFile();
-                DeSerializeList();                
+                Never_Call_initializeTwisterPositions();
+                //DeSerializeList();                
                 
                 
                 //THE TWISTER SERVE MUST BE INITIALIZED BEFORE IT WILL GIVE A ROBOT REF PROPERLY
