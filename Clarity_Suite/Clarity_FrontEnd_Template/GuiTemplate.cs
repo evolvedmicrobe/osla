@@ -24,6 +24,16 @@ namespace Clarity
 {    
     /// <summary>
     /// This is a generic template form which shows the basics of running Clarity.
+    /// Any Automation GUI can be created off of this as a template.
+    /// 
+    /// The form has several tabs, the first of which is the main one which shows the executions and current
+    /// state of the automation process, which protocols are running etc.
+    /// 
+    /// The second tab is a recovery tab that allows users to recover instruments that have broken.
+    /// 
+    /// The third tab is a demonstration tab that creates protocols to be run of a specific type for a user.
+    /// 
+    /// The fourth tab demonstrates controlling an instrument directly from the GUI.  In this case it is an 
     /// This form shows you how to load up and run instruments.  
     /// In general, the first tab shows the display of all things that run.
     /// The second tab allows one to recover errors when something goes wrong.  
@@ -32,12 +42,14 @@ namespace Clarity
     /// </summary>
     public partial class ClarityForm : Form    {
 
-        InstrumentManager Instrument;
+        /// <summary>
+        /// This is the engine that runs the protocols and manages the instruments
+        /// </summary>
+        private InstrumentManagerClass ClarityEngine;
+        //These is an instruments we want to have the GUI gain access to
+        //Demonstrated on the Incubator tab.
         private IncubatorServ Incubator;
-        private Twister Robot;
-        private TransferStation TransStation;
-        private VictorManager PlateReader;
-
+        //This region is not part of the final release, can be ignored.
         #region ToRemove
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
         public string NSFErrorEmails
@@ -110,20 +122,50 @@ namespace Clarity
 
             catch { ShowError("Weird error occurred"); }
         }
+        private int pWELL48_PLATE_PROTOCOL_ID = 2000095;
+        public int WELL48_PLATE_PROTOCOL_ID
+        {
+            get { return pWELL48_PLATE_PROTOCOL_ID; }
+            set { pWELL48_PLATE_PROTOCOL_ID = value; }
+        }
+        private int pGBO_PLATE_PROTOCOL_ID = 2000128;
+        public int GBO_PLATE_PROTOCOL_ID
+        {
+            get { return pGBO_PLATE_PROTOCOL_ID; }
+            set { pGBO_PLATE_PROTOCOL_ID = value; }
+        }
         #endregion
         WelcomeForm WF;
         public ClarityForm()
         {   
-            
             InitializeComponent();  
         }
-        private static InstrumentManagerClass ClarityEngine;
-        //Form Loading/Closing methods 
-        public void LoadUpClarityGUI()
+        /// <summary>
+        /// Shows a splash screen during load to explain that the instruments are working.
+        /// The splash screen simply displays the html file WelcomInstructions.htm
+        /// </summary>
+        public void ShowWelcomeForm()
         {
+            // Use full reference or it'll conflict with Skype
+            System.Windows.Forms.Application.Run(WF = new WelcomeForm());
+        }
+       
+        /// <summary>
+        /// Load up the GUI and initialize the runtime engine
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GUI_Load(object sender, EventArgs e)
+        {
+            //Create a splash screen on a separate thread to let the user know we are loading.
+            Thread LoadingThread = new Thread(ShowWelcomeForm);
+            LoadingThread.SetApartmentState(ApartmentState.STA);
+            LoadingThread.IsBackground = true;
+            LoadingThread.Start();
+
+            //First load up any XML Settings for the GUI
             try
             {
-                //Make a collection to hold everything
                 string Filename = BaseInstrumentClass.GetXMLSettingsFile();
                 XmlDocument XmlDoc = new XmlDocument();
                 XmlTextReader XReader = new XmlTextReader(Filename);
@@ -132,10 +174,72 @@ namespace Clarity
                 XmlNode SettingsXML = XmlDoc.SelectSingleNode("//InterfaceSettings");
                 BaseInstrumentClass.SetPropertiesByXML(SettingsXML, this);
                 XReader.Close();
-                
-                //Now to load up the instrument manager, remember to register events before initializing it
-                ClarityEngine = new InstrumentManagerClass();
+            }
+            catch (Exception thrown)
+            {
+                WF.StayAlive = false;
+                ShowError("Could not load settings for interface from XML.\nError is:" + thrown.Message);
+                this.Close();
+                Application.Exit();
+            }
+            //Give the Splash screen time to load
+            Thread.Sleep(1000);//give it time to initialize the WF              
+            //Now Load up the 
+            bool InstrumentsLoadedSuccessfully = LoadUpClarityEngine();
+            WF.StayAlive = false;
 
+
+
+            for (int i = 38; i > 0; i--)
+            {
+                if (ExcludedIncubatorPositions.Contains(i))
+                { continue; }
+                else
+                {
+                    lstIncubatorSlots.Items.Add(i);
+                    lstNSFPlates.Items.Add(i);
+                    lstGrowthRatesProtocol.Items.Add(i);
+                }
+            }
+            cmbShakeSpeed.SelectedIndex = 6;
+            if (ClarityEngine != null)
+            {
+                UpdateInstrumentStatus();
+                CreateRecoveryPanel();
+            }
+            try
+            {
+                string CurDirec = System.Environment.CurrentDirectory;
+                Uri recovAdd = new Uri(CurDirec + @"\AttemptRecoveryDocument.htm", UriKind.Absolute);
+                Uri growthinst = new Uri(CurDirec + @"\GrowthRateInstructionsl.htm", UriKind.Absolute);
+                wBrowRecovInstructions.Url = recovAdd;
+                wBrowGrowthRate.Url = growthinst;
+            }
+
+            catch { }
+            if (!InstrumentsLoadedSuccessfully)
+                ShowError("There was a problem during loading, please read any errors and then exit.  Clarity will not work.");
+        }
+     
+  /// <summary>
+        /// This method loads up the Clarity Engine and initializes all the instruments
+        /// Errors here should lead to shutdown/exits.
+  /// </summary>
+  /// <returns>True if load successful</returns>
+        public bool LoadUpClarityEngine()
+        {
+            try
+            {   
+                //Now to load up the instrument manager
+                try
+                {
+                     ClarityEngine = new InstrumentManagerClass();
+                }
+                catch(Exception thrown)
+                {
+                    ExitDueToError("Could not create Clarity Engine ",thrown);
+                }
+                //Any GUI should register for all of these events
                 ClarityEngine.OnProtocolStarted += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolStarted);
                 ClarityEngine.OnProtocolPaused += new ProtocolPauseEventHandler(ClarityEngine_OnProtocolPaused);
                 ClarityEngine.OnAllRunningProtocolsEnded += new InstrumentManagerEventHandler(ClarityEngine_OnAllProtocolsEnded);
@@ -143,12 +247,21 @@ namespace Clarity
                 ClarityEngine.OnProtocolSuccessfullyCancelled += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolSuccessfullyCancelled);
                 ClarityEngine.OnErrorDuringProtocolExecution += new InstrumentManagerErrorHandler(ClarityEngine_OnErrorDuringProtocolExecution);
                 ClarityEngine.OnProtocolExecutionUpdates += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolExecutionUpdates);
-
-                ClarityEngine.LoadUpInstruments();
-
+                //Make sure we can load the instruments we need to.
+                try
+                {
+                    ClarityEngine.LoadUpInstruments();
+                }
+                catch(Exception thrown)
+                {
+                    ExitDueToError("Could not initialize the instruments",thrown);
+                }
+                //Finally, if we wanted our GUI to have control of some instruments for the user,
+                //we can get references to them from the engine like so:
                 Incubator = ClarityEngine.ReturnInstrumentType<IncubatorServ>();
                 TransStation = ClarityEngine.ReturnInstrumentType<TransferStation>();
                 PlateReader = ClarityEngine.ReturnInstrumentType<VictorManager>();
+                return true;
             }
             catch (Exception thrown)
             {
@@ -162,21 +275,22 @@ namespace Clarity
                 {
                          ShowError("Problem initializing instruments\n\n" + thrown.Message);
                 }
+                return false;
             }
             
         }
-        private int pWELL48_PLATE_PROTOCOL_ID = 2000095;
-        public int WELL48_PLATE_PROTOCOL_ID
+        /// <summary>
+        /// Call when an error is so bad the program should exit.
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <param name="thrown"></param>
+        private void ExitDueToError(string Message, Exception thrown)
         {
-            get { return pWELL48_PLATE_PROTOCOL_ID; }
-            set { pWELL48_PLATE_PROTOCOL_ID = value; }
+            ShowError(Message+"\nError is: " + thrown.Message);
+            this.Close();
+            Application.Exit();
         }
-        private int pGBO_PLATE_PROTOCOL_ID = 2000128;
-        public int GBO_PLATE_PROTOCOL_ID
-        {
-            get { return pGBO_PLATE_PROTOCOL_ID; }
-            set { pGBO_PLATE_PROTOCOL_ID = value; }
-        }
+        
 
         void ClarityEngine_OnProtocolExecutionUpdates(InstrumentManager Source, EventArgs e)
         {
@@ -271,73 +385,10 @@ namespace Clarity
             TimeToGo.Stop();
         }
 
-        /// <summary>
-        /// Shows a splash screen during load to explain that the instruments are working.
-        /// The splash screen simply displays the html file WelcomInstructions.htm
-        /// </summary>
-        public void ShowWelcomeForm()
-        {
-            // Use full reference or it'll conflict with Skype
-            System.Windows.Forms.Application.Run(WF = new WelcomeForm());
-        }
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            
+       
+
         
-            
-            //Show the welcome form
-            Thread LoadingThread = new Thread(ShowWelcomeForm);
-            LoadingThread.SetApartmentState(ApartmentState.STA);
-            LoadingThread.IsBackground = true;
-            LoadingThread.Start();
-
-            //if this delegate is set before the instance is initialized it will fail
-            Thread.Sleep(1000);//give it time to initialize the WF              
-            LoadUpClarityGUI();            
-            WF.StayAlive = false; 
-           
-            
-
-            for (int i = 38; i > 0; i--)
-            {
-                if (ExcludedIncubatorPositions.Contains(i))
-                { continue; }
-                else
-                {
-                    lstIncubatorSlots.Items.Add(i);
-                    lstNSFPlates.Items.Add(i);
-                    lstGrowthRatesProtocol.Items.Add(i);
-                }
-            }
-            cmbShakeSpeed.SelectedIndex = 6;
-            if (ClarityEngine != null)
-            {
-                UpdateInstrumentStatus();
-                CreateRecoveryPanel();
-            }
-            try
-            {
-                string CurDirec=System.Environment.CurrentDirectory;
-                Uri recovAdd = new Uri(CurDirec+@"\AttemptRecoveryDocument.htm",UriKind.Absolute);
-                Uri growthinst = new Uri(CurDirec + @"\GrowthRateInstructionsl.htm",UriKind.Absolute);
-                wBrowRecovInstructions.Url = recovAdd;
-                wBrowGrowthRate.Url = growthinst;
-            }
-
-            catch { }
-
-        }
-        private void CreateIncubatorCommands()
-        {
-            for (int i = 38; i > 0; i--)
-            {
-                lstIncubatorSlots.Items.Add(i);
-                lstGrowthRatesProtocol.Items.Add(i);
-
-            }
-            cmbShakeSpeed.SelectedIndex = 6;
-
-        }
+        
         /// <summary>
         /// Method called on exit, reports to everyone that the GUI has been closed, and 
         /// releases all the instrument resources
@@ -355,6 +406,17 @@ namespace Clarity
         }
 
         // Incubator Controls    
+        private void CreateIncubatorCommands()
+        {
+            for (int i = 38; i > 0; i--)
+            {
+                lstIncubatorSlots.Items.Add(i);
+                lstGrowthRatesProtocol.Items.Add(i);
+
+            }
+            cmbShakeSpeed.SelectedIndex = 6;
+
+        }
         private void btnStartShaking_Click(object sender, EventArgs e)
         {
             try
@@ -380,7 +442,6 @@ namespace Clarity
                 ShowError("Could not stop shaker\n\n",thrown);            }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
         }
-
         private void btnLoadPlate_Click(object sender, EventArgs e)
         {
             try
@@ -497,6 +558,18 @@ namespace Clarity
                 ShowError("Could not reinitialize incubator",thrown);
             }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
+        }
+        private void btnStopIncubatorShaking_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Incubator.StopIncubatorShakingWhenNothingElseWill("");
+
+            }
+            catch (Exception thrown)
+            {
+                ShowError("Shaking Stop failed", thrown);
+            }
         }
 
         //Form update and addition methods
@@ -651,7 +724,123 @@ namespace Clarity
         {
             txtErrorLog.Text = txtErrorLog.Text+ ErrorInfo;
         }
+        private void btnEmailOkay_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ClarityEngine.ReportErrorRecovery();
+                MessageBox.Show("Clarity has sent a message to all users");
 
+            }
+            catch
+            {
+                MessageBox.Show("Could not send messages to all");
+            }
+        }
+
+        private void btnStartGrowthRate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //this will create and start a protocol, first to check for errors
+                int minuteDelay = 0;
+                int cycles = 0;
+                if (txtGrowthRateEmail.Text == "" | txtGrowthRateExperimentName.Text == "" | txtGrowthRateMinutes.Text == "" | txtGrowthRateTimesToMeasure.Text == "")
+                {
+                    ShowError("You did not fill out all of the required fields");
+                }
+                else if (lstGrowthRatesProtocol.SelectedIndex == -1)
+                {
+                    ShowError("You did not select any slots");
+                }
+                // For SkypeAlarm
+                else if (!ClarityEngine.Clarity_Alarm.ValidNumbers(textbox_number.Text))
+                {
+                    ShowError("Your number is not valid!");
+                }
+                else
+                {
+                    try { minuteDelay = Convert.ToInt32(txtGrowthRateMinutes.Text); cycles = Convert.ToInt32(txtGrowthRateTimesToMeasure.Text); }
+                    catch { ShowError("Could not convert your delay or measurement into an integer, please enter an appropriate value"); return; }
+                    if (minuteDelay < 9 | minuteDelay > 25 * 60)
+                    {
+                        ShowError("Your delay time is  weird, please make it greater then 9 minutes or less than 25 hours");
+                        return;
+                    }
+                    if (cycles < 0 | cycles > 200)
+                    {
+                        ShowError("You seem to have selected less than 0 or more than 200 readings, please pick an alternative");
+                        return;
+                    }
+                    Protocol NewProt = new Protocol();
+                    NewProt.ProtocolName = txtGrowthRateExperimentName.Text;
+                    NewProt.ErrorEmailAddress = txtGrowthRateEmail.Text;
+                    NewProt.ErrorPhoneNumber = textbox_number.Text;
+                    NewProt.Instructions = new List<ProtocolInstruction>();
+                    for (int i = 0; i < cycles; i++)
+                    {
+                        foreach (int plateslot in lstGrowthRatesProtocol.SelectedItems)
+                        {
+                            //move from incubator to platereader 
+                            StaticProtocolItem SP = new StaticProtocolItem();
+                            SP.InstrumentName = "Macros";
+                            SP.Parameters = new object[1] { plateslot };
+                            SP.MethodName = "MovePlateFromIncubatorToVictor";
+                            NewProt.Instructions.Add(SP);
+                            //read plate
+                            StaticProtocolItem SP2;
+                            if (chk48WellPlate.Checked)
+                            {
+                                SP2 = new StaticProtocolItem();
+                                SP2.MethodName = "ReadPlate2";
+                                SP2.InstrumentName = "PlateReader";
+                                SP2.Parameters = new object[2] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString(), WELL48_PLATE_PROTOCOL_ID };
+                                NewProt.Instructions.Add(SP2);
+
+                            }
+                            else if (chkGBO.Checked)
+                            {
+                                SP2 = new StaticProtocolItem();
+                                SP2.MethodName = "ReadPlate2";
+                                SP2.InstrumentName = "PlateReader";
+                                SP2.Parameters = new object[2] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString(), GBO_PLATE_PROTOCOL_ID };
+                                NewProt.Instructions.Add(SP2);
+                            }
+                            else
+                            {
+                                SP2 = new StaticProtocolItem();
+                                SP2.MethodName = "ReadPlate";
+                                SP2.InstrumentName = "PlateReader";
+                                SP2.Parameters = new object[1] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString() };
+                                NewProt.Instructions.Add(SP2);
+                            }
+                            //now to move the old plate back
+                            SP2 = SP.Clone();
+                            SP2.MethodName = "MovePlateFromVictorToIncubatorWithLidOnTransferStation";
+                            NewProt.Instructions.Add(SP2);
+                        }
+                        DelayTime DT = new DelayTime();
+                        DT.minutes = minuteDelay;
+                        NewProt.Instructions.Add(DT);
+                    }
+                    DialogResult DR = MessageBox.Show("Are you sure you have entered the right values and are ready to load this protocol?", "Final Check", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (DR == DialogResult.Yes)
+                    {
+                        UpdateLoadedProtocols();
+                        ClarityEngine.AddProtocol(NewProt);
+                        if (ClarityEngine.CurrentRunningState == RunningStates.Idle)//this timer is running while a protocol is waiting to go
+                        {
+                            DialogResult DR2 = MessageBox.Show("Would you like to start your protocol immediately?", "Begin Protocol", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (DR2 == DialogResult.Yes)
+                            {
+                                ClarityEngine.StartProtocolExecution();
+                            }
+                        }
+                    }
+                }
+            }
+            catch { ShowError("Weird error occurred"); }
+        }
 
         //UI Methods
         private void btnViewAdvancedControls_Click(object sender, EventArgs e)
@@ -878,153 +1067,15 @@ namespace Clarity
             catch { MessageBox.Show("Last instruction failed"); }
         }
 
-        private void btnStartGrowthRate_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //this will create and start a protocol, first to check for errors
-                int minuteDelay = 0;
-                int cycles = 0;
-                if (txtGrowthRateEmail.Text == "" | txtGrowthRateExperimentName.Text == "" | txtGrowthRateMinutes.Text == "" | txtGrowthRateTimesToMeasure.Text == "")
-                {
-                    ShowError("You did not fill out all of the required fields");
-                }
-                else if (lstGrowthRatesProtocol.SelectedIndex == -1)
-                {
-                    ShowError("You did not select any slots");
-                }
-                // For SkypeAlarm
-                else if (! ClarityEngine.Clarity_Alarm.ValidNumbers(textbox_number.Text))
-                {
-                    ShowError("Your number is not valid!");
-                }
-                else
-                {
-                    try { minuteDelay = Convert.ToInt32(txtGrowthRateMinutes.Text); cycles = Convert.ToInt32(txtGrowthRateTimesToMeasure.Text); }
-                    catch { ShowError("Could not convert your delay or measurement into an integer, please enter an appropriate value"); return; }
-                    if (minuteDelay < 9 | minuteDelay > 25 * 60)
-                    {
-                        ShowError("Your delay time is  weird, please make it greater then 9 minutes or less than 25 hours");
-                        return;
-                    }
-                    if (cycles < 0 | cycles > 200)
-                    {
-                        ShowError("You seem to have selected less than 0 or more than 200 readings, please pick an alternative");
-                        return;
-                    }
-                    Protocol NewProt = new Protocol();
-                    NewProt.ProtocolName = txtGrowthRateExperimentName.Text;
-                    NewProt.ErrorEmailAddress = txtGrowthRateEmail.Text;
-                    NewProt.ErrorPhoneNumber = textbox_number.Text;
-                    NewProt.Instructions = new List<ProtocolInstruction>();
-                    for (int i = 0; i < cycles; i++)
-                    {
-                        foreach (int plateslot in lstGrowthRatesProtocol.SelectedItems)
-                        {
-                            //move from incubator to platereader 
-                            StaticProtocolItem SP = new StaticProtocolItem();
-                            SP.InstrumentName = "Macros";
-                            SP.Parameters = new object[1] { plateslot };
-                            SP.MethodName = "MovePlateFromIncubatorToVictor";
-                            NewProt.Instructions.Add(SP);
-                            //read plate
-                            StaticProtocolItem SP2;
-                            if (chk48WellPlate.Checked)
-                            {
-                                SP2 = new StaticProtocolItem();
-                                SP2.MethodName = "ReadPlate2";
-                                SP2.InstrumentName = "PlateReader";
-                                SP2.Parameters = new object[2] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString(), WELL48_PLATE_PROTOCOL_ID };
-                                NewProt.Instructions.Add(SP2);
-
-                            }
-                            else if (chkGBO.Checked)
-                            {
-                                SP2 = new StaticProtocolItem();
-                                SP2.MethodName = "ReadPlate2";
-                                SP2.InstrumentName = "PlateReader";
-                                SP2.Parameters = new object[2] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString(), GBO_PLATE_PROTOCOL_ID };
-                                NewProt.Instructions.Add(SP2);
-                            }
-                            else
-                            {
-                                SP2 = new StaticProtocolItem();
-                                SP2.MethodName = "ReadPlate";
-                                SP2.InstrumentName = "PlateReader";
-                                SP2.Parameters = new object[1] { NewProt.ProtocolName + INSTRUMENT_NAME_DELIMITER + plateslot.ToString() };
-                                NewProt.Instructions.Add(SP2);
-                            }
-                            //now to move the old plate back
-                            SP2 = SP.Clone();
-                            SP2.MethodName = "MovePlateFromVictorToIncubatorWithLidOnTransferStation";
-                            NewProt.Instructions.Add(SP2);
-                        }
-                        DelayTime DT = new DelayTime();
-                        DT.minutes = minuteDelay;
-                        NewProt.Instructions.Add(DT);
-                    }
-                    DialogResult DR = MessageBox.Show("Are you sure you have entered the right values and are ready to load this protocol?", "Final Check", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (DR == DialogResult.Yes)
-                    {   
-                        UpdateLoadedProtocols();
-                        ClarityEngine.AddProtocol(NewProt);
-                        if (ClarityEngine.CurrentRunningState==RunningStates.Idle)//this timer is running while a protocol is waiting to go
-                        {
-                            DialogResult DR2 = MessageBox.Show("Would you like to start your protocol immediately?", "Begin Protocol", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                            if (DR2 == DialogResult.Yes)
-                            {
-                                ClarityEngine.StartProtocolExecution();
-                            }
-                        }
-                    }
-                }
-            }
-            catch { ShowError("Weird error occurred"); }
-        }
+        
         private bool CheckPassword()
         {
             if (txtPassword.Text.ToUpper() == "DONKEY") { return true; }
             else { MessageBox.Show("You do not have permission to make the advanced controls"); return false; }
         }
-        private void btnReleaseCom_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (CheckPassword())
-                {
-                    Incubator.ReleaseComPort("donkey");
-                }
-            }
-            catch (Exception thrown)
-            {
-                ShowError("Could not release com", thrown);
-            }
-        }
-        private void btnStopIncubatorShaking_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Incubator.StopIncubatorShakingWhenNothingElseWill("");
 
-            }
-            catch (Exception thrown)
-            {
-                ShowError("Shaking Stop failed", thrown);
-            }
-        }
-        private void btnEmailOkay_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ClarityEngine.ReportErrorRecovery();
-                MessageBox.Show("Clarity has sent a message to all users");
-                
-            }
-            catch
-            {
-                MessageBox.Show("Could not send messages to all");
-            }
-        }
+       
+        
         private void saveCurrentProtocolsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try

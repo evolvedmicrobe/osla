@@ -53,7 +53,6 @@
             this.btnMakeProtocols = new System.Windows.Forms.Button();
             this.IncubatorTab = new System.Windows.Forms.TabPage();
             this.btnStopIncubatorShaking = new System.Windows.Forms.Button();
-            this.btnReleaseCom = new System.Windows.Forms.Button();
             this.btnReinitializeIncubator = new System.Windows.Forms.Button();
             this.btnResetIncubator = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
@@ -361,7 +360,6 @@
             // IncubatorTab
             // 
             this.IncubatorTab.Controls.Add(this.btnStopIncubatorShaking);
-            this.IncubatorTab.Controls.Add(this.btnReleaseCom);
             this.IncubatorTab.Controls.Add(this.btnReinitializeIncubator);
             this.IncubatorTab.Controls.Add(this.btnResetIncubator);
             this.IncubatorTab.Controls.Add(this.label4);
@@ -396,16 +394,6 @@
             this.btnStopIncubatorShaking.Text = "Stop Shaking When Nothing Else Will";
             this.btnStopIncubatorShaking.UseVisualStyleBackColor = true;
             this.btnStopIncubatorShaking.Click += new System.EventHandler(this.btnStopIncubatorShaking_Click);
-            // 
-            // btnReleaseCom
-            // 
-            this.btnReleaseCom.Location = new System.Drawing.Point(346, 605);
-            this.btnReleaseCom.Name = "btnReleaseCom";
-            this.btnReleaseCom.Size = new System.Drawing.Size(163, 27);
-            this.btnReleaseCom.TabIndex = 18;
-            this.btnReleaseCom.Text = "Release Com Port";
-            this.btnReleaseCom.UseVisualStyleBackColor = true;
-            this.btnReleaseCom.Click += new System.EventHandler(this.btnReleaseCom_Click);
             // 
             // btnReinitializeIncubator
             // 
@@ -932,41 +920,41 @@
             this.loadPreviousSystemStateToolStripMenuItem,
             this.recoverLastProtcolInstructionToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // loadProtocolToolStripMenuItem
             // 
             this.loadProtocolToolStripMenuItem.Name = "loadProtocolToolStripMenuItem";
-            this.loadProtocolToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
+            this.loadProtocolToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
             this.loadProtocolToolStripMenuItem.Text = "Load Protocol";
             this.loadProtocolToolStripMenuItem.Click += new System.EventHandler(this.loadProtocolToolStripMenuItem_Click);
             // 
             // saveCurrentProtocolsToolStripMenuItem
             // 
             this.saveCurrentProtocolsToolStripMenuItem.Name = "saveCurrentProtocolsToolStripMenuItem";
-            this.saveCurrentProtocolsToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
+            this.saveCurrentProtocolsToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
             this.saveCurrentProtocolsToolStripMenuItem.Text = "Save Current System State";
             this.saveCurrentProtocolsToolStripMenuItem.Click += new System.EventHandler(this.saveCurrentProtocolsToolStripMenuItem_Click);
             // 
             // loadPreviousSystemStateToolStripMenuItem
             // 
             this.loadPreviousSystemStateToolStripMenuItem.Name = "loadPreviousSystemStateToolStripMenuItem";
-            this.loadPreviousSystemStateToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
+            this.loadPreviousSystemStateToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
             this.loadPreviousSystemStateToolStripMenuItem.Text = "Load Previous System State";
             this.loadPreviousSystemStateToolStripMenuItem.Click += new System.EventHandler(this.loadPreviousSystemStateToolStripMenuItem_Click);
             // 
             // recoverLastProtcolInstructionToolStripMenuItem
             // 
             this.recoverLastProtcolInstructionToolStripMenuItem.Name = "recoverLastProtcolInstructionToolStripMenuItem";
-            this.recoverLastProtcolInstructionToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
+            this.recoverLastProtcolInstructionToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
             this.recoverLastProtcolInstructionToolStripMenuItem.Text = "Recover From System Failure, Load Last System State";
             this.recoverLastProtcolInstructionToolStripMenuItem.Click += new System.EventHandler(this.recoverLastProtcolInstructionToolStripMenuItem_Click);
             // 
             // versionToolStripMenuItem
             // 
             this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
-            this.versionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.versionToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.versionToolStripMenuItem.Text = "Version";
             this.versionToolStripMenuItem.Click += new System.EventHandler(this.versionToolStripMenuItem_Click);
             // 
@@ -978,34 +966,34 @@
             this.getAlarmStateToolStripMenuItem,
             this.reconnectToAlarmServerToolStripMenuItem});
             this.alarmStateToolStripMenuItem.Name = "alarmStateToolStripMenuItem";
-            this.alarmStateToolStripMenuItem.Size = new System.Drawing.Size(111, 20);
+            this.alarmStateToolStripMenuItem.Size = new System.Drawing.Size(125, 20);
             this.alarmStateToolStripMenuItem.Text = "Alarm Management";
             // 
             // turnOnAlarmToolStripMenuItem
             // 
             this.turnOnAlarmToolStripMenuItem.Name = "turnOnAlarmToolStripMenuItem";
-            this.turnOnAlarmToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.turnOnAlarmToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.turnOnAlarmToolStripMenuItem.Text = "Turn On Alarm";
             this.turnOnAlarmToolStripMenuItem.Click += new System.EventHandler(this.turnOnAlarmToolStripMenuItem_Click);
             // 
             // turnOffAlarmToolStripMenuItem
             // 
             this.turnOffAlarmToolStripMenuItem.Name = "turnOffAlarmToolStripMenuItem";
-            this.turnOffAlarmToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.turnOffAlarmToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.turnOffAlarmToolStripMenuItem.Text = "Turn Off Alarm";
             this.turnOffAlarmToolStripMenuItem.Click += new System.EventHandler(this.turnOffAlarmToolStripMenuItem_Click);
             // 
             // getAlarmStateToolStripMenuItem
             // 
             this.getAlarmStateToolStripMenuItem.Name = "getAlarmStateToolStripMenuItem";
-            this.getAlarmStateToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.getAlarmStateToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.getAlarmStateToolStripMenuItem.Text = "Get Alarm State";
             this.getAlarmStateToolStripMenuItem.Click += new System.EventHandler(this.getAlarmStateToolStripMenuItem_Click);
             // 
             // reconnectToAlarmServerToolStripMenuItem
             // 
             this.reconnectToAlarmServerToolStripMenuItem.Name = "reconnectToAlarmServerToolStripMenuItem";
-            this.reconnectToAlarmServerToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.reconnectToAlarmServerToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.reconnectToAlarmServerToolStripMenuItem.Text = "Reconnect To Alarm Server";
             this.reconnectToAlarmServerToolStripMenuItem.Click += new System.EventHandler(this.reconnectToAlarmServerToolStripMenuItem_Click);
             // 
@@ -1022,7 +1010,7 @@
             // StatusLabel
             // 
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(108, 17);
+            this.StatusLabel.Size = new System.Drawing.Size(115, 17);
             this.StatusLabel.Text = "System Status: None";
             // 
             // txtPassword
@@ -1077,7 +1065,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Clarity - Template -  Robot Management Program";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.GUI_Load);
             this.MainTab.ResumeLayout(false);
             this.tabSubMain.ResumeLayout(false);
             this.tabSubMain.PerformLayout();
@@ -1168,7 +1156,6 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.RichTextBox txtErrorLog;
         private System.Windows.Forms.TextBox txtGrowthRateMinutes;
-        private System.Windows.Forms.Button btnReleaseCom;
         private System.Windows.Forms.Button btnStopIncubatorShaking;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnEmailOkay;
