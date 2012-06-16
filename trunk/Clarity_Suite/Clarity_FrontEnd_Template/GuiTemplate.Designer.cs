@@ -49,6 +49,10 @@
             this.btnExecuteProtocols = new System.Windows.Forms.Button();
             this.lstCurrentProtocol = new System.Windows.Forms.ListBox();
             this.btnMakeProtocols = new System.Windows.Forms.Button();
+            this.tabRecovery = new System.Windows.Forms.TabPage();
+            this.btnEmailOkay = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.wBrowRecovInstructions = new System.Windows.Forms.WebBrowser();
             this.IncubatorTab = new System.Windows.Forms.TabPage();
             this.btnStopIncubatorShaking = new System.Windows.Forms.Button();
             this.btnReinitializeIncubator = new System.Windows.Forms.Button();
@@ -67,10 +71,6 @@
             this.btnLoadPlate = new System.Windows.Forms.Button();
             this.btnStopShaking = new System.Windows.Forms.Button();
             this.btnStartShaking = new System.Windows.Forms.Button();
-            this.tabRecovery = new System.Windows.Forms.TabPage();
-            this.btnEmailOkay = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.wBrowRecovInstructions = new System.Windows.Forms.WebBrowser();
             this.tabMakeGrowthInstructions = new System.Windows.Forms.TabPage();
             this.textbox_number = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
@@ -122,8 +122,8 @@
             this.tabSubMain.SuspendLayout();
             this.pnlFailure.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.IncubatorTab.SuspendLayout();
             this.tabRecovery.SuspendLayout();
+            this.IncubatorTab.SuspendLayout();
             this.tabMakeGrowthInstructions.SuspendLayout();
             this.tabNSFExperiment.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -314,6 +314,7 @@
             this.btnCancelProtocolExecution.TabIndex = 5;
             this.btnCancelProtocolExecution.Text = "Cancel Protocol Execution";
             this.btnCancelProtocolExecution.UseVisualStyleBackColor = true;
+            this.btnCancelProtocolExecution.Click += new System.EventHandler(this.btnCancelProtocolExecution_Click);
             // 
             // btnExecuteProtocols
             // 
@@ -323,6 +324,7 @@
             this.btnExecuteProtocols.TabIndex = 4;
             this.btnExecuteProtocols.Text = "Start Protocol Execution";
             this.btnExecuteProtocols.UseVisualStyleBackColor = true;
+            this.btnExecuteProtocols.Click += new System.EventHandler(this.btnExecuteProtocols_Click);
             // 
             // lstCurrentProtocol
             // 
@@ -342,6 +344,53 @@
             this.btnMakeProtocols.Text = "Create New Protocols";
             this.btnMakeProtocols.UseVisualStyleBackColor = true;
             this.btnMakeProtocols.Click += new System.EventHandler(this.btnMakeProtocols_Click);
+            // 
+            // tabRecovery
+            // 
+            this.tabRecovery.Controls.Add(this.btnEmailOkay);
+            this.tabRecovery.Controls.Add(this.label8);
+            this.tabRecovery.Controls.Add(this.wBrowRecovInstructions);
+            this.tabRecovery.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabRecovery.Location = new System.Drawing.Point(4, 24);
+            this.tabRecovery.Name = "tabRecovery";
+            this.tabRecovery.Padding = new System.Windows.Forms.Padding(3);
+            this.tabRecovery.Size = new System.Drawing.Size(788, 649);
+            this.tabRecovery.TabIndex = 2;
+            this.tabRecovery.Text = "Recover From Errors";
+            this.tabRecovery.UseVisualStyleBackColor = true;
+            // 
+            // btnEmailOkay
+            // 
+            this.btnEmailOkay.BackColor = System.Drawing.Color.Snow;
+            this.btnEmailOkay.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnEmailOkay.Location = new System.Drawing.Point(19, 580);
+            this.btnEmailOkay.Name = "btnEmailOkay";
+            this.btnEmailOkay.Size = new System.Drawing.Size(233, 41);
+            this.btnEmailOkay.TabIndex = 11;
+            this.btnEmailOkay.Text = "Email System OK to Users";
+            this.btnEmailOkay.UseVisualStyleBackColor = false;
+            this.btnEmailOkay.Click += new System.EventHandler(this.btnEmailOkay_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(16, 245);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(204, 68);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "Wait 5 mins after attempting\r\na recovery\r\n\r\nMore Advanced Controls Below";
+            // 
+            // wBrowRecovInstructions
+            // 
+            this.wBrowRecovInstructions.AllowNavigation = false;
+            this.wBrowRecovInstructions.Dock = System.Windows.Forms.DockStyle.Right;
+            this.wBrowRecovInstructions.Location = new System.Drawing.Point(267, 3);
+            this.wBrowRecovInstructions.MinimumSize = new System.Drawing.Size(20, 20);
+            this.wBrowRecovInstructions.Name = "wBrowRecovInstructions";
+            this.wBrowRecovInstructions.ScriptErrorsSuppressed = true;
+            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 643);
+            this.wBrowRecovInstructions.TabIndex = 0;
+            this.wBrowRecovInstructions.WebBrowserShortcutsEnabled = false;
             // 
             // IncubatorTab
             // 
@@ -547,53 +596,6 @@
             this.btnStartShaking.UseVisualStyleBackColor = true;
             this.btnStartShaking.Click += new System.EventHandler(this.btnStartShaking_Click);
             // 
-            // tabRecovery
-            // 
-            this.tabRecovery.Controls.Add(this.btnEmailOkay);
-            this.tabRecovery.Controls.Add(this.label8);
-            this.tabRecovery.Controls.Add(this.wBrowRecovInstructions);
-            this.tabRecovery.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabRecovery.Location = new System.Drawing.Point(4, 24);
-            this.tabRecovery.Name = "tabRecovery";
-            this.tabRecovery.Padding = new System.Windows.Forms.Padding(3);
-            this.tabRecovery.Size = new System.Drawing.Size(788, 649);
-            this.tabRecovery.TabIndex = 2;
-            this.tabRecovery.Text = "Recover From Errors";
-            this.tabRecovery.UseVisualStyleBackColor = true;
-            // 
-            // btnEmailOkay
-            // 
-            this.btnEmailOkay.BackColor = System.Drawing.Color.Snow;
-            this.btnEmailOkay.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnEmailOkay.Location = new System.Drawing.Point(19, 580);
-            this.btnEmailOkay.Name = "btnEmailOkay";
-            this.btnEmailOkay.Size = new System.Drawing.Size(233, 41);
-            this.btnEmailOkay.TabIndex = 11;
-            this.btnEmailOkay.Text = "Email System OK to Users";
-            this.btnEmailOkay.UseVisualStyleBackColor = false;
-            this.btnEmailOkay.Click += new System.EventHandler(this.btnEmailOkay_Click);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(16, 245);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(204, 68);
-            this.label8.TabIndex = 1;
-            this.label8.Text = "Wait 5 mins after attempting\r\na recovery\r\n\r\nMore Advanced Controls Below";
-            // 
-            // wBrowRecovInstructions
-            // 
-            this.wBrowRecovInstructions.AllowNavigation = false;
-            this.wBrowRecovInstructions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.wBrowRecovInstructions.Location = new System.Drawing.Point(267, 3);
-            this.wBrowRecovInstructions.MinimumSize = new System.Drawing.Size(20, 20);
-            this.wBrowRecovInstructions.Name = "wBrowRecovInstructions";
-            this.wBrowRecovInstructions.ScriptErrorsSuppressed = true;
-            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 643);
-            this.wBrowRecovInstructions.TabIndex = 0;
-            this.wBrowRecovInstructions.WebBrowserShortcutsEnabled = false;
-            // 
             // tabMakeGrowthInstructions
             // 
             this.tabMakeGrowthInstructions.Controls.Add(this.textbox_number);
@@ -645,7 +647,7 @@
             this.chkGBO.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkGBO.Location = new System.Drawing.Point(645, 93);
             this.chkGBO.Name = "chkGBO";
-            this.chkGBO.Size = new System.Drawing.Size(129, 19);
+            this.chkGBO.Size = new System.Drawing.Size(117, 17);
             this.chkGBO.TabIndex = 18;
             this.chkGBO.Text = "48 Well Excel Data";
             this.chkGBO.UseVisualStyleBackColor = true;
@@ -656,7 +658,7 @@
             this.chk48WellPlate.AutoSize = true;
             this.chk48WellPlate.Location = new System.Drawing.Point(645, 71);
             this.chk48WellPlate.Name = "chk48WellPlate";
-            this.chk48WellPlate.Size = new System.Drawing.Size(98, 19);
+            this.chk48WellPlate.Size = new System.Drawing.Size(89, 17);
             this.chk48WellPlate.TabIndex = 14;
             this.chk48WellPlate.Text = "48 Well Plate";
             this.chk48WellPlate.UseVisualStyleBackColor = true;
@@ -906,41 +908,41 @@
             this.loadPreviousSystemStateToolStripMenuItem,
             this.recoverLastProtcolInstructionToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // loadProtocolToolStripMenuItem
             // 
             this.loadProtocolToolStripMenuItem.Name = "loadProtocolToolStripMenuItem";
-            this.loadProtocolToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.loadProtocolToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
             this.loadProtocolToolStripMenuItem.Text = "Load Protocol";
             this.loadProtocolToolStripMenuItem.Click += new System.EventHandler(this.loadProtocolToolStripMenuItem_Click);
             // 
             // saveCurrentProtocolsToolStripMenuItem
             // 
             this.saveCurrentProtocolsToolStripMenuItem.Name = "saveCurrentProtocolsToolStripMenuItem";
-            this.saveCurrentProtocolsToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.saveCurrentProtocolsToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
             this.saveCurrentProtocolsToolStripMenuItem.Text = "Save Current System State";
             this.saveCurrentProtocolsToolStripMenuItem.Click += new System.EventHandler(this.saveCurrentProtocolsToolStripMenuItem_Click);
             // 
             // loadPreviousSystemStateToolStripMenuItem
             // 
             this.loadPreviousSystemStateToolStripMenuItem.Name = "loadPreviousSystemStateToolStripMenuItem";
-            this.loadPreviousSystemStateToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.loadPreviousSystemStateToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
             this.loadPreviousSystemStateToolStripMenuItem.Text = "Load Previous System State";
             this.loadPreviousSystemStateToolStripMenuItem.Click += new System.EventHandler(this.loadPreviousSystemStateToolStripMenuItem_Click);
             // 
             // recoverLastProtcolInstructionToolStripMenuItem
             // 
             this.recoverLastProtcolInstructionToolStripMenuItem.Name = "recoverLastProtcolInstructionToolStripMenuItem";
-            this.recoverLastProtcolInstructionToolStripMenuItem.Size = new System.Drawing.Size(352, 22);
+            this.recoverLastProtcolInstructionToolStripMenuItem.Size = new System.Drawing.Size(345, 22);
             this.recoverLastProtcolInstructionToolStripMenuItem.Text = "Recover From System Failure, Load Last System State";
             this.recoverLastProtcolInstructionToolStripMenuItem.Click += new System.EventHandler(this.recoverLastProtcolInstructionToolStripMenuItem_Click);
             // 
             // versionToolStripMenuItem
             // 
             this.versionToolStripMenuItem.Name = "versionToolStripMenuItem";
-            this.versionToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.versionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.versionToolStripMenuItem.Text = "Version";
             this.versionToolStripMenuItem.Click += new System.EventHandler(this.versionToolStripMenuItem_Click);
             // 
@@ -952,34 +954,34 @@
             this.getAlarmStateToolStripMenuItem,
             this.reconnectToAlarmServerToolStripMenuItem});
             this.alarmStateToolStripMenuItem.Name = "alarmStateToolStripMenuItem";
-            this.alarmStateToolStripMenuItem.Size = new System.Drawing.Size(125, 20);
+            this.alarmStateToolStripMenuItem.Size = new System.Drawing.Size(111, 20);
             this.alarmStateToolStripMenuItem.Text = "Alarm Management";
             // 
             // turnOnAlarmToolStripMenuItem
             // 
             this.turnOnAlarmToolStripMenuItem.Name = "turnOnAlarmToolStripMenuItem";
-            this.turnOnAlarmToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.turnOnAlarmToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.turnOnAlarmToolStripMenuItem.Text = "Turn On Alarm";
             this.turnOnAlarmToolStripMenuItem.Click += new System.EventHandler(this.turnOnAlarmToolStripMenuItem_Click);
             // 
             // turnOffAlarmToolStripMenuItem
             // 
             this.turnOffAlarmToolStripMenuItem.Name = "turnOffAlarmToolStripMenuItem";
-            this.turnOffAlarmToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.turnOffAlarmToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.turnOffAlarmToolStripMenuItem.Text = "Turn Off Alarm";
             this.turnOffAlarmToolStripMenuItem.Click += new System.EventHandler(this.turnOffAlarmToolStripMenuItem_Click);
             // 
             // getAlarmStateToolStripMenuItem
             // 
             this.getAlarmStateToolStripMenuItem.Name = "getAlarmStateToolStripMenuItem";
-            this.getAlarmStateToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.getAlarmStateToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.getAlarmStateToolStripMenuItem.Text = "Get Alarm State";
             this.getAlarmStateToolStripMenuItem.Click += new System.EventHandler(this.getAlarmStateToolStripMenuItem_Click);
             // 
             // reconnectToAlarmServerToolStripMenuItem
             // 
             this.reconnectToAlarmServerToolStripMenuItem.Name = "reconnectToAlarmServerToolStripMenuItem";
-            this.reconnectToAlarmServerToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.reconnectToAlarmServerToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.reconnectToAlarmServerToolStripMenuItem.Text = "Reconnect To Alarm Server";
             this.reconnectToAlarmServerToolStripMenuItem.Click += new System.EventHandler(this.reconnectToAlarmServerToolStripMenuItem_Click);
             // 
@@ -996,7 +998,7 @@
             // StatusLabel
             // 
             this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(115, 17);
+            this.StatusLabel.Size = new System.Drawing.Size(108, 17);
             this.StatusLabel.Text = "System Status: None";
             // 
             // txtPassword
@@ -1060,10 +1062,10 @@
             this.pnlFailure.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.IncubatorTab.ResumeLayout(false);
-            this.IncubatorTab.PerformLayout();
             this.tabRecovery.ResumeLayout(false);
             this.tabRecovery.PerformLayout();
+            this.IncubatorTab.ResumeLayout(false);
+            this.IncubatorTab.PerformLayout();
             this.tabMakeGrowthInstructions.ResumeLayout(false);
             this.tabMakeGrowthInstructions.PerformLayout();
             this.tabNSFExperiment.ResumeLayout(false);
