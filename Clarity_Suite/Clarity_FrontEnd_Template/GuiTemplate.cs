@@ -76,6 +76,8 @@ namespace Clarity
                 ClarityEngine.OnGenericError += new InstrumentManagerErrorHandler(ClarityEngine_OnGenericError);
                 ClarityEngine.OnProtocolSuccessfullyCancelled += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolSuccessfullyCancelled);
                 ClarityEngine.OnErrorDuringProtocolExecution += new InstrumentManagerErrorHandler(ClarityEngine_OnErrorDuringProtocolExecution);
+                ClarityEngine.OnProtocolExecutionUpdates += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolExecutionUpdates);
+
                 Incubator = ClarityEngine.ReturnInstrumentType<IncubatorServ>();
                 TransStation = ClarityEngine.ReturnInstrumentType<TransferStation>();
                 PlateReader = ClarityEngine.ReturnInstrumentType<VictorManager>();
@@ -95,6 +97,35 @@ namespace Clarity
             }
             
         }
+        private int pWELL48_PLATE_PROTOCOL_ID = 2000095;
+        public int WELL48_PLATE_PROTOCOL_ID
+        {
+            get { return pWELL48_PLATE_PROTOCOL_ID; }
+            set { pWELL48_PLATE_PROTOCOL_ID = value; }
+        }
+        private int pGBO_PLATE_PROTOCOL_ID = 2000128;
+        public int GBO_PLATE_PROTOCOL_ID
+        {
+            get { return pGBO_PLATE_PROTOCOL_ID; }
+            set { pGBO_PLATE_PROTOCOL_ID = value; }
+        }
+
+        void ClarityEngine_OnProtocolExecutionUpdates(InstrumentManager Source, EventArgs e)
+        {
+            lock (Source.LoadedProtocols)
+            {
+                try
+                {
+                    UpdateForm();
+                    try
+                    {
+                        StatusLabel.Text = "Performing operation: " + Source.LoadedProtocols.CurrentProtocolInUse.Instructions[Source.LoadedProtocols.CurrentProtocolInUse.NextItemToRun - 1].ToString();
+                    }
+                    catch { }
+                }
+                catch { }
+            }
+        }
 
         void ClarityEngine_OnErrorDuringProtocolExecution(InstrumentManager Source, Exception thrown)
         {
@@ -103,9 +134,9 @@ namespace Clarity
             ShowError("Failed To Run Protocol", thrown);
             pnlFailure.Visible = true;
             lblFailure.Text = "The Last Instruction Failed To Run, Please recover the machines and retry or delete the protocol, Do not reattempt a macro instruction";
-            if (Source.LastFailedInstruction != null)
+            if (Source.GetLastFailedInstruction() != null)
             {
-                lblFailureInstructionName.Text = "Would you like to reattempt: " + Source.LastFailedInstruction.ToString();
+                lblFailureInstructionName.Text = "Would you like to reattempt: " + Source.GetLastFailedInstruction().ToString();
             }
             else
             {
@@ -116,6 +147,13 @@ namespace Clarity
             }
             btnExecuteProtocols.Enabled = true;
             btnCancelProtocolExecution.Enabled = false;
+
+            if (thrown is ProtcolExcecutionError)
+            {
+                StringDel newDel = this.AddErrorLogText;
+                object[] myarr = new object[1] { ((ProtcolExcecutionError)thrown).MakeErrorReport() };
+                this.Invoke(newDel, myarr);
+            }
         }
 
         void ClarityEngine_OnProtocolSuccessfullyCancelled(InstrumentManager Source, EventArgs e)
@@ -134,6 +172,11 @@ namespace Clarity
             btnCancelProtocolExecution.Enabled = false;
             ShowError("Unspecified Error", thrown);
             UpdateForm();
+
+            string ErrorMessage = thrown.Message;
+            StringDel newDel = this.AddErrorLogText;
+            object[] myarr = new object[1] { ErrorMessage };
+            this.Invoke(newDel, myarr);
         }
 
         void ClarityEngine_OnAllProtocolsEnded(InstrumentManager Source, EventArgs e)
@@ -476,16 +519,11 @@ namespace Clarity
                 UpdateInstrumentStatus();
                 UpdateLoadedProtocols();
                 lstCurrentProtocol.Items.Clear();
-                if (LoadedProtocols.CurrentProtocolInUse != null)
+                if (ClarityEngine.LoadedProtocols.CurrentProtocolInUse != null)
                 {
-                    Protocol selectedProtocol = (Protocol)LoadedProtocols.CurrentProtocolInUse;
+                    Protocol selectedProtocol = (Protocol)ClarityEngine.LoadedProtocols.CurrentProtocolInUse;
                     int FinishedUPTO = selectedProtocol.NextItemToRun;
                     lblCurrentRunningProtocol.Text = "Current Running Protocol - " + selectedProtocol.ToString();
-                    if (UseAlarm)
-                    {
-
-                        Clarity_Alarm.ChangeStatus("Current Running Protocol - " + selectedProtocol.ToString());
-                    }
                     for (int j = 0; j < selectedProtocol.Instructions.Count; j++)
                     {
                         if (j < FinishedUPTO)
@@ -495,14 +533,6 @@ namespace Clarity
                     if (FinishedUPTO < lstCurrentProtocol.Items.Count)
                     { lstCurrentProtocol.SelectedIndex = FinishedUPTO; }
                 }
-                else
-                {
-                    if (UseAlarm)
-                    {
-                        Clarity_Alarm.ChangeStatus("Nothing Running");
-                    }
-                }
-
             }
             catch (Exception thrown)
             {
@@ -634,15 +664,15 @@ namespace Clarity
                     Protocol NewProtocol = ProtocolConverter.XMLFileToProtocol(Filename);
                     NewProtocol.Instructions = ProtocolConverter.ProtocolWithRepeatsToProtocolWithout(NewProtocol.Instructions);
 
-                    LoadedProtocols.AddProtocol(NewProtocol);
+                    ClarityEngine.AddProtocol(NewProtocol);
                     UpdateLoadedProtocols();
-                    if (NextInstructionTimer.Enabled == true)//this timer is running while a protocol is waiting to go
+                    if (ClarityEngine.CurrentRunningState==RunningStates.Idle)//this timer is running while a protocol is waiting to go
                     {
                         DialogResult DR2 = MessageBox.Show("Would you like to start your protocol immediately?", "Begin Protocol", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (DR2 == DialogResult.Yes)
                         {
-                            LoadedProtocols.CurrentProtocolInUse = NewProtocol;
-                            StopClockWaitAndExecute();
+                            ClarityEngine.LoadedProtocols.CurrentProtocolInUse = NewProtocol;
+                            ClarityEngine.StartProtocolExecution();
                         }
                     }
                 }
@@ -721,34 +751,11 @@ namespace Clarity
                     DialogResult DR = MessageBox.Show("Do you want to delete this protocol?  Please only delete your own protocols.", "Delete Protocol?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if (DR == DialogResult.OK)
                     {
-                        bool OkayToRemove = true;
-                        bool ResetTimerAfterwards = false;//will be used to determine if we need to reset the timer
-                        if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
+                        InstrumentManagerClass.ProtocolRemoveResult result = ClarityEngine.RemoveProtocol(toRemove);
+                        //protocol is running
+                        if (result == InstrumentManagerClass.ProtocolRemoveResult.WasCurrentlyRunning)
                         {
-                            //protocol is running
-                            if (LoadedProtocols.CurrentProtocolInUse == toRemove)
-                            {
-                                OkayToRemove = false;
-                                MessageBox.Show("Cannot delete currently executing protocol, please stop the protocol and then delete it", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
-                        }
-                        if (LoadedProtocols.CurrentProtocolInUse == toRemove)
-                        {
-                            ResetTimerAfterwards = true;
-                        }
-                        if (OkayToRemove)
-                        {
-                            LoadedProtocols.RemoveProtocol(toRemove);
-                            UpdateLoadedProtocols();
-                        }
-                        if (btnExecuteProtocols.Enabled==false && ResetTimerAfterwards && OkayToRemove)
-                        {
-                            double timeMS=LoadedProtocols.GetMilliSecondsTillNextRunTime();
-                            TimeSpan delay = new TimeSpan(10000*(Convert.ToInt64(timeMS) + 1));
-                            ProtocolEvents.FirePauseEvent(delay);
-                            int Delay = Convert.ToInt32(timeMS) + 1;//always make sure the value is greater then 0
-                            SetDelayAndStartWait(Delay);
-                            //StopClockWaitAndExecute();
+                            MessageBox.Show("Cannot delete currently executing protocol, please stop the protocol and then delete it", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
                 }
@@ -771,15 +778,13 @@ namespace Clarity
         {
             try
             {
-                if (LastFailedInstruction != null)
-                {
-                    RunInstrumentMethod(LastFailedInstruction.InstrumentName, LastFailedInstruction.MethodName, LastFailedInstruction.Parameters, true,LastFailedInstruction.ContainingProtocol);
-                }
+                ClarityEngine.RetryLastFailedInstruction();     
             }
             catch { MessageBox.Show("Last instruction failed"); }
         }
         private void button1_Click(object sender, EventArgs e)
         {
+
             StaticProtocolItem Instruction = LoadedProtocols.GetNextProtocolObject() as StaticProtocolItem;
             MessageBox.Show(Instruction.InstrumentName + "," + Instruction.Parameters.ToString());
             //then we run the protocol item
@@ -802,7 +807,7 @@ namespace Clarity
                     ShowError("You did not select any slots");
                 }
                 // For SkypeAlarm
-                else if (! Clarity_Alarm.ValidNumbers(textbox_number.Text))
+                else if (! ClarityEngine.Clarity_Alarm.ValidNumbers(textbox_number.Text))
                 {
                     ShowError("Your number is not valid!");
                 }
@@ -873,16 +878,15 @@ namespace Clarity
                     }
                     DialogResult DR = MessageBox.Show("Are you sure you have entered the right values and are ready to load this protocol?", "Final Check", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (DR == DialogResult.Yes)
-                    {
-                        LoadedProtocols.AddProtocol(NewProt);
+                    {   
                         UpdateLoadedProtocols();
-                        if (NextInstructionTimer.Enabled == true)//this timer is running while a protocol is waiting to go
+                        ClarityEngine.AddProtocol(NewProt);
+                        if (ClarityEngine.CurrentRunningState==RunningStates.Idle)//this timer is running while a protocol is waiting to go
                         {
                             DialogResult DR2 = MessageBox.Show("Would you like to start your protocol immediately?", "Begin Protocol", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                             if (DR2 == DialogResult.Yes)
                             {
-                                LoadedProtocols.CurrentProtocolInUse = NewProt;
-                                StopClockWaitAndExecute();
+                                ClarityEngine.StartProtocolExecution();
                             }
                         }
                     }
@@ -925,10 +929,9 @@ namespace Clarity
         {
             try
             {
-                LoadedProtocols.ReportToAllUsers("The Robot System Is Okay Now ");
+                ClarityEngine.ReportErrorRecovery();
                 MessageBox.Show("Clarity has sent a message to all users");
-                if (UseAlarm)
-                { Clarity_Alarm.TurnOffAlarm(); }
+                
             }
             catch
             {
@@ -939,7 +942,7 @@ namespace Clarity
         {
             try
             {
-                if (LoadedProtocols.Protocols.Count == 0)
+                if (ClarityEngine.LoadedProtocols.Protocols.Count == 0)
                 {
                     MessageBox.Show("There are no currently loaded protocols");
                 }
@@ -955,7 +958,7 @@ namespace Clarity
                     DialogResult DR = SFD.ShowDialog();
                     if (DR == DialogResult.OK)
                     {
-                        OutputRecoveryFile(SFD.FileName);
+                        ClarityEngine.OutputRecoveryFile(SFD.FileName);
                         MessageBox.Show("File Saved");
                     }
                 }
@@ -970,7 +973,7 @@ namespace Clarity
             try
             {
                 DialogResult DR;
-                if (LoadedProtocols.Protocols.Count > 0)
+                if (ClarityEngine.LoadedProtocols.Protocols.Count > 0)
                 {
                     DR = MessageBox.Show("Are you sure you want to load another set of protocols?  Doing so will remove the current set, and prevent a recovery of their state."
                        + "  If there are no loaded protocols, feel free to hit okay.", "Confirm Protocol Load", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
@@ -988,7 +991,7 @@ namespace Clarity
                     DR = OFD.ShowDialog();
                     if (DR == DialogResult.OK)
                     {
-                        InputRecoveryFile(OFD.FileName);
+                        ClarityEngine.InputRecoveryFile(OFD.FileName);
                         UpdateLoadedProtocols();
                     }
                 }
@@ -1023,10 +1026,10 @@ namespace Clarity
                         if (DR == DialogResult.OK)
                         {
                             SelectedProtocol.NextExecutionTimePoint = DateTime.Now;
-                            if (NextInstructionTimer.Enabled == true)//this timer is running while a protocol is waiting to go
+                            if (ClarityEngine.CurrentRunningState==RunningStates.Idle || ClarityEngine.CurrentRunningState==RunningStates.WaitingForNextExecutionTimePoint)//this timer is running while a protocol is waiting to go
                             {
-                                LoadedProtocols.CurrentProtocolInUse = SelectedProtocol;
-                                StopClockWaitAndExecute();
+                                ClarityEngine.LoadedProtocols.CurrentProtocolInUse = SelectedProtocol;
+                                ClarityEngine.StartProtocolExecution();
                             }
                         }
                     }
@@ -1042,7 +1045,7 @@ namespace Clarity
             try
             {
                 DialogResult DR;
-                if (LoadedProtocols.Protocols.Count > 0)
+                if (ClarityEngine.LoadedProtocols.Protocols.Count > 0)
                 {
                     DR = MessageBox.Show("Are you sure you want to load the most recent set of protocols?  Doing so will remove the current set, and prevent a recovery of their state."
                        + "  If there are no loaded protocols, feel free to hit okay.", "Confirm Protocol Load", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
@@ -1053,7 +1056,7 @@ namespace Clarity
                 }
                 if (DR == DialogResult.OK)
                 {
-                    InputRecoveryFile(RecoveryProtocolFile);
+                    ClarityEngine.InputRecoveryFile(ClarityEngine.RecoveryProtocolFile);
                     UpdateLoadedProtocols();
                 }
             }
@@ -1065,9 +1068,9 @@ namespace Clarity
         }
         private void getAlarmStateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (UseAlarm)
+            if (ClarityEngine.UseAlarm)
             {
-                Alarm.AlarmState CurStatus = Clarity_Alarm.IsAlarmOn();
+                Alarm.AlarmState CurStatus = ClarityEngine.Clarity_Alarm.IsAlarmOn();
                 if (CurStatus == Alarm.AlarmState.On)
                 {
                     MessageBox.Show("Connected and On");
@@ -1088,49 +1091,23 @@ namespace Clarity
         }
         private void turnOnAlarmToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (UseAlarm)
-                Clarity_Alarm.TurnOnAlarm("User activated alarm");
+            if (ClarityEngine.UseAlarm)
+                ClarityEngine.Clarity_Alarm.TurnOnAlarm("User activated alarm");
             else
                 MessageBox.Show("Alarm disabled at startup");
         }
         private void turnOffAlarmToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(UseAlarm)
-                Clarity_Alarm.TurnOffAlarm("User Ended Alarm");
+            if(ClarityEngine.UseAlarm)
+                ClarityEngine.Clarity_Alarm.TurnOffAlarm("User Ended Alarm");
              else
                 MessageBox.Show("Alarm disabled at startup");
         }
         private void reconnectToAlarmServerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (UseAlarm)
-                {
-                    Clarity_Alarm = new Alarm();
-                    if (Clarity_Alarm.Connected) { LoadedProtocols.UpdateAlarmProtocols(); }
-                }
-                else
-                    MessageBox.Show("Alarm disabled at startup");
-            }
-            catch (Exception thrown) { MessageBox.Show(thrown.Message); }
+            ClarityEngine.ReinitializeAlarm();
         }
-        private void btnResetLid_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (CheckPassword())
-                {
-                    this.Cursor = Cursors.WaitCursor;
-                    RunInstrumentMethod("Macros", "AttemptToReseatLid", null, true);
-                }
-            }
-            catch (Exception thrown)
-            {
-                ShowError("Could not perform Command, error was:\n\n" + thrown.Message);
-            }
-            finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
-            
-        }
+       
         private void btnCancelProtocolExecution_Click(object sender, EventArgs e)
         {
             try
@@ -1163,7 +1140,6 @@ namespace Clarity
         {
             MessageBox.Show("Version : 5.0");
         }
-
         private void btnDeleteProtocol_Click(object sender, EventArgs e)
         {
             RemoveSelectedProtocol();
@@ -1179,8 +1155,7 @@ namespace Clarity
         {
             if(chk48WellPlate.Checked)
             { chkGBO.Checked = false; }
-        }
-        
+        }        
         private void btnInstrumentRefresh_Click(object sender, EventArgs e)
         {
             UpdateInstrumentStatus();
