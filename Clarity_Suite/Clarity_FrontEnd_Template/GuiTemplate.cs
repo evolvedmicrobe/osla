@@ -52,7 +52,7 @@ namespace Clarity
         /// <summary>
         /// For certain controls we might only want some users to have access, this is the password setting.
         /// </summary>
-        static const string PASSWORD = "PASSWORD";
+        public const string PASSWORD = "PASSWORD";
         //This region is not part of the final release, can be ignored.
         #region ToRemove
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
