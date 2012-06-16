@@ -161,7 +161,7 @@ namespace Clarity
         }
         public override void Initialize()
         {
-            initializeTwisterPositions();
+            //initializeTwisterPositions();
             try
             {  
                           

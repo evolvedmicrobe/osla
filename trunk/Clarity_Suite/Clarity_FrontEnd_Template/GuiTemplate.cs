@@ -296,7 +296,7 @@ namespace Clarity
             LoadUpClarityGUI();            
             WF.StayAlive = false; 
            
-            UpdateInstrumentStatus();
+            
 
             for (int i = 38; i > 0; i--)
             {
@@ -310,9 +310,11 @@ namespace Clarity
                 }
             }
             cmbShakeSpeed.SelectedIndex = 6;
-            
-            CreateRecoveryPanel();
-
+            if (ClarityEngine != null)
+            {
+                UpdateInstrumentStatus();
+                CreateRecoveryPanel();
+            }
             try
             {
                 string CurDirec=System.Environment.CurrentDirectory;
@@ -345,7 +347,10 @@ namespace Clarity
         private void GUI_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
-            ClarityEngine.ShutdownEngine();
+            if (ClarityEngine != null)
+            {
+                ClarityEngine.ShutdownEngine();
+            }
             this.Cursor = Cursors.Default;
         }
 
@@ -556,21 +561,24 @@ namespace Clarity
         }                   
         private void UpdateInstrumentStatus()
         {
-            lock (ClarityEngine.InstrumentCollection)
+            lstInstrumentStatus.Items.Clear();
+            if (ClarityEngine!=null && ClarityEngine.InstrumentCollection != null)
             {
-                lstInstrumentStatus.Items.Clear();
-                foreach (object o in ClarityEngine.InstrumentCollection)
+                lock (ClarityEngine.InstrumentCollection)
                 {
-                    if (o is VirtualInstrument)
-                    { continue; }
-                    BaseInstrumentClass BC = (BaseInstrumentClass)o;
-                    if (BC.StatusOK != true)
+                    foreach (object o in ClarityEngine.InstrumentCollection)
                     {
-                        lstInstrumentStatus.Items.Add(BC.Name + " is not working");
-                    }
-                    else
-                    {
-                        lstInstrumentStatus.Items.Add(BC.Name + " is working");
+                        if (o is VirtualInstrument)
+                        { continue; }
+                        BaseInstrumentClass BC = (BaseInstrumentClass)o;
+                        if (BC.StatusOK != true)
+                        {
+                            lstInstrumentStatus.Items.Add(BC.Name + " is not working");
+                        }
+                        else
+                        {
+                            lstInstrumentStatus.Items.Add(BC.Name + " is working");
+                        }
                     }
                 }
             }
