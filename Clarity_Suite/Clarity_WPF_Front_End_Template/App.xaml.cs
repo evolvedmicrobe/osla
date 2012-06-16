@@ -12,5 +12,11 @@ namespace Clarity_WPF_Front_End_Template
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            MainWindow m = new MainWindow();
+
+        }
     }
 }

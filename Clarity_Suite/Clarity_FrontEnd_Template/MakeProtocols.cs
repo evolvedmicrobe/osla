@@ -374,7 +374,7 @@ namespace Clarity
             List<ProtocolInstruction> CurrentProtocol = new List<ProtocolInstruction>();
             try
             {
-                foreach (ProtocolInstruction Item in BoxToRun.Items)
+                foreach (Object Item in BoxToRun.Items)
                 {
                     ProtocolListBoxItem myInstruction = (ProtocolListBoxItem)Item;
                     CurrentProtocol.Add(myInstruction.ReturnInstructionObject());
