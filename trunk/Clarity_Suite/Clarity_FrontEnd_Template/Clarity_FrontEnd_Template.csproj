@@ -157,6 +157,7 @@
     <Content Include="Clarity.ico" />
     <Content Include="ConfigurationFile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="GrowthRateInstructionsl.htm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

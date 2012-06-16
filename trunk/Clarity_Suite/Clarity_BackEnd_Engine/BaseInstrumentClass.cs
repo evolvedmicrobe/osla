@@ -32,11 +32,16 @@ namespace Clarity
         /// <summary>
         /// This is an optional method that allows for some instruments to try
         /// and self-diagnos and correct a mistake based on the error produced.
+        /// 
         /// </summary>
         /// <param name="Error"></param>
         /// <returns></returns>
         public abstract bool AttemptRecovery(InstrumentError Error);
         //this method should absolutely attempt to resolve the issue, if it cannot, then it should return a value indicating as much
+        /// <summary>
+        /// This method should initalize any resources the instrument needs, and not the constructor.
+        /// Errors can be trapped arsising from this method.
+        /// </summary>
         public virtual void Initialize()
         {
             return;
@@ -50,7 +55,11 @@ namespace Clarity
         {
             return AttemptRecovery(new InstrumentError("none", false, this));
         }
-        //this method should initialize the instrument and return a status okay
+        /// <summary>
+        /// This method should be implemented by each class and handle releaseing unmanaged resources,
+        /// COM objects, etc. that are created for the instrument to run.
+        /// </summary>
+        /// <returns></returns>
         public abstract bool CloseAndFreeUpResources();
         /// <summary>
         /// This is a method called to force certain instruments to free up resources that they

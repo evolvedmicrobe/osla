@@ -690,7 +690,7 @@ namespace Clarity
             //First get an instance of every possible base instrument class by searching for DLLs in the
             //current directory
             List<BaseInstrumentClass> BICs = InstrumentFinder.GetAllInstrumentClasses();
-            //now make a dictionary of it
+            //now make a dictionary of these types
             NamesToBICs = new Dictionary<string, BaseInstrumentClass>();
             Dictionary<string, BaseInstrumentClass> TypesToInstruments = new Dictionary<string, BaseInstrumentClass>();
             //now make them searchable
@@ -738,7 +738,14 @@ namespace Clarity
                     if (Skip == null || Skip.Value.ToUpper().Trim() != "TRUE")
                     {
                         //if not load it
-                        instrument.InitializeFromParsedXML(instNode);                        
+                        try
+                        {
+                            instrument.InitializeFromParsedXML(instNode);
+                        }
+                        catch (Exception thrown)
+                        {
+                            throw new Exception("Could not Initialize Instrument: "+instrument.Name+"\n"+thrown.Message);
+                        }
                     }
                 }
             }
@@ -756,12 +763,22 @@ namespace Clarity
             pLoadedProtocols = new ProtocolManager(this);
             ProtocolEvents = new ProtocolEventCaller();
             NextInstructionTimer.Tick+=new EventHandler(NextInstructionTimer_Tick);
-            SetEngineSettingsBasedOnXML();
-
-            //LoadUpInstruments();
-            if (UseAlarm)
+            try
             {
-                pClarity_Alarm = new Alarm();
+                SetEngineSettingsBasedOnXML();
+            }
+            catch(Exception thrown) { throw new Exception("Could not load XML Settings for Clarity Engine\n" + thrown.Message); }
+            try
+            {
+                if (UseAlarm)
+                {
+                    pClarity_Alarm = new Alarm();
+                }
+            }
+            catch (Exception thrown)
+            {
+                this.UseAlarm = false;
+                throw new Exception("Could not create Alarm for Clarity Engine\n" + thrown.Message);
             }
         }
         #region InstrumentManager Members
