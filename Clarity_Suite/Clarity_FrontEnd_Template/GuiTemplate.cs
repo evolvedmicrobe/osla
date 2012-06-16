@@ -49,6 +49,10 @@ namespace Clarity
         //These is an instruments we want to have the GUI gain access to
         //Demonstrated on the Incubator tab.
         private IncubatorServ Incubator;
+        /// <summary>
+        /// For certain controls we might only want some users to have access, this is the password setting.
+        /// </summary>
+        static const string PASSWORD = "PASSWORD";
         //This region is not part of the final release, can be ignored.
         #region ToRemove
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
@@ -221,7 +225,7 @@ namespace Clarity
                 ShowError("There was a problem during loading, please read any errors and then exit.  Clarity will not work.");
         }
      
-  /// <summary>
+        /// <summary>
         /// This method loads up the Clarity Engine and initializes all the instruments
         /// Errors here should lead to shutdown/exits.
   /// </summary>
@@ -240,7 +244,7 @@ namespace Clarity
                     ExitDueToError("Could not create Clarity Engine ",thrown);
                 }
                 //Any GUI should register for all of these events
-                ClarityEngine.OnProtocolStarted += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolStarted);
+                ClarityEngine.OnProtocolsStarted += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolStarted);
                 ClarityEngine.OnProtocolPaused += new ProtocolPauseEventHandler(ClarityEngine_OnProtocolPaused);
                 ClarityEngine.OnAllRunningProtocolsEnded += new InstrumentManagerEventHandler(ClarityEngine_OnAllProtocolsEnded);
                 ClarityEngine.OnGenericError += new InstrumentManagerErrorHandler(ClarityEngine_OnGenericError);
@@ -279,6 +283,45 @@ namespace Clarity
             
         }
         /// <summary>
+        /// Displays an error message to the user
+        /// </summary>
+        /// <param name="ErrorMessage"></param>
+        private void ShowError(string ErrorMessage)
+        {
+            ErrorMessage = "\nNew Error at " + DateTime.Now.ToString() + " \n" + ErrorMessage;
+            AddErrorLogText(ErrorMessage);
+            MessageBox.Show(ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        private void ShowError(string ErrorMessage, Exception Error)
+        {
+            if (Error != null && Error.InnerException != null && Error.InnerException.Message != null)
+            {
+                Exception tempExcep = Error;
+                int InnerExceptionCounter = 0;
+                while (InnerExceptionCounter < 4)
+                {
+                    ErrorMessage += "\n\n" + tempExcep.InnerException.Message;
+                    if (tempExcep.InnerException == null || tempExcep.InnerException.Message == null)
+                    { break; }
+                    else { tempExcep = tempExcep.InnerException; }
+                    InnerExceptionCounter++;
+                }
+                ShowError(ErrorMessage);
+            }
+            else if (Error != null && Error.Message == null)
+            {
+                ShowError(ErrorMessage += "\nException was null, no message");
+            }
+            else if (Error == null)
+            {
+                ShowError(ErrorMessage);
+            }
+            else
+            {
+                ShowError(ErrorMessage += "\n" + Error.Message);
+            }
+        }
+        /// <summary>
         /// Call when an error is so bad the program should exit.
         /// </summary>
         /// <param name="Message"></param>
@@ -289,8 +332,9 @@ namespace Clarity
             this.Close();
             Application.Exit();
         }
-        
 
+
+        #region ClarityEngine Event Handler
         void ClarityEngine_OnProtocolExecutionUpdates(InstrumentManager Source, EventArgs e)
         {
             lock (Source.LoadedProtocols)
@@ -347,7 +391,7 @@ namespace Clarity
         }
 
         void ClarityEngine_OnGenericError(InstrumentManager Source, Exception thrown)
-        {   
+        {
             TimeToGo.Text = "Nothing Running";
             btnExecuteProtocols.Enabled = true;
             btnCancelProtocolExecution.Enabled = false;
@@ -382,7 +426,8 @@ namespace Clarity
             //probably should try some checks here
             TimeToGo.Text = "Protocol Running";
             TimeToGo.Stop();
-        }
+        } 
+        #endregion
 
        
 
@@ -404,7 +449,8 @@ namespace Clarity
             this.Cursor = Cursors.Default;
         }
 
-        // Incubator Controls    
+        // Incubator Controls, demonstrates a tab that controls an instrument.    
+        #region IncubatorTabCode
         private void CreateIncubatorCommands()
         {
             for (int i = 38; i > 0; i--)
@@ -425,7 +471,7 @@ namespace Clarity
             }
             catch (Exception thrown)
             {
-                ShowError("Could not start shaker\n\n",thrown);
+                ShowError("Could not start shaker\n\n", thrown);
             }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
         }
@@ -438,7 +484,8 @@ namespace Clarity
             }
             catch (Exception thrown)
             {
-                ShowError("Could not stop shaker\n\n",thrown);            }
+                ShowError("Could not stop shaker\n\n", thrown);
+            }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
         }
         private void btnLoadPlate_Click(object sender, EventArgs e)
@@ -456,9 +503,9 @@ namespace Clarity
                     MessageBox.Show("Please Select a Slot First");
                 }
             }
-            catch(Exception thrown)
-            {  
-                ShowError("Could not load plate\n",thrown);
+            catch (Exception thrown)
+            {
+                ShowError("Could not load plate\n", thrown);
             }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
         }
@@ -481,7 +528,7 @@ namespace Clarity
             catch (Exception thrown)
             {
                 string error = "Could not unload, error was: ";
-                ShowError(error,thrown);
+                ShowError(error, thrown);
             }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
         }
@@ -492,7 +539,7 @@ namespace Clarity
                 if (CheckPassword())
                 {
                     this.Cursor = Cursors.WaitCursor;
-                    txtResponse.Text = Incubator.PerformCommandUnsafe(txtCommand.Text,"donkey");
+                    txtResponse.Text = Incubator.PerformCommandUnsafe(txtCommand.Text, "donkey");
                 }
             }
             catch (Exception thrown)
@@ -549,12 +596,12 @@ namespace Clarity
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-                Incubator.Initialize(Incubator.STARTING_SPEED);                
+                Incubator.Initialize(Incubator.STARTING_SPEED);
                 MessageBox.Show("Incubator is now initialized");
             }
-            catch(Exception thrown)
+            catch (Exception thrown)
             {
-                ShowError("Could not reinitialize incubator",thrown);
+                ShowError("Could not reinitialize incubator", thrown);
             }
             finally { this.Cursor = Cursors.Default; UpdateInstrumentStatus(); }
         }
@@ -569,7 +616,8 @@ namespace Clarity
             {
                 ShowError("Shaking Stop failed", thrown);
             }
-        }
+        }        
+        #endregion
 
         //Form update and addition methods
         public const char INSTRUMENT_NAME_DELIMITER = '_';
@@ -679,6 +727,16 @@ namespace Clarity
                 UpdateInstrumentStatus();
                 UpdateLoadedProtocols();
                 lstCurrentProtocol.Items.Clear();
+                if (ClarityEngine.CurrentRunningState == RunningStates.Running)
+                {
+                    TimeToGo.Text = "Protocol Running";
+                    TimeToGo.Stop();
+                }
+                if (ClarityEngine.CurrentRunningState == RunningStates.Idle)
+                {
+                    TimeToGo.Text = "Nothing Running";
+                    TimeToGo.Stop();
+                }
                 if (ClarityEngine.LoadedProtocols.CurrentProtocolInUse != null)
                 {
                     Protocol selectedProtocol = (Protocol)ClarityEngine.LoadedProtocols.CurrentProtocolInUse;
@@ -737,6 +795,13 @@ namespace Clarity
             }
         }
 
+        
+        /// <summary>
+        /// This method creates a protocol to run a certain type of 
+        /// experiment for the user.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnStartGrowthRate_Click(object sender, EventArgs e)
         {
             try
@@ -842,6 +907,12 @@ namespace Clarity
         }
 
         //UI Methods
+        /// <summary>
+        /// This is a method that creates separate tabs for each instrument method that
+        /// is available in all the instruments.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnViewAdvancedControls_Click(object sender, EventArgs e)
         {
             //this method will create a tab for every instrument, and fill that tab with 
@@ -877,28 +948,17 @@ namespace Clarity
                                 StartPoint.X = StartX + 5 + DefaultButtonSize.Width;
                             }
                         }
-                        else if (MI.GetParameters()[0].ParameterType.Name == "IncubatorServ")
-                        {
-                            //Make a button
-                            Button NewButton = new Button();
-                            NewButton.Name = Instr.Name + INSTRUMENT_NAME_DELIMITER + MI.Name + "@" + "IncubatorServ";
-                            NewButton.Size = DefaultButtonSize;
-                            NewButton.Text = MI.Name;
-                            NewButton.Location = new Point(StartPoint.X, StartPoint.Y);
-                            NewButton.Click += new System.EventHandler(handleAdvancedButton);
-                            NewTab.Controls.Add(NewButton);
-                            StartPoint.Y += DefaultButtonSize.Height;
-                            if (StartPoint.Y >= maxDepth)
-                            {
-                                StartPoint.Y = StartY;
-                                StartPoint.X = StartX + 5 + DefaultButtonSize.Width;
-                            }
-                        }
+
                     }
                 }
             }
            
         }
+        /// <summary>
+        /// This method will run the given method when the button is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void handleAdvancedButton(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
@@ -958,41 +1018,7 @@ namespace Clarity
                 MessageBox.Show("Could not load your protocol.  Error is:\n\n" + thrown.Message, "Unable to Load Protocol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void ShowError(string ErrorMessage)
-        {
-            ErrorMessage= "\nNew Error at " + DateTime.Now.ToString() + " \n" + ErrorMessage;
-            AddErrorLogText(ErrorMessage);
-            MessageBox.Show(ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        private void ShowError(string ErrorMessage, Exception Error)
-        {
-            if (Error!=null && Error.InnerException != null  && Error.InnerException.Message!=null)
-            {
-                Exception tempExcep = Error;
-                int InnerExceptionCounter=0;
-                while (InnerExceptionCounter < 4)
-                {
-                    ErrorMessage += "\n\n" + tempExcep.InnerException.Message;
-                    if (tempExcep.InnerException == null || tempExcep.InnerException.Message==null)
-                    { break; }
-                    else { tempExcep = tempExcep.InnerException; }
-                    InnerExceptionCounter++;                
-                }
-                ShowError(ErrorMessage);               
-            }
-            else if (Error != null && Error.Message == null)
-            {
-                ShowError(ErrorMessage += "\nException was null, no message");
-            }
-            else if (Error == null)
-            {
-                ShowError(ErrorMessage);
-            }
-            else
-            {
-                ShowError(ErrorMessage += "\n" + Error.Message);
-            }
-        }
+
         private void btnExecuteProtocols_Click(object sender, EventArgs e)
         {
             ClarityEngine.StartProtocolExecution();
@@ -1069,12 +1095,35 @@ namespace Clarity
         
         private bool CheckPassword()
         {
-            if (txtPassword.Text.ToUpper() == "DONKEY") { return true; }
+            if (txtPassword.Text.ToUpper() == PASSWORD) { return true; }
             else { MessageBox.Show("You do not have permission to make the advanced controls"); return false; }
         }
 
-       
-        
+
+        private void btnCancelProtocolExecution_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (ClarityEngine.CurrentRunningState == RunningStates.Running)
+                {
+                    ClarityEngine.RequestProtocolCancellation();
+                    btnCancelProtocolExecution.Enabled = false;
+                    StatusLabel.Text = "Status is: Attempting To Cancel Operation";
+                }
+                else if (ClarityEngine.CurrentRunningState == RunningStates.WaitingForNextExecutionTimePoint)
+                {
+                    StatusLabel.Text = "Cancelled Operation";
+                    btnExecuteProtocols.Enabled = true;
+                    btnCancelProtocolExecution.Enabled = false;
+                }
+                else { btnCancelProtocolExecution.Enabled = false; btnExecuteProtocols.Enabled = true; }
+                TimeToGo.Stop();
+            }
+            catch (Exception thrown)
+            {
+                MessageBox.Show("Could not cancel operation.\n\n" + thrown.Message);
+            }
+        }
         private void saveCurrentProtocolsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -1203,6 +1252,8 @@ namespace Clarity
                 MessageBox.Show("Could not load previous protocols.  \n\n" + thrown.Message);
             }
         }
+        
+        #region Alarm Server Relevant Code
         private void getAlarmStateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ClarityEngine.UseAlarm)
@@ -1235,47 +1286,25 @@ namespace Clarity
         }
         private void turnOffAlarmToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(ClarityEngine.UseAlarm)
+            if (ClarityEngine.UseAlarm)
                 ClarityEngine.Clarity_Alarm.TurnOffAlarm("User Ended Alarm");
-             else
+            else
                 MessageBox.Show("Alarm disabled at startup");
         }
         private void reconnectToAlarmServerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClarityEngine.ReinitializeAlarm();
-        }
+        } 
+        #endregion
        
-        private void btnCancelProtocolExecution_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (ClarityEngine.CurrentRunningState==RunningStates.Running)
-                {
-                    ClarityEngine.RequestProtocolCancellation();
-                    btnCancelProtocolExecution.Enabled = false;
-                    StatusLabel.Text = "Status is: Attempting To Cancel Operation";
-                }
-                else if (ClarityEngine.CurrentRunningState==RunningStates.WaitingForNextExecutionTimePoint)
-                {
-                    StatusLabel.Text = "Cancelled Operation";
-                    btnExecuteProtocols.Enabled = true;
-                    btnCancelProtocolExecution.Enabled = false;
-                }
-                else { btnCancelProtocolExecution.Enabled = false; btnExecuteProtocols.Enabled = true; }
-                TimeToGo.Stop();
-            }
-            catch (Exception thrown)
-            {
-                MessageBox.Show("Could not cancel operation.\n\n" + thrown.Message);
-            }
-        }
+       
         
 
         public delegate void StringDel(string firstArg);
         public delegate void StringErrorDel(string arg1, Exception arg2);
         private void versionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Version : 5.0");
+            MessageBox.Show("Version : 1.0");
         }
         private void btnDeleteProtocol_Click(object sender, EventArgs e)
         {

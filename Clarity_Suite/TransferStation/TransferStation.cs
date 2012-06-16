@@ -301,7 +301,9 @@ namespace Clarity
         }
         
         public override void Initialize()
-        {           
+        {
+            try { CloseAndFreeUpResources(); }
+            catch { }
             try
             {
                 DCUServer = new clsDCUserver();

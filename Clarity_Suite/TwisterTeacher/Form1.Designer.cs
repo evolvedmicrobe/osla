@@ -46,6 +46,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.saveAllPositionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnGripMaterial = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -91,7 +92,7 @@
             this.lstPositions.FormattingEnabled = true;
             this.lstPositions.Location = new System.Drawing.Point(347, 27);
             this.lstPositions.Name = "lstPositions";
-            this.lstPositions.Size = new System.Drawing.Size(304, 433);
+            this.lstPositions.Size = new System.Drawing.Size(304, 394);
             this.lstPositions.TabIndex = 4;
             // 
             // btnMove
@@ -205,11 +206,24 @@
             this.btnGripMaterial.UseVisualStyleBackColor = true;
             this.btnGripMaterial.Click += new System.EventHandler(this.btnGripMaterial_Click);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.Red;
+            this.label5.Location = new System.Drawing.Point(317, 429);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(388, 40);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "Do not set clearance positions at the very top!!!\r\nIt will burn out the motor if " +
+    "it can\'t get there.";
+            // 
             // TwisterTeacher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(890, 544);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.btnGripMaterial);
             this.Controls.Add(this.btnChangePosition);
             this.Controls.Add(this.label4);
@@ -258,6 +272,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem saveAllPositionsToolStripMenuItem;
         private System.Windows.Forms.Button btnGripMaterial;
+        private System.Windows.Forms.Label label5;
     }
 }
 

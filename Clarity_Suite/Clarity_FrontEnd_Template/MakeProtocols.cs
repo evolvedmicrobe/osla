@@ -11,7 +11,9 @@ using System.Reflection;
 
 namespace Clarity
 {
-
+    /// <summary>
+    /// This is a GUI form that users can make XML protocols using the various instruments with.  
+    /// </summary>
     public partial class MakeProtocols : Form
     {
         List<BaseInstrumentClass> InstrumentCollection;
