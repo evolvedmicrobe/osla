@@ -758,7 +758,7 @@ namespace Clarity
             NextInstructionTimer.Tick+=new EventHandler(NextInstructionTimer_Tick);
             SetEngineSettingsBasedOnXML();
 
-            LoadUpInstruments();
+            //LoadUpInstruments();
             if (UseAlarm)
             {
                 pClarity_Alarm = new Alarm();
