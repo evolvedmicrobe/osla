@@ -300,7 +300,7 @@ namespace Clarity
                 int InnerExceptionCounter = 0;
                 while (InnerExceptionCounter < 4)
                 {
-                    ErrorMessage += "\n\n" + tempExcep.InnerException.Message;
+                    ErrorMessage += "\n\n" + tempExcep.Message;
                     if (tempExcep.InnerException == null || tempExcep.InnerException.Message == null)
                     { break; }
                     else { tempExcep = tempExcep.InnerException; }
