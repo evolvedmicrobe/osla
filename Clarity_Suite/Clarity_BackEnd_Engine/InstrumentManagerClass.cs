@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -23,6 +24,7 @@ namespace Clarity
     /// These are the various options the engine is in, depending on what it is currently doing
     /// </summary>
     public enum RunningStates { Idle, Running, WaitingForNextExecutionTimePoint }
+    public enum ProtocolRemoveResult { WasCurrentlyRunning, RemovedSuccessfully, Error };
     /// <summary>
     /// This class is the runtime engine for Clarity
     /// </summary>
@@ -60,6 +62,9 @@ namespace Clarity
             get { return pAppDataDirectory; }
             set { pAppDataDirectory = value; }
         }
+        public bool LoadInstrumentsInParallel {get;set;}
+
+
         private bool pRequireProtocolValidation;
         public bool RequireProtocolValidation
         {
@@ -148,30 +153,34 @@ namespace Clarity
             }
             if (OnAllRunningProtocolsEnded != null)
             { OnAllRunningProtocolsEnded(this, null); }
+            //Fire a really really long pause event
+            ProtocolEvents.FirePauseEvent(this, new TimeSpan(10000,0,0));
         }
         private void FireProtocolDelayEvent(DateTime NextExecutionTime)
         {
-            int Delay = 20;
-            CurrentRunningState = RunningStates.WaitingForNextExecutionTimePoint;
-            if (Delay <= 0)
-            {
-                throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
-            }
-           if (UseAlarm)
-            {
-                pClarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
-            }
-            NextInstructionTimer.Interval = Delay;
-            NextInstructionTimer.Start();
-            TimeSpan ts = new TimeSpan((long)Delay*10000);
             
-            ProtocolEvents.FirePauseEvent(this, ts);
-                    
-            if (OnProtocolPaused != null)
-            {   
-                OnProtocolPaused(this, ts);
+            TimeSpan ts = NextExecutionTime.Subtract(DateTime.Now);
+            //Perhaps I should throw an error here instead
+            if (ts.TotalMilliseconds <= 0)
+            {
+                StartProtocolExecution();
+                //throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
             }
-          
+            else
+            {
+                CurrentRunningState = RunningStates.WaitingForNextExecutionTimePoint;
+                if (UseAlarm)
+                {
+                    pClarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
+                }
+                NextInstructionTimer.Interval = (int)ts.TotalMilliseconds;
+                NextInstructionTimer.Start();
+                ProtocolEvents.FirePauseEvent(this, ts);
+                if (OnProtocolPaused != null)
+                {
+                    OnProtocolPaused(this, ts);
+                }
+            }
         }
         private void FireProtocolUpdate()
         {
@@ -300,10 +309,10 @@ namespace Clarity
                {
                    FireAllProtocolsCompleted();
                }
-               else if (e.Result is Int32)
+               else if (e.Result is DateTime)
                {
                    //then is the milliseconds until the next instruction occurs
-                   int delay = (int)e.Result;
+                   DateTime delay = (DateTime)e.Result;
                    FireProtocolDelayEvent(delay);
                }
            }
@@ -351,23 +360,20 @@ namespace Clarity
                                 Worker.ReportProgress(pLoadedProtocols.CurrentProtocolInUse.NextItemToRun);
                             }
                         }
-                        else if (NextInstruction is double)
+                        else if (NextInstruction is DateTime)
                         {
-                            //this is the milliseconds until the next protocol runs
-                            e.Result = Convert.ToInt32(NextInstruction) + 1;//always make sure the value is greater then 0
+                            //this is the time when the next protocol should run
                             OutputRecoveryFile(RecoveryProtocolFile);
-                            TimeSpan delay = new TimeSpan(10000 * (Convert.ToInt64(NextInstruction) + 1));
-                            ProtocolEvents.FirePauseEvent(this,delay);
+                            e.Result = NextInstruction;
                             return;
                         }
                         else if (NextInstruction == null)
                         {
-                            TimeSpan delay = new TimeSpan(1000000, 0, 0);
-                            ProtocolEvents.FirePauseEvent(this,delay);
+                            OutputRecoveryFile(RecoveryProtocolFile);
                             e.Result = null;
                             return;
                         }
-                        else { throw new Exception("Protocol item was not an instruction, double or null"); }
+                        else { throw new Exception("Protocol item was not an instruction, datetime or null"); }
                     }
                 }
                 if (Worker.CancellationPending) { e.Cancel = true; OutputRecoveryFile(RecoveryProtocolFile); }
@@ -398,15 +404,14 @@ namespace Clarity
                 //Run now
                 if (Delay < 0)
                 {
-
-                    if (UseAlarm)
-                    {
-                        pClarity_Alarm.ChangeStatus("Protocol Running");
-                    }
                     if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
                     { FireGenericError("Tried to start a protocol when one was already running"); }
                     else
                     {
+                        if (UseAlarm)
+                        {
+                            pClarity_Alarm.ChangeStatus("Protocol Running");
+                        }
                         InitializeWorkerToRunRobots();
                         CurrentRunningState = RunningStates.Running;
                         WorkerToRunRobots.RunWorkerAsync();
@@ -416,7 +421,7 @@ namespace Clarity
                 //Delay for later
                 else
                 {
-                    FireProtocolDelayEvent((int)Delay);
+                    FireProtocolDelayEvent(LoadedProtocols.CurrentProtocolInUse.NextExecutionTimePoint);
                 }
             }
         }
@@ -482,7 +487,7 @@ namespace Clarity
             catch
             { }
         }
-        public enum ProtocolRemoveResult {WasCurrentlyRunning,RemovedSuccessfully,Error};
+        
         public ProtocolRemoveResult RemoveProtocol(Protocol toRemove)
         {
             ProtocolRemoveResult toReturn;
@@ -503,9 +508,9 @@ namespace Clarity
                     ResetTimerAfterwards = true;
                 }
                 LoadedProtocols.RemoveProtocol(toRemove);
-                if (ResetTimerAfterwards)
+                if (ResetTimerAfterwards && LoadedProtocols.Protocols.Count>0)
                 {
-                    UpdateDelayUntilNextRun();
+                    StartProtocolExecution();
                 }
                 toReturn = ProtocolRemoveResult.RemovedSuccessfully;
                 return toReturn;
@@ -523,7 +528,7 @@ namespace Clarity
             LoadedProtocols.AddProtocol(toAdd);
             if (CurrentRunningState == RunningStates.WaitingForNextExecutionTimePoint)
             {
-                UpdateDelayUntilNextRun();
+                StartProtocolExecution();
             }
 
         }
@@ -628,30 +633,8 @@ namespace Clarity
                 FireGenericError("Could not send messages to all: \n" + thrown.Message);
             }
         }
-        private void SetDelayAndStartWait(int Delay)
-        {
-            if (Delay <= 0)
-            {
-                StartProtocolExecution();
-                return;
-                //throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
-            }
-            if (UseAlarm)
-            {
-                pClarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
-            }
-            NextInstructionTimer.Interval = Delay;
-            NextInstructionTimer.Start();
-            FireProtocolDelayEvent(Delay);
-            
-        }
-        private void UpdateDelayUntilNextRun()
-        {
-            double timeMS = LoadedProtocols.GetMilliSecondsTillNextRunTime();
-            TimeSpan delay = new TimeSpan(10000 * (Convert.ToInt64(timeMS) + 1));
-            int Delay = Convert.ToInt32(timeMS) + 1;//always make sure the value is greater then 0
-            SetDelayAndStartWait(Delay);
-        }
+       
+
 
         private void NextInstructionTimer_Tick(object sender, EventArgs e)
         {
@@ -758,25 +741,70 @@ namespace Clarity
             //first node is xml, second is the protocol, this is assumed and should be the case
             XmlNode InstrumentsNode = XmlDoc.SelectSingleNode("//Instruments");
             //Loop through all of the Instruments
-            //Perhaps would be much faster if done in parrallel
-            foreach(XmlNode instNode in InstrumentsNode)
+
+            if (!LoadInstrumentsInParallel)
             {
-                string instName = instNode.Name;
-                if(NamesToBICs.ContainsKey(instName))
+                //For some reason it couldn't do type inference without making a list like this
+                //not sure why, but it seemed easiest.
+                List<XmlNode> toUse = new List<XmlNode>();
+                foreach (XmlNode instNode in InstrumentsNode)
                 {
-                    BaseInstrumentClass instrument = NamesToBICs[instName];
-                    //now to check if it has a no load flag
-                    var Skip=instNode.Attributes.GetNamedItem("SkipLoad");
-                    if (Skip == null || Skip.Value.ToUpper().Trim() != "TRUE")
+                    toUse.Add(instNode);
+                }
+                var allExceptions = new ConcurrentQueue<Exception>();
+                Parallel.ForEach(toUse, instNode =>
+                {
+                    try
                     {
-                        //if not load it
-                        try
+                        string instName = instNode.Name;
+                        if (NamesToBICs.ContainsKey(instName))
                         {
-                            instrument.InitializeFromParsedXML(instNode);
+                            BaseInstrumentClass instrument = NamesToBICs[instName];
+                            //now to check if it has a no load flag
+                            var Skip = instNode.Attributes.GetNamedItem("SkipLoad");
+                            if (Skip == null || Skip.Value.ToUpper().Trim() != "TRUE")
+                            {
+                                instrument.InitializeFromParsedXML(instNode);
+                            }
                         }
-                        catch (Exception thrown)
+                    }
+                    catch (Exception thrown)
+                    {
+                       allExceptions.Enqueue(new Exception("Could not Initialize Instrument: " + instNode.Name + "\n" + thrown.Message));
+                    }
+                      
+                });
+                if (allExceptions.Count > 0)
+                {
+                    string Error = "Could not Initialize Instruments in Parrallel\n";
+                    foreach (Exception e in allExceptions)
+                    {
+                        Error += e.Message + "\n\n";
+                    }
+                    throw new Exception(Error);
+                }
+            }
+            else
+            {
+                foreach (XmlNode instNode in InstrumentsNode)
+                {
+                    string instName = instNode.Name;
+                    if (NamesToBICs.ContainsKey(instName))
+                    {
+                        BaseInstrumentClass instrument = NamesToBICs[instName];
+                        //now to check if it has a no load flag
+                        var Skip = instNode.Attributes.GetNamedItem("SkipLoad");
+                        if (Skip == null || Skip.Value.ToUpper().Trim() != "TRUE")
                         {
-                            throw new Exception("Could not Initialize Instrument: "+instrument.Name+"\n"+thrown.Message);
+                            //if not load it
+                            try
+                            {
+                                instrument.InitializeFromParsedXML(instNode);
+                            }
+                            catch (Exception thrown)
+                            {
+                                throw new Exception("Could not Initialize Instrument: " + instrument.Name + "\n" + thrown.Message);
+                            }
                         }
                     }
                 }

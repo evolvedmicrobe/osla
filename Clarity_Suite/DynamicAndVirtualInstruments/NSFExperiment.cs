@@ -83,7 +83,7 @@ namespace Clarity
         [UserCallableMethod()]
         public bool FakeInstruction()
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             return true;
         }
         [UserCallableMethod(RequiresCurrentProtocol=true)]

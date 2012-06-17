@@ -355,6 +355,7 @@ namespace Clarity
         void ClarityEngine_OnErrorDuringProtocolExecution(InstrumentManager Source, Exception thrown)
         {
             StatusLabel.Text = "Procedure ended with errors";
+            UpdateInstrumentStatus();
             btnRetryLastInstruction.Enabled = true;
             ShowError("Failed To Run Protocol", thrown);
             pnlFailure.Visible = true;
@@ -1065,9 +1066,9 @@ namespace Clarity
                     DialogResult DR = MessageBox.Show("Do you want to delete this protocol?  Please only delete your own protocols.", "Delete Protocol?", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if (DR == DialogResult.OK)
                     {
-                        InstrumentManagerClass.ProtocolRemoveResult result = ClarityEngine.RemoveProtocol(toRemove);
+                        ProtocolRemoveResult result = ClarityEngine.RemoveProtocol(toRemove);
                         //protocol is running
-                        if (result == InstrumentManagerClass.ProtocolRemoveResult.WasCurrentlyRunning)
+                        if (result == ProtocolRemoveResult.WasCurrentlyRunning)
                         {
                             MessageBox.Show("Cannot delete currently executing protocol, please stop the protocol and then delete it", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
@@ -1120,6 +1121,8 @@ namespace Clarity
                     StatusLabel.Text = "Cancelled Operation";
                     btnExecuteProtocols.Enabled = true;
                     btnCancelProtocolExecution.Enabled = false;
+                    ClarityEngine.RequestProtocolCancellation();
+
                 }
                 else { btnCancelProtocolExecution.Enabled = false; btnExecuteProtocols.Enabled = true; }
                 TimeToGo.Stop();
@@ -1216,7 +1219,7 @@ namespace Clarity
                         DR = MessageBox.Show("Should We Make This Instruction Run ASAP?", "Confirm Protocol Change", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                         if (DR == DialogResult.OK)
                         {
-                            SelectedProtocol.NextExecutionTimePoint = DateTime.Now;
+                            SelectedProtocol.NextExecutionTimePoint = DateTime.Now.Subtract(new TimeSpan(1000000,0,0));
                             if (ClarityEngine.CurrentRunningState==RunningStates.Idle || ClarityEngine.CurrentRunningState==RunningStates.WaitingForNextExecutionTimePoint)//this timer is running while a protocol is waiting to go
                             {
                                 ClarityEngine.LoadedProtocols.CurrentProtocolInUse = SelectedProtocol;
