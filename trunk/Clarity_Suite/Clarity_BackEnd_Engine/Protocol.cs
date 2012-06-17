@@ -444,23 +444,9 @@ namespace Clarity
                 //should throw an error here
             }
             DateTime CurNextTimePoint;
-            if (CurrentProtocolInUse == null)//this happens if the protocol was deleted
-            {
-                CurNextTimePoint = DateTime.Now.AddYears(100);//makes sure another protocol always runs sooner
-            }
-            else
-            {
-                CurNextTimePoint = CurrentProtocolInUse.NextExecutionTimePoint;
-            }
-            foreach (Protocol Prot in Protocols)
-            {
-                if (Prot.NextExecutionTimePoint.CompareTo(CurNextTimePoint) == -1)//make sure -1 is lower
-                {
-                    CurrentProtocolInUse = Prot;
-                    CurNextTimePoint = Prot.NextExecutionTimePoint;
-                }
-            }
-            //now return the time until the next run in milliseconds
+            UpdateCurrentProtocol();
+            CurNextTimePoint = CurrentProtocolInUse.NextExecutionTimePoint;
+            ////now return the time until the next run in milliseconds
             TimeSpan CurDelay = CurNextTimePoint.Subtract(DateTime.Now);
             return CurDelay.TotalMilliseconds;
         }
@@ -600,6 +586,17 @@ namespace Clarity
             return nt >= CallHourStart || nt <= CallHourEnd;
         }
         #endregion
+        /// <summary>
+        /// Sets the current protocol to the next one to run.
+        /// </summary>
+        public void UpdateCurrentProtocol()
+        {
+            if (Protocols.Count > 0)
+            {
+                Protocols.Sort((x, y) => x.NextExecutionTimePoint.CompareTo(y.NextExecutionTimePoint));
+                CurrentProtocolInUse = Protocols[0];
+            }
+        }
         public double GetMilliSecondsTillNextRunTime()
         {
             return this.FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();

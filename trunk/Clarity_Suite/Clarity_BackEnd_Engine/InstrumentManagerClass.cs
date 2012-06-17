@@ -149,8 +149,9 @@ namespace Clarity
             if (OnAllRunningProtocolsEnded != null)
             { OnAllRunningProtocolsEnded(this, null); }
         }
-        private void FireProtocolDelayEvent(int Delay)
+        private void FireProtocolDelayEvent(DateTime NextExecutionTime)
         {
+            int Delay = 20;
             CurrentRunningState = RunningStates.WaitingForNextExecutionTimePoint;
             if (Delay <= 0)
             {
@@ -192,6 +193,7 @@ namespace Clarity
         }
         private void InitializeWorkerToRunRobots()
         {
+            LoadedProtocols.UpdateCurrentProtocol();
             WorkerToRunRobots = new BackgroundWorker();
             WorkerToRunRobots.WorkerReportsProgress = true;
             WorkerToRunRobots.WorkerSupportsCancellation = true;
@@ -383,23 +385,40 @@ namespace Clarity
         /// </summary>
         public void StartProtocolExecution()
         {
-
-            //probably should try some checks here
             if (NextInstructionTimer != null && NextInstructionTimer.Enabled)
             { NextInstructionTimer.Stop(); }
-            if (UseAlarm)
+            if (LoadedProtocols.Protocols.Count < 1)
             {
-                pClarity_Alarm.ChangeStatus("Protocol Running");
+                FireGenericError("Tried to start protocols when none were loaded");
             }
-            if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
-            { FireGenericError("Tried to start a protocol when one was already running"); }
             else
             {
-                InitializeWorkerToRunRobots();
-                CurrentRunningState = RunningStates.Running;
-                WorkerToRunRobots.RunWorkerAsync();
+                //First to check if a protocol is running
+                double Delay = LoadedProtocols.GetMilliSecondsTillNextRunTime();
+                //Run now
+                if (Delay < 0)
+                {
+
+                    if (UseAlarm)
+                    {
+                        pClarity_Alarm.ChangeStatus("Protocol Running");
+                    }
+                    if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
+                    { FireGenericError("Tried to start a protocol when one was already running"); }
+                    else
+                    {
+                        InitializeWorkerToRunRobots();
+                        CurrentRunningState = RunningStates.Running;
+                        WorkerToRunRobots.RunWorkerAsync();
+                    }
+                    FireProtocolExecutionStarted();
+                }
+                //Delay for later
+                else
+                {
+                    FireProtocolDelayEvent((int)Delay);
+                }
             }
-            FireProtocolExecutionStarted();
         }
         /// <summary>
         /// Request that any running protocols stop running

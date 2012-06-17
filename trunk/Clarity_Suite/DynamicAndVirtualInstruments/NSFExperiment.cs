@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Office.Interop.Excel;
 using System.IO;
-
+using System.Threading;
 namespace Clarity
 {
     public class NSFExperiment : VirtualInstrument
@@ -83,6 +83,7 @@ namespace Clarity
         [UserCallableMethod()]
         public bool FakeInstruction()
         {
+            Thread.Sleep(2000);
             return true;
         }
         [UserCallableMethod(RequiresCurrentProtocol=true)]
