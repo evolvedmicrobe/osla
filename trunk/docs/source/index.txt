@@ -31,17 +31,10 @@ For developers:
     :maxdepth: 2
     
     overview
+    device_tutorial.cs
 
 
 Reference:
 
 * `Source Browser`_
-
-	(We use Doxygen_ to generate indepth documentation from the source code.)
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
 

@@ -69,6 +69,10 @@ exclude_patterns = []
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
 
+# The default language to highlight source code in. The default is 'python'.
+# The value should be a valid Pygments lexer name.
+#highlight_language = 'c#'
+
 # If true, '()' will be appended to :func: etc. cross-reference text.
 #add_function_parentheses = True
 

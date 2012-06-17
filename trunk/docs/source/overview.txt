@@ -23,23 +23,3 @@ Alarm server and monitors
 
 
 
-Customizing Clarity
-===================
-
-
-
-Configuration File
-++++++++++++++++++
-
-
-
-Implementing New Instruments
-++++++++++++++++++++++++++++
-
-
-
-Adding GUI Elements
-+++++++++++++++++++
-
-
-
