@@ -502,36 +502,39 @@ namespace Clarity
         public ProtocolRemoveResult RemoveProtocol(Protocol toRemove)
         {
             ProtocolRemoveResult toReturn;
-            try
+            lock (LoadedProtocols)
             {
-                bool ResetTimerAfterwards = false;//will be used to determine if we need to reset the timer
-                if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
+                try
                 {
-                    //protocol is running
+                    bool ResetTimerAfterwards = false;//will be used to determine if we need to reset the timer
+                    if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
+                    {
+                        //protocol is running
+                        if (LoadedProtocols.CurrentProtocolInUse == toRemove)
+                        {
+                            toReturn = ProtocolRemoveResult.WasCurrentlyRunning;
+                            return toReturn;
+                        }
+                    }
                     if (LoadedProtocols.CurrentProtocolInUse == toRemove)
                     {
-                        toReturn = ProtocolRemoveResult.WasCurrentlyRunning;
-                        return toReturn;
+                        ResetTimerAfterwards = true;
                     }
+                    LoadedProtocols.RemoveProtocol(toRemove);
+                    if (ResetTimerAfterwards && LoadedProtocols.Protocols.Count > 0)
+                    {
+                        StartProtocolExecution();
+                    }
+                    toReturn = ProtocolRemoveResult.RemovedSuccessfully;
+                    return toReturn;
                 }
-                if (LoadedProtocols.CurrentProtocolInUse == toRemove)
+                catch (Exception thrown)
                 {
-                    ResetTimerAfterwards = true;
+                    Exception e = new Exception("Could not remove protcol: " + thrown.Message, thrown);
+                    FireGenericError(e);
+                    toReturn = ProtocolRemoveResult.Error;
+                    return toReturn;
                 }
-                LoadedProtocols.RemoveProtocol(toRemove);
-                if (ResetTimerAfterwards && LoadedProtocols.Protocols.Count>0)
-                {
-                    StartProtocolExecution();
-                }
-                toReturn = ProtocolRemoveResult.RemovedSuccessfully;
-                return toReturn;
-            }
-            catch (Exception thrown)
-            {
-                Exception e = new Exception("Could not remove protcol: " + thrown.Message, thrown);
-                FireGenericError(e);
-                toReturn = ProtocolRemoveResult.Error;
-                return toReturn;
             }
         }
         public void AddProtocol(Protocol toAdd)
