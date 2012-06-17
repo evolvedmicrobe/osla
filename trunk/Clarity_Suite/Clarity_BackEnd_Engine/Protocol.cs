@@ -9,6 +9,7 @@ using System.Reflection;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Net;
+using System.Threading;
 
 namespace Clarity
 {
@@ -530,6 +531,11 @@ namespace Clarity
         }
         int CallHourStart = 23;
         int CallHourEnd = 8;
+        public void ReportToAllUsersAsynchronously(string message = "The robot has an error, and has stopped working")
+        {
+            Action<string> report = ReportToAllUsers;
+            report.BeginInvoke(message, null, null);
+        }
         public void ReportToAllUsers(string message = "The robot has an error, and has stopped working")
         {
             EmailErrorMessageToAllUsers(message);

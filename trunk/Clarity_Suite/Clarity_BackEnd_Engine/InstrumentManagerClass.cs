@@ -121,15 +121,22 @@ namespace Clarity
         private void FireErrorDuringProtocolExecution(Exception thrown)
         {
             this.CurrentRunningState = RunningStates.Idle;
+            pLoadedProtocols.ReportToAllUsersAsynchronously("Clarity is down");
             if (OnErrorDuringProtocolExecution != null)
             {
                 OnErrorDuringProtocolExecution(this, thrown);
             }
-            pLoadedProtocols.ReportToAllUsers();
-            if (UseAlarm)
+            try
             {
-                pClarity_Alarm.ChangeStatus("Nothing Running");
-                pClarity_Alarm.TurnOnAlarm("Procedure ended with errors");
+                if (UseAlarm)
+                {
+                    pClarity_Alarm.ChangeStatus("Nothing Running");
+                    pClarity_Alarm.TurnOnAlarm("Procedure ended with errors");
+                }
+            }
+            catch (Exception thrown2)
+            {
+                FireGenericError("Could not send messages or turn on alarm" + thrown2.Message);
             }
         }
         private void FireSuccessfulCancellation()
@@ -318,9 +325,8 @@ namespace Clarity
            }
            catch (Exception thrown)
            {
-               pLoadedProtocols.ReportToAllUsers("There was an error in the protocol manager, and the system is down.");
                Exception toThrow = new Exception("Problem interpretting the results of an executing protocol, the system is down", thrown);
-               FireGenericError(toThrow);
+               FireErrorDuringProtocolExecution(toThrow);
            }
        }
         void WorkerToRunRobots_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -373,7 +379,11 @@ namespace Clarity
                             e.Result = null;
                             return;
                         }
-                        else { throw new Exception("Protocol item was not an instruction, datetime or null"); }
+                        else 
+                        {
+                            
+                            FireErrorDuringProtocolExecution(new Exception("Protocol item was not an instruction, datetime or null")); 
+                        }
                     }
                 }
                 if (Worker.CancellationPending) { e.Cancel = true; OutputRecoveryFile(RecoveryProtocolFile); }
@@ -381,7 +391,8 @@ namespace Clarity
             }
             catch (Exception thrown)
             {
-                throw thrown;
+                FireErrorDuringProtocolExecution(thrown);
+                //throw thrown;
             }
         }
 
@@ -460,7 +471,7 @@ namespace Clarity
         {
             try {
                 if(pLoadedProtocols!=null)
-                pLoadedProtocols.ReportToAllUsers("The Robot Software Has Been Closed");
+                pLoadedProtocols.ReportToAllUsersAsynchronously("The Robot Software Has Been Closed");
             }
             catch { }
             try { if (UseAlarm &&pClarity_Alarm!=null) { pClarity_Alarm.TurnOnAlarm("The software was closed"); } }
@@ -624,7 +635,7 @@ namespace Clarity
         {
             try
             {
-                LoadedProtocols.ReportToAllUsers("The Clarity System Is Okay Now ");
+                LoadedProtocols.ReportToAllUsersAsynchronously("The Clarity System Is Okay Now ");
                 if (UseAlarm)
                 { Clarity_Alarm.TurnOffAlarm(); }
             }
@@ -827,7 +838,11 @@ namespace Clarity
             {
                 SetEngineSettingsBasedOnXML();
             }
-            catch(Exception thrown) { throw new Exception("Could not load XML Settings for Clarity Engine\n" + thrown.Message); }
+            catch(Exception thrown) 
+            { 
+
+                throw new Exception("Could not load XML Settings for Clarity Engine\n" + thrown.Message);
+            }
             try
             {
                 if (UseAlarm)
@@ -838,7 +853,8 @@ namespace Clarity
             catch (Exception thrown)
             {
                 this.UseAlarm = false;
-                throw new Exception("Could not create Alarm for Clarity Engine\n" + thrown.Message);
+                FireGenericError("Could not create Alarm for Clarity Engine\n" + thrown.Message);
+                //throw new Exception("Could not create Alarm for Clarity Engine\n" + thrown.Message);
             }
         }
         #region InstrumentManager Members
