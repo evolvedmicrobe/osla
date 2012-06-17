@@ -14,7 +14,8 @@ namespace Clarity
     {
         /// <summary>
         /// This variable indicates whether the instrument is able to 
-        /// perform commands
+        /// perform commands or not, for most scenarios, if this is set to false
+        /// any method calls to the instrument will throw errors.
         /// </summary>
         public bool StatusOK = false;
 
@@ -31,13 +32,14 @@ namespace Clarity
         }
         /// <summary>
         /// This is an optional method that allows for some instruments to try
-        /// and self-diagnos and correct a mistake based on the error produced.
+        /// and self-diagnose and correct a mistake based on the error produced.
         /// 
+        /// This method should attempt to resolve the issue, if it cannot, then it should return a value indicating as much
         /// </summary>
         /// <param name="Error"></param>
         /// <returns></returns>
         public abstract bool AttemptRecovery(InstrumentError Error);
-        //this method should absolutely attempt to resolve the issue, if it cannot, then it should return a value indicating as much
+        //
         /// <summary>
         /// This method should initalize any resources the instrument needs, and not the constructor.
         /// Errors can be trapped arsising from this method.
@@ -46,18 +48,30 @@ namespace Clarity
         {
             return;
         }
+        //TODO: Remove overloaded constructor.
+        /// <summary>
+        /// This was a hack for one instrument early on, could be changed
+        /// to an object array, though ideally no instruments use this.
+        /// </summary>
+        /// <param name="Parameter"></param>
         public virtual void Initialize(int Parameter)
         {
             return;
         }
+        /// <summary>
+        /// This should be a generic "Fix and reinitialize" method called after 
+        /// the device fails.  
+        /// </summary>
+        /// <returns></returns>
         [UserCallableMethod()]
         public virtual bool AttemptRecovery()
         {
             return AttemptRecovery(new InstrumentError("none", false, this));
         }
         /// <summary>
-        /// This method should be implemented by each class and handle releaseing unmanaged resources,
-        /// COM objects, etc. that are created for the instrument to run.
+        /// This method should be implemented by each class and handle releasing unmanaged resources,
+        /// COM objects, etc. that are created for the instrument to run.  It is essential if an instrument wants to call 
+        /// a "clean" start, and often involves direct process kills on COM objects that have lost their way.
         /// </summary>
         /// <returns></returns>
         public abstract bool CloseAndFreeUpResources();
@@ -101,8 +115,7 @@ namespace Clarity
         /// <param name="instrumentNode"></param>
         public virtual void InitializeFromParsedXML(XmlNode instrumentNode)
         {
-            //First remove anything old
-            
+            //First remove anything old            
             SetPropertiesByXML(instrumentNode, this);
             this.Initialize();          
         }
@@ -152,12 +165,24 @@ namespace Clarity
                 throw newExcept;
             }
         }
+        /// <summary>
+        /// This method tells the entire software suite where to 
+        /// find the configuration file
+        /// </summary>
+        /// <returns></returns>
         public static string GetXMLSettingsFile()
         {
             string direc= Directory.GetCurrentDirectory();
             string file = direc + "\\ConfigurationFile.xml";
             return file;
         }
+        /// <summary>
+        /// Some instruments might want to know when the engine that runs the protocol execution
+        /// has a certain event.  In particular, for long shutdowns the instrument might want to power 
+        /// itself down and then restart later.  This allows instruments to register for events with 
+        /// this type of information.
+        /// </summary>
+        /// <param name="PEC"></param>
         public virtual void RegisterEventsWithProtocolManager(ProtocolEventCaller PEC) { }
     
     }
