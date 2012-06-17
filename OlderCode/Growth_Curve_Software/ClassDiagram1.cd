@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Clarity.StaticProtocolItem" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAEAAAAAAAAAAAAAAAAAIACAAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Clarity.DelayTime" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.LoopInstruction" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.ProtocolListBoxItem" Collapsed="true">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.ListBoxProtocolItem" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAIAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.ListBoxDelayItem" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAgAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.ListBoxRepeatItem" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.Protocol" Collapsed="true">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAEABAAAAAAAAAIAAAAAAKAAAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.ProtocolManager" Collapsed="true">
+    <Position X="9.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAIEAAAAAAAAAAAAAABAgAAAAAAAAIAAgAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.ProtocolConverter" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABgAAABAAAAAAAAAAAAAAAAAAgAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.Form1" Collapsed="true">
+    <Position X="2.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BxQQAJCBEWAAEDgEEASQIgRCBFJABQAkSCQIgAAgMgA=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clarity.IncubatorServ" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGAAACQAgAAQAACAQABGQAAAAAUAAAAERAACGAAgA=</HashCode>
+      <FileName>Incubator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Clarity.ValidInstruction" Collapsed="true">
+    <Position X="7.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Clarity.ProtocolPriority" Collapsed="true">
+    <Position X="7.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAgAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="Clarity.delVoidVoid" Collapsed="true">
+    <Position X="3" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
