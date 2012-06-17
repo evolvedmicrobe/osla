@@ -801,7 +801,8 @@ namespace Clarity
         
         /// <summary>
         /// This method creates a protocol to run a certain type of 
-        /// experiment for the user.
+        /// experiment for the user, in this case an experiment that moves plates
+        /// from an incubator to a plate reader periodically.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -893,8 +894,9 @@ namespace Clarity
                     DialogResult DR = MessageBox.Show("Are you sure you have entered the right values and are ready to load this protocol?", "Final Check", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (DR == DialogResult.Yes)
                     {
-                        UpdateLoadedProtocols();
+                       
                         ClarityEngine.AddProtocol(NewProt);
+                        UpdateLoadedProtocols();
                         if (ClarityEngine.CurrentRunningState == RunningStates.Idle)//this timer is running while a protocol is waiting to go
                         {
                             DialogResult DR2 = MessageBox.Show("Would you like to start your protocol immediately?", "Begin Protocol", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
