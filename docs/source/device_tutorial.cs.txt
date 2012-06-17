@@ -1,0 +1,51 @@
+Creating a Custom Device
+========================
+
+
+
+Introduction
+++++++++++++
+
+.. highlight:: c#
+
+We create a virtual device with a single user callable activity, ``HelloWorld``,
+that sends an email to a prespecified address.
+
+This device is written in ``C#``, but any Common Language Infrastructure
+language could be used (https://en.wikipedia.org/wiki/List_of_CLI_languages).
+
+Preliminaries
++++++++++++++
+
+All devices interfaces have to be members of ``BaseDeviceInterface``::
+
+  using System;
+  namespace Clarity {  
+    public class HelloDevice : BaseDeviceInterface
+    {
+
+SMTP Client
++++++++++++
+
+We need a function to
+
+::
+
+        private SmtpClient createSmtpClient()
+        {
+            SmtpClient client = new SmtpClient("smtp.gmail.com");
+            //client.UseDefaultCredentials = false;
+            client.Port = 587;
+            client.EnableSsl = true;
+            client.Credentials = new NetworkCredential("clarity.lab.automation@gmail.com", "icontrolrobots");
+            return client;
+        }
+
+Closing Brackets
+++++++++++++++++
+
+::
+
+    }
+  }
+
