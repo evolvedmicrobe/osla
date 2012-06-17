@@ -452,15 +452,16 @@ namespace Clarity
         }
         public object GetNextProtocolObject()
         {
-            //this will return one of three objects, an instruction, a delay time (double), or null if protocols are done            
+            //this will return one of three objects, an instruction, a time to execute the next instructions , or null if protocols are done            
             if (Protocols.Count == 0)
-            {//Once we are out of protocols, then that is it. Return null so that the program knows that there are no protocols
+            {
+                //Once we are out of protocols, then that is it. Return null so that the program knows that there are no protocols
                 return null;
             }
             else if (CurrentProtocolInUse == null)
             {
                 double MS = FindMilliSecondsUntilNextRunAndChangeCurrentProtocol();
-                if (MS > 0) { return MS; } //this should always return a positive ms value
+                if (MS > 0) { return CurrentProtocolInUse.NextExecutionTimePoint; } //this should always return a positive ms value
             }
             //Below is a postfix operation
             int IndexOfNextProtInst = CurrentProtocolInUse.NextItemToRun++;//move up one instruction index,         
@@ -500,7 +501,7 @@ namespace Clarity
                     //recursively grab next instruction
                     return GetNextProtocolObject();
                 }
-                else { return MillisecondDelay; }
+                else { return CurrentProtocolInUse.NextExecutionTimePoint; }
             }
             else if (CurrentProtocolInUse.Instructions[IndexOfNextProtInst].GetType() == typeof(StaticProtocolItem))
             {

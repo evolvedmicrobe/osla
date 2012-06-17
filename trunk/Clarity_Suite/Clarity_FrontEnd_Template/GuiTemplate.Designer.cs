@@ -388,7 +388,7 @@
             this.wBrowRecovInstructions.MinimumSize = new System.Drawing.Size(20, 20);
             this.wBrowRecovInstructions.Name = "wBrowRecovInstructions";
             this.wBrowRecovInstructions.ScriptErrorsSuppressed = true;
-            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 645);
+            this.wBrowRecovInstructions.Size = new System.Drawing.Size(518, 643);
             this.wBrowRecovInstructions.TabIndex = 0;
             this.wBrowRecovInstructions.WebBrowserShortcutsEnabled = false;
             // 
@@ -647,7 +647,7 @@
             this.chkGBO.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkGBO.Location = new System.Drawing.Point(645, 93);
             this.chkGBO.Name = "chkGBO";
-            this.chkGBO.Size = new System.Drawing.Size(129, 19);
+            this.chkGBO.Size = new System.Drawing.Size(117, 17);
             this.chkGBO.TabIndex = 18;
             this.chkGBO.Text = "48 Well Excel Data";
             this.chkGBO.UseVisualStyleBackColor = true;
@@ -658,7 +658,7 @@
             this.chk48WellPlate.AutoSize = true;
             this.chk48WellPlate.Location = new System.Drawing.Point(645, 71);
             this.chk48WellPlate.Name = "chk48WellPlate";
-            this.chk48WellPlate.Size = new System.Drawing.Size(98, 19);
+            this.chk48WellPlate.Size = new System.Drawing.Size(89, 17);
             this.chk48WellPlate.TabIndex = 14;
             this.chk48WellPlate.Text = "48 Well Plate";
             this.chk48WellPlate.UseVisualStyleBackColor = true;
@@ -1026,7 +1026,7 @@
             this.TimeToGo.AutoSize = true;
             this.TimeToGo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TimeToGo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.TimeToGo.Location = new System.Drawing.Point(838, 161);
+            this.TimeToGo.Location = new System.Drawing.Point(812, 162);
             this.TimeToGo.Name = "TimeToGo";
             this.TimeToGo.Size = new System.Drawing.Size(153, 40);
             this.TimeToGo.TabIndex = 0;
