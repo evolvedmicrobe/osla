@@ -70,6 +70,7 @@
     <Content Include="Interop.ZyRobot_ICP.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TwistPos.nfd">
