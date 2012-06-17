@@ -51,12 +51,18 @@ namespace Clarity
         {
             TurnOnAlarm("Alarm On");
         }
+        /// <summary>
+        /// This method has a try/catch block
+        /// </summary>
+        /// <param name="StatusUpdate">Message to post</param>
         public void TurnOffAlarm(string StatusUpdate)
         {
             try { AC.TurnOffAlarm(); AC.UpdateStatus(StatusUpdate); }
             catch { Connected = false; }
         }
-
+        /// <summary>
+        /// This method has a try/catch block
+        /// </summary>
         public void TurnOffAlarm()
         {
             TurnOffAlarm("Alarm off");

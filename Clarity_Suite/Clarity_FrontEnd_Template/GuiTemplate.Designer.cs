@@ -54,9 +54,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.wBrowRecovInstructions = new System.Windows.Forms.WebBrowser();
             this.IncubatorTab = new System.Windows.Forms.TabPage();
-            this.btnStopIncubatorShaking = new System.Windows.Forms.Button();
-            this.btnReinitializeIncubator = new System.Windows.Forms.Button();
-            this.btnResetIncubator = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -394,9 +391,6 @@
             // 
             // IncubatorTab
             // 
-            this.IncubatorTab.Controls.Add(this.btnStopIncubatorShaking);
-            this.IncubatorTab.Controls.Add(this.btnReinitializeIncubator);
-            this.IncubatorTab.Controls.Add(this.btnResetIncubator);
             this.IncubatorTab.Controls.Add(this.label4);
             this.IncubatorTab.Controls.Add(this.label3);
             this.IncubatorTab.Controls.Add(this.label2);
@@ -418,39 +412,6 @@
             this.IncubatorTab.TabIndex = 1;
             this.IncubatorTab.Text = "Incubator Controls";
             this.IncubatorTab.UseVisualStyleBackColor = true;
-            // 
-            // btnStopIncubatorShaking
-            // 
-            this.btnStopIncubatorShaking.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStopIncubatorShaking.Location = new System.Drawing.Point(477, 496);
-            this.btnStopIncubatorShaking.Name = "btnStopIncubatorShaking";
-            this.btnStopIncubatorShaking.Size = new System.Drawing.Size(305, 27);
-            this.btnStopIncubatorShaking.TabIndex = 19;
-            this.btnStopIncubatorShaking.Text = "Stop Shaking When Nothing Else Will";
-            this.btnStopIncubatorShaking.UseVisualStyleBackColor = true;
-            this.btnStopIncubatorShaking.Click += new System.EventHandler(this.btnStopIncubatorShaking_Click);
-            // 
-            // btnReinitializeIncubator
-            // 
-            this.btnReinitializeIncubator.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReinitializeIncubator.Location = new System.Drawing.Point(477, 442);
-            this.btnReinitializeIncubator.Name = "btnReinitializeIncubator";
-            this.btnReinitializeIncubator.Size = new System.Drawing.Size(305, 27);
-            this.btnReinitializeIncubator.TabIndex = 15;
-            this.btnReinitializeIncubator.Text = "Reinitialize Incubator";
-            this.btnReinitializeIncubator.UseVisualStyleBackColor = true;
-            this.btnReinitializeIncubator.Click += new System.EventHandler(this.btnReinitializeIncubator_Click);
-            // 
-            // btnResetIncubator
-            // 
-            this.btnResetIncubator.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetIncubator.Location = new System.Drawing.Point(477, 386);
-            this.btnResetIncubator.Name = "btnResetIncubator";
-            this.btnResetIncubator.Size = new System.Drawing.Size(305, 27);
-            this.btnResetIncubator.TabIndex = 14;
-            this.btnResetIncubator.Text = "Reset Incubator";
-            this.btnResetIncubator.UseVisualStyleBackColor = true;
-            this.btnResetIncubator.Click += new System.EventHandler(this.btnResetIncubator_Click);
             // 
             // label4
             // 
@@ -1098,8 +1059,6 @@
         private System.Windows.Forms.ListBox lstIncubatorSlots;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnResetIncubator;
-        private System.Windows.Forms.Button btnReinitializeIncubator;
         private System.Windows.Forms.Button btnViewAdvancedControls;
         private System.Windows.Forms.Label lblErrorLog;
         private System.Windows.Forms.ListBox lstInstrumentStatus;
@@ -1144,7 +1103,6 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.RichTextBox txtErrorLog;
         private System.Windows.Forms.TextBox txtGrowthRateMinutes;
-        private System.Windows.Forms.Button btnStopIncubatorShaking;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnEmailOkay;
         private System.Windows.Forms.ToolStripMenuItem versionToolStripMenuItem;

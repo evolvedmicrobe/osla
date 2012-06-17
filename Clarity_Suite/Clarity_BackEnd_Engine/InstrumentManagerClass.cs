@@ -539,7 +539,10 @@ namespace Clarity
         }
         public void AddProtocol(Protocol toAdd)
         {
-            LoadedProtocols.AddProtocol(toAdd);
+            lock(LoadedProtocols)
+            {
+                LoadedProtocols.AddProtocol(toAdd);
+            }
             if (CurrentRunningState == RunningStates.WaitingForNextExecutionTimePoint)
             {
                 StartProtocolExecution();

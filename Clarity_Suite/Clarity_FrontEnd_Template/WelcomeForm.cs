@@ -17,7 +17,6 @@ namespace Clarity
         {
             InitializeComponent();
         }
-
         private void WelcomeForm_Load(object sender, EventArgs e)
         {
             StayAlive = true;

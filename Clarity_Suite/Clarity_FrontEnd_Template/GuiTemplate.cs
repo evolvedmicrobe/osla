@@ -26,24 +26,35 @@ namespace Clarity
     /// This is a generic template form which shows the basics of running Clarity.
     /// Any Automation GUI can be created off of this as a template.
     /// 
-    /// The form has several tabs, the first of which is the main one which shows the executions and current
-    /// state of the automation process, which protocols are running etc.
+    /// The form has several tabs, the first of which is the main one which shows the currently loaded protocols,
+    /// The state of the execution process, which protocols are running etc.
     /// 
-    /// The second tab is a recovery tab that allows users to recover instruments that have broken.
+    /// The second tab is a recovery tab that allows users to recover instruments that have broken.  Every instrument
+    /// not derived from the VirtualInstrument class gets a recovery button
     /// 
-    /// The third tab is a demonstration tab that creates protocols to be run of a specific type for a user.
+    /// The third tab demonstrates controlling an instrument directly from the GUI.  In this case it is an 
+    /// incubator, whose shaking speed can be changed, etc.  
     /// 
-    /// The fourth tab demonstrates controlling an instrument directly from the GUI.  In this case it is an 
-    /// This form shows you how to load up and run instruments.  
-    /// In general, the first tab shows the display of all things that run.
-    /// The second tab allows one to recover errors when something goes wrong.  
-    /// There is a third tab the "Incubator tab" which allows for GUI control of an instrument.
-    /// This can be useful for various tasks.
+    /// This form generally shows the engine of Clarity, it is designed to be a front end for the engine,
+    /// which is implemented as an InstrumentManagerClass.  Most of the execution of protocols takes place on 
+    /// a separate thread behind this class.  
+    ///
+    /// Note that the Clarity Suite is slightly agnostic when it comes to the division of labor amongst threads.  
+    /// Conceptually and in code, the engine that runs the protocols (ClarityEngine, an instance of the 
+    /// InstrumentManagerClass) is distinct.  Most of it's work also takes place on a background worker thread.
+    /// 
+    /// However, it does not maintain a separate message queue and does not exist without this controlling GUI.
+    /// The reason for this is both so that the code is easier to integrate, though this can be easily divided in the
+    /// future if need be.  
+    /// 
+    /// The code below is commented, read through to learn how to make a Clarity GUI!
+    /// 
+    /// 
     /// </summary>
     public partial class ClarityForm : Form    {
 
         /// <summary>
-        /// This is the engine that runs the protocols and manages the instruments
+        /// This is the backend engine that runs the protocols and manages the instruments
         /// </summary>
         private InstrumentManagerClass ClarityEngine;
         //These is an instruments we want to have the GUI gain access to
@@ -53,7 +64,7 @@ namespace Clarity
         /// For certain controls we might only want some users to have access, this is the password setting.
         /// </summary>
         public const string PASSWORD = "PASSWORD";
-        //This region is not part of the final release, can be ignored.
+        //This region should not part be a part of the final release, can be ignored.
         #region ToRemove
         private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
         public string NSFErrorEmails
@@ -139,7 +150,9 @@ namespace Clarity
             set { pGBO_PLATE_PROTOCOL_ID = value; }
         }
         #endregion
+        //A splash screen to show while the instruments load
         WelcomeForm WF;
+        //Basic constructor, makes the GUI+
         public ClarityForm()
         {   
             InitializeComponent();  
@@ -152,8 +165,7 @@ namespace Clarity
         {
             // Use full reference or it'll conflict with Skype
             System.Windows.Forms.Application.Run(WF = new WelcomeForm());
-        }
-       
+        }       
         /// <summary>
         /// Load up the GUI and initialize the runtime engine
         /// </summary>
@@ -167,7 +179,8 @@ namespace Clarity
             LoadingThread.IsBackground = true;
             LoadingThread.Start();
 
-            //First load up any XML Settings for the GUI
+            //First load up any XML Settings for the GUI, any fields in this class can be 
+            //customized here for local deployment.
             try
             {
                 string Filename = BaseInstrumentClass.GetXMLSettingsFile();
@@ -186,14 +199,34 @@ namespace Clarity
                 this.Close();
                 Application.Exit();
             }
-            //Give the Splash screen time to load
-            Thread.Sleep(1000);//give it time to initialize the WF              
-            //Now Load up the 
+             
+            //Now Load up the instruments
             bool InstrumentsLoadedSuccessfully = LoadUpClarityEngine();
+            //Give the Splash screen time to load, since it is being created on a separate thread
+            //it could not be ready before we set the WF.StayAlive value to false, which signals the form to close
+            if (WF == null)
+            {
+                Thread.Sleep(1000);
+            }
             WF.StayAlive = false;
 
-
-
+            if (ClarityEngine != null)
+            {
+                UpdateInstrumentStatus();
+                CreateRecoveryPanel();
+            }
+            try
+            {
+                //Load web pages with instructions into windows on the tabs
+                //to orient the users
+                string CurDirec = System.Environment.CurrentDirectory;
+                Uri recovAdd = new Uri(CurDirec + @"\AttemptRecoveryDocument.htm", UriKind.Absolute);
+                Uri growthinst = new Uri(CurDirec + @"\GrowthRateInstructionsl.htm", UriKind.Absolute);
+                wBrowRecovInstructions.Url = recovAdd;
+                wBrowGrowthRate.Url = growthinst;
+            }
+            catch { }
+            //Finally some code related to the tab to control incubators, this loads it with slots
             for (int i = 38; i > 0; i--)
             {
                 if (ExcludedIncubatorPositions.Contains(i))
@@ -206,25 +239,10 @@ namespace Clarity
                 }
             }
             cmbShakeSpeed.SelectedIndex = 6;
-            if (ClarityEngine != null)
-            {
-                UpdateInstrumentStatus();
-                CreateRecoveryPanel();
-            }
-            try
-            {
-                string CurDirec = System.Environment.CurrentDirectory;
-                Uri recovAdd = new Uri(CurDirec + @"\AttemptRecoveryDocument.htm", UriKind.Absolute);
-                Uri growthinst = new Uri(CurDirec + @"\GrowthRateInstructionsl.htm", UriKind.Absolute);
-                wBrowRecovInstructions.Url = recovAdd;
-                wBrowGrowthRate.Url = growthinst;
-            }
-
-            catch { }
+            //Throw an error if problem loading
             if (!InstrumentsLoadedSuccessfully)
                 ShowError("There was a problem during loading, please read any errors and then exit.  Clarity will not work.");
-        }
-     
+        }     
         /// <summary>
         /// This method loads up the Clarity Engine and initializes all the instruments
         /// Errors here should lead to shutdown/exits.
@@ -243,7 +261,8 @@ namespace Clarity
                 {
                     ExitDueToError("Could not create Clarity Engine ",thrown);
                 }
-                //Any GUI should register for all of these events
+                //Any GUI should register for all of these events, note that most of these will have to redirect
+                // to this Forms thread, any interface to the engine should subscribe to all of these
                 ClarityEngine.OnProtocolsStarted += new InstrumentManagerEventHandler(ClarityEngine_OnProtocolStarted);
                 ClarityEngine.OnProtocolPaused += new ProtocolPauseEventHandler(ClarityEngine_OnProtocolPaused);
                 ClarityEngine.OnAllRunningProtocolsEnded += new InstrumentManagerEventHandler(ClarityEngine_OnAllProtocolsEnded);
@@ -263,11 +282,12 @@ namespace Clarity
                 //Finally, if we wanted our GUI to have control of some instruments for the user,
                 //we can get references to them from the engine like so:
                 Incubator = ClarityEngine.ReturnInstrumentType<IncubatorServ>();
-                
+                //Quite simple, just request it by type!  (note, this does mean we tend to only have one type of instrument)                
                 return true;
             }
             catch (Exception thrown)
             {
+                //These are thrown by the interfaces to the instruments.
                 if (thrown is InstrumentError)
                 {
                     InstrumentError IE = thrown as InstrumentError;
@@ -332,12 +352,11 @@ namespace Clarity
             this.Close();
             Application.Exit();
         }
-
-
         #region ClarityEngine Event Handlers
-        //Note that each of these methods has a bunch of pain in the butt
-        //code to ensure the control is not altered by a different thread
-        //should it trigger the event (and it should usually be a different thread).
+        //Note that each of these methods has one trick to it.
+        //Windows forms can't update the UI from any thread but the one controlling it
+        //so we redirect if it's a different thread to the controllng thread using 
+        // this.invoke if that is the case, as a separate thread might be responsible for the call.
         delegate void IM(InstrumentManager s, EventArgs e2);
         delegate void IME(InstrumentManager s, Exception e);
         delegate void IMT(InstrumentManager s, TimeSpan t);
@@ -491,11 +510,6 @@ namespace Clarity
             
         } 
         #endregion
-
-       
-
-        
-        
         /// <summary>
         /// Method called on exit, reports to everyone that the GUI has been closed, and 
         /// releases all the instrument resources
@@ -511,7 +525,6 @@ namespace Clarity
             }
             this.Cursor = Cursors.Default;
         }
-
         // Incubator Controls, demonstrates a tab that controls an instrument.    
         #region IncubatorTabCode
         private void CreateIncubatorCommands()
@@ -681,9 +694,15 @@ namespace Clarity
             }
         }        
         #endregion
-
         //Form update and addition methods
+        //When we make buttons, name them and give them a generic event handler, 
+        //which parses the buttons name to decide what to do based on this delimiter
         public const char INSTRUMENT_NAME_DELIMITER = '_';
+        /// <summary>
+        /// This creates a panel of buttons that give access to 
+        /// a basic "Complete reboot after failure" method for 
+        /// each instrument.  All instruments should implement this.
+        /// </summary>
         private void CreateRecoveryPanel()
         {
             //this method will create a tab for every instrument, and fill that tab with 
@@ -742,6 +761,10 @@ namespace Clarity
             }
            
         }                   
+        /// <summary>
+        /// Updates the instrument list to say who is working 
+        /// and who isn't
+        /// </summary>
         private void UpdateInstrumentStatus()
         {
             lstInstrumentStatus.Items.Clear();
@@ -766,14 +789,21 @@ namespace Clarity
                 }
             }
         }
+        /// <summary>
+        /// This makes a GUI that allows users to create protocols, follow the code to
+        /// see how!
+        /// </summary>
         private void DisplayMakeProtocolsForm()
         {
             // Use full reference to avoid conflict with Skype
             System.Windows.Forms.Application.Run(new MakeProtocols(ClarityEngine.InstrumentCollection));
         }
+        /// <summary>
+        /// This is a generic method to update all the windows forms controls 
+        /// related to which programs are running and 
+        /// </summary>
         private void UpdateLoadedProtocols()
         {
-            //int SelectedIndex = lstLoadedProtocols.SelectedIndex;
             lstSelectedProtocol.Items.Clear();
             lstLoadedProtocols.Items.Clear();
             lstCurrentProtocol.Items.Clear();
@@ -781,8 +811,11 @@ namespace Clarity
             {
                 lstLoadedProtocols.Items.Add(o);
             }
-            //lstLoadedProtocols.SelectedIndex = SelectedIndex;
         }
+        /// <summary>
+        /// This is a generic method that basically updates EVERYTHING
+        /// based on the currrent state of the runtime engine.
+        /// </summary>
         private void UpdateForm()
         {
             try
@@ -823,6 +856,11 @@ namespace Clarity
             }
 
         }
+        /// <summary>
+        /// When a protocol is selected with the listbox, display its instructions.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void lstLoadedProtocols_SelectedIndexChanged(object sender, EventArgs e)
         {
             lstSelectedProtocol.Items.Clear();
@@ -842,10 +880,21 @@ namespace Clarity
                 catch { MessageBox.Show("Could not display the protocol"); }
             }
         }
+        /// <summary>
+        /// Historical method to add error messages to the textbox
+        /// could have been done directly but at the time separate
+        /// threads were required
+        /// </summary>
+        /// <param name="ErrorInfo"></param>
         private void AddErrorLogText(string ErrorInfo)
         {
             txtErrorLog.Text = txtErrorLog.Text+ ErrorInfo;
         }
+        /// <summary>
+        /// If you solved the problem, let everyone else know!
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnEmailOkay_Click(object sender, EventArgs e)
         {
             try
@@ -859,8 +908,6 @@ namespace Clarity
                 MessageBox.Show("Could not send messages to all");
             }
         }
-
-        
         /// <summary>
         /// This method creates a protocol to run a certain type of 
         /// experiment for the user, in this case an experiment that moves plates
@@ -972,7 +1019,6 @@ namespace Clarity
             }
             catch { ShowError("Weird error occurred"); }
         }
-
         //UI Methods
         /// <summary>
         /// This is a method that creates separate tabs for each instrument method that
@@ -1085,7 +1131,6 @@ namespace Clarity
                 MessageBox.Show("Could not load your protocol.  Error is:\n\n" + thrown.Message, "Unable to Load Protocol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void btnExecuteProtocols_Click(object sender, EventArgs e)
         {
             ClarityEngine.StartProtocolExecution();
@@ -1160,14 +1205,23 @@ namespace Clarity
             catch { MessageBox.Show("Last instruction failed"); }
         }
 
-        
+        /// <summary>
+        /// Some commands we want system admin types to be able to use
+        /// if the errors for them are not robustly handled, this 
+        /// validates that only people with the not-so-cryptic password
+        /// perform such commands.
+        /// </summary>
+        /// <returns></returns>
         private bool CheckPassword()
         {
             if (txtPassword.Text.ToUpper() == PASSWORD) { return true; }
             else { MessageBox.Show("You do not have permission to make the advanced controls"); return false; }
         }
-
-
+        /// <summary>
+        /// Request the engine to stop running protocols.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCancelProtocolExecution_Click(object sender, EventArgs e)
         {
             try
@@ -1369,7 +1423,6 @@ namespace Clarity
        
        
         
-
         public delegate void StringDel(string firstArg);
         public delegate void StringErrorDel(string arg1, Exception arg2);
         private void versionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1380,6 +1433,8 @@ namespace Clarity
         {
             RemoveSelectedProtocol();
         }
+        //Ignore these methods, they involve which plate a protocol should read
+        //and are specific to one lab or people doing growth curves
         private void chkGBO_CheckedChanged(object sender, EventArgs e)
         {
             if (chkGBO.Checked)
