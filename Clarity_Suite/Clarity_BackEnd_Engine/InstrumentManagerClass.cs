@@ -130,8 +130,8 @@ namespace Clarity
             {
                 if (UseAlarm)
                 {
-                    pClarity_Alarm.ChangeStatus("Nothing Running");
-                    pClarity_Alarm.TurnOnAlarm("Procedure ended with errors");
+                    pClarity_Alarm.ChangeStatusAsynchronously("Nothing Running");
+                    pClarity_Alarm.TurnOnAlarmAsynchronously("Procedure ended with errors");
                 }
             }
             catch (Exception thrown2)
@@ -474,7 +474,7 @@ namespace Clarity
                 pLoadedProtocols.ReportToAllUsersAsynchronously("The Robot Software Has Been Closed");
             }
             catch { }
-            try { if (UseAlarm &&pClarity_Alarm!=null) { pClarity_Alarm.TurnOnAlarm("The software was closed"); } }
+            try { if (UseAlarm &&pClarity_Alarm!=null) { pClarity_Alarm.TurnOnAlarmAsynchronously("The software was closed"); } }
             catch { }
             try
             {

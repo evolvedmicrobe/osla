@@ -334,99 +334,165 @@ namespace Clarity
         }
 
 
-        #region ClarityEngine Event Handler
+        #region ClarityEngine Event Handlers
+        //Note that each of these methods has a bunch of pain in the butt
+        //code to ensure the control is not altered by a different thread
+        //should it trigger the event (and it should usually be a different thread).
+        delegate void IM(InstrumentManager s, EventArgs e2);
+        delegate void IME(InstrumentManager s, Exception e);
+        delegate void IMT(InstrumentManager s, TimeSpan s);
+      
+        
         void ClarityEngine_OnProtocolExecutionUpdates(InstrumentManager Source, EventArgs e)
         {
-            lock (Source.LoadedProtocols)
+            if (this.InvokeRequired)
             {
-                try
+               
+                IM myDel=ClarityEngine_OnProtocolExecutionUpdates; 
+                this.Invoke(myDel,new object[] {Source,e});
+            }
+            else
+            {
+                lock (Source.LoadedProtocols)
                 {
-                    UpdateForm();
                     try
                     {
-                        StatusLabel.Text = "Performing operation: " + Source.LoadedProtocols.CurrentProtocolInUse.Instructions[Source.LoadedProtocols.CurrentProtocolInUse.NextItemToRun - 1].ToString();
+                        UpdateForm();
+                        try
+                        {
+                            StatusLabel.Text = "Performing operation: " + Source.LoadedProtocols.CurrentProtocolInUse.Instructions[Source.LoadedProtocols.CurrentProtocolInUse.NextItemToRun - 1].ToString();
+                        }
+                        catch { }
                     }
                     catch { }
                 }
-                catch { }
             }
         }
 
         void ClarityEngine_OnErrorDuringProtocolExecution(InstrumentManager Source, Exception thrown)
         {
-            StatusLabel.Text = "Procedure ended with errors";
-            UpdateInstrumentStatus();
-            btnRetryLastInstruction.Enabled = true;
-            ShowError("Failed To Run Protocol", thrown);
-            pnlFailure.Visible = true;
-            lblFailure.Text = "The Last Instruction Failed To Run, Please recover the machines and retry or delete the protocol, Do not reattempt a macro instruction";
-            if (Source.GetLastFailedInstruction() != null)
+            if (this.InvokeRequired)
             {
-                lblFailureInstructionName.Text = "Would you like to reattempt: " + Source.GetLastFailedInstruction().ToString();
+                IME myDel= ClarityEngine_OnErrorDuringProtocolExecution;
+                this.Invoke(myDel, new object[] { Source, thrown});
             }
             else
             {
-                btnRetryLastInstruction.Enabled = false;
-                StringDel newDel = this.AddErrorLogText;
-                object[] myarr = new object[1] { "\nWeird command failure, the last instruction is not available" };
-                this.Invoke(newDel, myarr);
-            }
-            btnExecuteProtocols.Enabled = true;
-            btnCancelProtocolExecution.Enabled = false;
+                StatusLabel.Text = "Procedure ended with errors";
+                UpdateInstrumentStatus();
+                btnRetryLastInstruction.Enabled = true;
+                ShowError("Failed To Run Protocol", thrown);
+                pnlFailure.Visible = true;
+                lblFailure.Text = "The Last Instruction Failed To Run, Please recover the machines and retry or delete the protocol, Do not reattempt a macro instruction";
+                if (Source.GetLastFailedInstruction() != null)
+                {
+                    lblFailureInstructionName.Text = "Would you like to reattempt: " + Source.GetLastFailedInstruction().ToString();
+                }
+                else
+                {
+                    btnRetryLastInstruction.Enabled = false;
+                    StringDel newDel = this.AddErrorLogText;
+                    object[] myarr = new object[1] { "\nWeird command failure, the last instruction is not available" };
+                    this.Invoke(newDel, myarr);
+                }
+                btnExecuteProtocols.Enabled = true;
+                btnCancelProtocolExecution.Enabled = false;
 
-            if (thrown is ProtcolExcecutionError)
-            {
-                StringDel newDel = this.AddErrorLogText;
-                object[] myarr = new object[1] { ((ProtcolExcecutionError)thrown).MakeErrorReport() };
-                this.Invoke(newDel, myarr);
+                if (thrown is ProtcolExcecutionError)
+                {
+                    StringDel newDel = this.AddErrorLogText;
+                    object[] myarr = new object[1] { ((ProtcolExcecutionError)thrown).MakeErrorReport() };
+                    this.Invoke(newDel, myarr);
+                }
             }
         }
 
         void ClarityEngine_OnProtocolSuccessfullyCancelled(InstrumentManager Source, EventArgs e)
         {
-            btnCancelProtocolExecution.Enabled = false;
-            btnExecuteProtocols.Enabled = true;
-            StatusLabel.Text = "Cancelled Protocol";
-            TimeToGo.Text = "Nothing Running";
-            UpdateForm();
+            if (this.InvokeRequired)
+            {
+                IM myDel = ClarityEngine_OnProtocolSuccessfullyCancelled;
+                this.Invoke(myDel, new object[] { Source, e });
+            }
+            else
+            {
+                btnCancelProtocolExecution.Enabled = false;
+                btnExecuteProtocols.Enabled = true;
+                StatusLabel.Text = "Cancelled Protocol";
+                TimeToGo.Text = "Nothing Running";
+                UpdateForm();
+            }
         }
 
         void ClarityEngine_OnGenericError(InstrumentManager Source, Exception thrown)
         {
-            TimeToGo.Text = "Nothing Running";
-            btnExecuteProtocols.Enabled = true;
-            btnCancelProtocolExecution.Enabled = false;
-            ShowError("Unspecified Error", thrown);
-            UpdateForm();
+            if (this.InvokeRequired)
+            {
+                IME myDel = ClarityEngine_OnGenericError;
+                this.Invoke(myDel, new object[] { Source, thrown });
+            }
+            else
+            {
+                TimeToGo.Text = "Nothing Running";
+                btnExecuteProtocols.Enabled = true;
+                btnCancelProtocolExecution.Enabled = false;
+                ShowError("Unspecified Error", thrown);
+                UpdateForm();
 
-            string ErrorMessage = thrown.Message;
-            StringDel newDel = this.AddErrorLogText;
-            object[] myarr = new object[1] { ErrorMessage };
-            this.Invoke(newDel, myarr);
+                string ErrorMessage = thrown.Message;
+                StringDel newDel = this.AddErrorLogText;
+                object[] myarr = new object[1] { ErrorMessage };
+                this.Invoke(newDel, myarr);
+            }
         }
 
         void ClarityEngine_OnAllProtocolsEnded(InstrumentManager Source, EventArgs e)
         {
-            StatusLabel.Text = "Finished Running Protocols";
-            TimeToGo.Text = "";
+            if (this.InvokeRequired)
+            {
+                IM myDel = ClarityEngine_OnAllProtocolsEnded;
+                this.Invoke(myDel, new object[] { Source, e });
+            }
+            else
+            {
+                StatusLabel.Text = "Finished Running Protocols";
+                TimeToGo.Text = "";
+            }
         }
 
         void ClarityEngine_OnProtocolPaused(InstrumentManager Source, TimeSpan TS)
         {
-            StatusLabel.Text = "Waiting Until It Is Time To Run The Next Protocol Instruction";
-            TimeToGo.Start((int)TS.TotalMilliseconds);
-            UpdateForm();
+            if (this.InvokeRequired)
+            {
+                IMT myDel = ClarityEngine_OnProtocolPaused;
+                this.Invoke(myDel, new object[] { Source, TS });
+            }
+            else
+            {
+
+                StatusLabel.Text = "Waiting Until It Is Time To Run The Next Protocol Instruction";
+                TimeToGo.Start((int)TS.TotalMilliseconds);
+                UpdateForm();
+            }
         }
 
         void ClarityEngine_OnProtocolStarted(InstrumentManager Source, EventArgs e)
         {
-            pnlFailure.Visible = false;
-            btnExecuteProtocols.Enabled = false;
-            btnCancelProtocolExecution.Enabled = true;
-            btnRetryLastInstruction.Enabled = false;
-            //probably should try some checks here
-            TimeToGo.Stop();
-            TimeToGo.Text = "Protocol Running";
+            if (this.InvokeRequired)
+            {
+                IM myDel = ClarityEngine_OnProtocolStarted;
+                this.Invoke(myDel, new object[] { Source, e });
+            }
+            else
+            {
+                pnlFailure.Visible = false;
+                btnExecuteProtocols.Enabled = false;
+                btnCancelProtocolExecution.Enabled = true;
+                btnRetryLastInstruction.Enabled = false;
+                //probably should try some checks here
+                TimeToGo.Stop();
+                TimeToGo.Text = "Protocol Running";
+            }
             
         } 
         #endregion
