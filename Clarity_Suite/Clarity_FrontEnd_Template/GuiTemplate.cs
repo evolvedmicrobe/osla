@@ -1138,6 +1138,7 @@ namespace Clarity
                         {
                             MessageBox.Show("Cannot delete currently executing protocol, please stop the protocol and then delete it", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
+                        UpdateForm();
                     }
                 }
                 else
