@@ -340,7 +340,7 @@ namespace Clarity
         //should it trigger the event (and it should usually be a different thread).
         delegate void IM(InstrumentManager s, EventArgs e2);
         delegate void IME(InstrumentManager s, Exception e);
-        delegate void IMT(InstrumentManager s, TimeSpan s);
+        delegate void IMT(InstrumentManager s, TimeSpan t);
       
         
         void ClarityEngine_OnProtocolExecutionUpdates(InstrumentManager Source, EventArgs e)

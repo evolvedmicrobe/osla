@@ -753,7 +753,7 @@ namespace Clarity
             XmlNode InstrumentsNode = XmlDoc.SelectSingleNode("//Instruments");
             //Loop through all of the Instruments
 
-            if (!LoadInstrumentsInParallel)
+            if (LoadInstrumentsInParallel)
             {
                 //For some reason it couldn't do type inference without making a list like this
                 //not sure why, but it seemed easiest.
