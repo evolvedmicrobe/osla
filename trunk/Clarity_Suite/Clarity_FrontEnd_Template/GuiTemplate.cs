@@ -391,18 +391,15 @@ namespace Clarity
                 else
                 {
                     btnRetryLastInstruction.Enabled = false;
-                    StringDel newDel = this.AddErrorLogText;
-                    object[] myarr = new object[1] { "\nWeird command failure, the last instruction is not available" };
-                    this.Invoke(newDel, myarr);
+                    AddErrorLogText("\nWeird command failure, the last instruction is not available");
+                    
                 }
                 btnExecuteProtocols.Enabled = true;
                 btnCancelProtocolExecution.Enabled = false;
 
                 if (thrown is ProtcolExcecutionError)
                 {
-                    StringDel newDel = this.AddErrorLogText;
-                    object[] myarr = new object[1] { ((ProtcolExcecutionError)thrown).MakeErrorReport() };
-                    this.Invoke(newDel, myarr);
+                    this.AddErrorLogText(((ProtcolExcecutionError)thrown).MakeErrorReport());
                 }
             }
         }
@@ -440,9 +437,7 @@ namespace Clarity
                 UpdateForm();
 
                 string ErrorMessage = thrown.Message;
-                StringDel newDel = this.AddErrorLogText;
-                object[] myarr = new object[1] { ErrorMessage };
-                this.Invoke(newDel, myarr);
+                AddErrorLogText(ErrorMessage);
             }
         }
 
@@ -856,7 +851,7 @@ namespace Clarity
             try
             {
                 ClarityEngine.ReportErrorRecovery();
-                MessageBox.Show("Clarity has sent a message to all users");
+                MessageBox.Show("Clarity is sending a message to all users");
 
             }
             catch

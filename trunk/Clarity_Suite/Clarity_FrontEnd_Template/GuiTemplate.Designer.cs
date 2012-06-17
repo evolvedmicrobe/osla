@@ -647,7 +647,7 @@
             this.chkGBO.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkGBO.Location = new System.Drawing.Point(645, 93);
             this.chkGBO.Name = "chkGBO";
-            this.chkGBO.Size = new System.Drawing.Size(117, 17);
+            this.chkGBO.Size = new System.Drawing.Size(129, 19);
             this.chkGBO.TabIndex = 18;
             this.chkGBO.Text = "48 Well Excel Data";
             this.chkGBO.UseVisualStyleBackColor = true;
@@ -658,7 +658,7 @@
             this.chk48WellPlate.AutoSize = true;
             this.chk48WellPlate.Location = new System.Drawing.Point(645, 71);
             this.chk48WellPlate.Name = "chk48WellPlate";
-            this.chk48WellPlate.Size = new System.Drawing.Size(89, 17);
+            this.chk48WellPlate.Size = new System.Drawing.Size(98, 19);
             this.chk48WellPlate.TabIndex = 14;
             this.chk48WellPlate.Text = "48 Well Plate";
             this.chk48WellPlate.UseVisualStyleBackColor = true;
@@ -1052,7 +1052,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ClarityForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Clarity - Template -  Robot Management Program";
+            this.Text = "Clarity - Lab Automation and  Robot Management Program";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
             this.Load += new System.EventHandler(this.GUI_Load);
             this.MainTab.ResumeLayout(false);
