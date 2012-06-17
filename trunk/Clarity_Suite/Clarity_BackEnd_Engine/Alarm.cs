@@ -41,6 +41,12 @@ namespace Clarity
                 catch { Connected = false; }
             }
         }
+        public void TurnOnAlarmAsynchronously(string StatusMessage)
+        {
+            Action<string> t = TurnOnAlarm;
+            t.BeginInvoke(StatusMessage, null, null);
+        }
+
         public void TurnOnAlarm()
         {
             TurnOnAlarm("Alarm On");
@@ -54,6 +60,11 @@ namespace Clarity
         public void TurnOffAlarm()
         {
             TurnOffAlarm("Alarm off");
+        }
+        public void ChangeStatusAsynchronously(string StatusMessage)
+        {
+            Action<string> t = ChangeStatus;
+            t.BeginInvoke(StatusMessage, null, null);
         }
         public void ChangeStatus(string StatusMessage)
         {
