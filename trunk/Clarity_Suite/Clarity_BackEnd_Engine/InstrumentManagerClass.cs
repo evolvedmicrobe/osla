@@ -452,7 +452,7 @@ namespace Clarity
                     NextInstructionTimer.Enabled = false;
                     if (UseAlarm)
                     {
-                        pClarity_Alarm.ChangeStatus("User stopped protocol execution");
+                        pClarity_Alarm.ChangeStatusAsynchronously("User stopped protocol execution");
                     }
                     CurrentRunningState = RunningStates.Idle;
                 }
