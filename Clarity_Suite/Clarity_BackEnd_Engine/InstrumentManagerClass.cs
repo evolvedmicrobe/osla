@@ -630,7 +630,11 @@ namespace Clarity
                 if (UseAlarm)
                 {
                      pClarity_Alarm = new Alarm();
-                    if (pClarity_Alarm.Connected) { LoadedProtocols.UpdateAlarmProtocols(); }
+                     if (pClarity_Alarm.Connected) { LoadedProtocols.UpdateAlarmProtocols(); }
+                     else
+                     {
+                         FireGenericError("Could not connect to alarm");
+                     }
                 }
                 else
                     FireGenericError("Alarm disabled at startup");
