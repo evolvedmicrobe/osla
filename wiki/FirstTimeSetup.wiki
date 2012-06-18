@@ -1,0 +1,19 @@
+#summary How to change ConfigurationFile.xml for local variables.
+#labels Phase-Deploy
+
+= ConfigurationFile.xml =
+
+This file is located in the installation directory for Clarity, and it determines what instruments Clarity will try to load as well as the local properties.  Any problem loading an instrument can likely be solved here.
+
+If you do not have an instrument available on your local machine, simply change the SkipLoad attribute for that instrument to True.  E.g. if we did not have an Incubator available, we would add this line inside the Instruments Node.
+
+
+<code language="xml">
+ <Incubator SkipLoad="False">
+</code>
+
+<code language="xml">
+{{{
+
+}}}
+</code>
