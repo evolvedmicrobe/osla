@@ -14,7 +14,8 @@ namespace VictorRemoteServer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new VictorForm());
+            BooleanReferenceType FailedToLoad=new BooleanReferenceType();
+            Application.Run(new VictorForm(FailedToLoad));
         }
     }
 }

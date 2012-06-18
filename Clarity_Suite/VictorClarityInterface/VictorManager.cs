@@ -133,22 +133,38 @@ namespace Clarity
                     ThreadToRunForm.Name = ThreadName;
                     ThreadToRunForm.IsBackground = true;
                     ThreadToRunForm.Start();
-                    Thread.Sleep(1000);//give it time to initalize variables
+                    Thread.Sleep(1000);//give it time to initalize variables and create a reference
                     int WaitCount = 0;
                     while (true)
                     {
-                        try
-                        {
-                            if (PlateReader.isInitialized)
-                            {
-                                StatusChange(true);
-                                return;
-                            }
-                        }
-                        catch { }
+                                if (PlateReader!=null && PlateReader.isInitialized)
+                                {
+                                    StatusChange(true);
+                                    return;
+                                }
+                                else if ((PlateReader!=null && PlateReader.CurrentStatus == InstrumentState.Busted) || (FailedToLoad.FailedToLoad))
+                                {
+                                    KillForm();
+                                    StatusChange(false);
+                                    string err = "Could not initialize victor, is the Wallac software installed? ";
+                                    if (FailedToLoad.ErrorMessage != null)
+                                    {
+                                        err += FailedToLoad.ErrorMessage;
+                                    }
+                                    throw new Exception(err);
+                                }
+                    
+                        
                         delVoid_Void stayuptodate = Application.DoEvents;
-                        try { PlateReader.Invoke(stayuptodate); }
-                        catch { }
+                        try 
+                        { 
+                            if(PlateReader!=null)
+                                PlateReader.Invoke(stayuptodate); 
+                        }
+                        catch(Exception thrown)
+                        {
+                            string msg = thrown.Message;
+                        }
 
                         Thread.Sleep(600);
                         WaitCount++;
@@ -156,11 +172,20 @@ namespace Clarity
                     }
                 }
             }
+            BooleanReferenceType FailedToLoad = new BooleanReferenceType();
+
             private void InitializePlateReader()
             {
                 //seperate method to be called by a seperate thread, this keeps the form
                 //with its own message queue
-                Application.Run(PlateReader = new VictorForm());
+                try
+                {
+                    Application.Run(PlateReader = new VictorForm(FailedToLoad));
+                }
+                catch (Exception thrown)
+                {
+                    FailedToLoad.FailedToLoad = true;
+                }
             }
             [UserCallableMethod()]
             public bool ReadPlateLocal(string DirectoryName, int ProtocolID)
@@ -224,6 +249,7 @@ namespace Clarity
             [UserCallableMethod()]
             public void KillForm()
             {
+                
                 StatusChange(false);
                 try
                 {

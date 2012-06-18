@@ -9,10 +9,13 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Reflection;
 
+
 namespace Clarity
 {
     /// <summary>
-    /// This is a GUI form that users can make XML protocols using the various instruments with.  
+    /// This is a GUI form that users can make XML protocols using the various instruments with.
+    /// 
+    /// It uses reflection to automatically generate the methods and protocols.
     /// </summary>
     public partial class MakeProtocols : Form
     {

@@ -52,6 +52,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\VictorStandAloneForm.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AxMlrCtls, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -131,6 +132,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="OldCode.txt" />
+    <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

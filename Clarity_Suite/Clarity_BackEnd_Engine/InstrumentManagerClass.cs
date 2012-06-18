@@ -793,7 +793,7 @@ namespace Clarity
                 });
                 if (allExceptions.Count > 0)
                 {
-                    string Error = "Could not Initialize Instruments in Parrallel\n";
+                    string Error = "Could not Initialize Instruments in Parallel.\n\n";
                     foreach (Exception e in allExceptions)
                     {
                         Error += e.Message + "\n\n";

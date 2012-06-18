@@ -25,6 +25,7 @@ namespace VictorRemoteServer
 {
     public delegate void delVoid_Void();
     public enum InstrumentState {Ready,NotReady,Busted};
+
     public partial class VictorForm : Form, IDisposable
     {
         //This form is designed to run a simple plate read, it assumes that two things will happen when it 
@@ -53,17 +54,37 @@ namespace VictorRemoteServer
         //apparently this all seems to work better if I stick with the interfaces instead of the classes
         MlrServ.InstrumentServer InstrumentServ; //I believe this is the mlrsrv control
 
-        //Startup
-        public VictorForm()
+        /// <summary>
+        /// Startup, object called from calling thread to indicate a failure to load
+        /// </summary>
+        /// <param name="FailedToLoad"></param>
+        public VictorForm(BooleanReferenceType FailedToLoad)
         {
+
             lock (this)
             {
-                isInitialized = false;
-                //MessageBox.Show(Thread.CurrentThread.Name);
-                InitializeComponent();
-                del_RunParameterizedProtocol = RunDifferentProtocol;
-                StartVictor();
-                isInitialized = true;
+                try
+                {
+                    isInitialized = false;
+                    //MessageBox.Show(Thread.CurrentThread.Name);
+                    InitializeComponent();
+                    del_RunParameterizedProtocol = RunDifferentProtocol;
+                    StartVictor();
+                    isInitialized = true;
+                    FailedToLoad.FailedToLoad = false;
+                    FailedToLoad.ErrorMessage = null;
+                    FailedToLoad.thrown = null;
+                }
+                catch (Exception thrown)
+                {
+                    FailedToLoad.FailedToLoad = true;
+                    FailedToLoad.ErrorMessage = thrown.Message;
+                    FailedToLoad.thrown = thrown;
+                    this.txtErrors.Text += thrown.Message;
+                    this.CurrentStatus = InstrumentState.Busted;
+                    isInitialized = false;
+                    Application.ExitThread();                    
+                }
             }
         }
         public void StartVictor()
@@ -98,9 +119,12 @@ namespace VictorRemoteServer
                     }
         private void Form1_Load(object sender, EventArgs e)
         {
-            StartVictor();
-            InstrumentServ = new InstrumentServerClass();
-            InstrumentServ.OnError += new IInstrumentEvents_OnErrorEventHandler(InstrumentServ_OnError);
+            //StartVictor();
+            if (CurrentStatus != InstrumentState.Busted)
+            {
+                InstrumentServ = new InstrumentServerClass();
+                InstrumentServ.OnError += new IInstrumentEvents_OnErrorEventHandler(InstrumentServ_OnError);
+            }
         }
 
         //UI Methods 
@@ -543,4 +567,10 @@ namespace VictorRemoteServer
 
         }
     }
+    public class BooleanReferenceType
+            {
+                public bool FailedToLoad=false;
+                public string ErrorMessage;
+                public Exception thrown;
+            }
 }

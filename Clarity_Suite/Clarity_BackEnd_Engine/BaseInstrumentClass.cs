@@ -48,16 +48,7 @@ namespace Clarity
         {
             return;
         }
-        //TODO: Remove overloaded constructor.
-        /// <summary>
-        /// This was a hack for one instrument early on, could be changed
-        /// to an object array, though ideally no instruments use this.
-        /// </summary>
-        /// <param name="Parameter"></param>
-        public virtual void Initialize(int Parameter)
-        {
-            return;
-        }
+
         /// <summary>
         /// This should be a generic "Fix and reinitialize" method called after 
         /// the device fails.  

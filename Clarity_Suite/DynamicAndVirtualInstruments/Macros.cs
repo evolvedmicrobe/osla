@@ -40,6 +40,12 @@ namespace Clarity
             TransStation.TurnOffVacuumAndReturnLid();
             return true;
         }
+        /// <summary>
+        /// Temporary method required to remotely fix the occasional error., do not regularly call
+        /// </summary>
+        /// <param name="toModify"></param>
+        /// <param name="eargs"></param>
+        /// <returns></returns>
         [UserCallableMethod(RequiresInstrumentManager=true)]
         public bool AttemptToReseatLid(Protocol toModify, AdditionalMethodArguments eargs)
         {
