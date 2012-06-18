@@ -60,7 +60,6 @@ namespace VictorRemoteServer
         /// <param name="FailedToLoad"></param>
         public VictorForm(BooleanReferenceType FailedToLoad)
         {
-
             lock (this)
             {
                 try
@@ -126,7 +125,6 @@ namespace VictorRemoteServer
                 InstrumentServ.OnError += new IInstrumentEvents_OnErrorEventHandler(InstrumentServ_OnError);
             }
         }
-
         //UI Methods 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -137,7 +135,6 @@ namespace VictorRemoteServer
             catch (Exception thrown)
             { txtErrors.Text = thrown.Message; }
         }
-
         //Status Updates
         private void UpdateStatus()
         {
@@ -193,8 +190,6 @@ namespace VictorRemoteServer
                 }
             }
         }
-
-
         //Victor/Form Events
         void Victor_ServerPlateUnload(object sender, _DVictorEvents_ServerPlateUnloadEvent e)
         {
@@ -213,7 +208,6 @@ namespace VictorRemoteServer
         {
             UpdateStatus();
         }
-        
         void InstrumentServ_OnError(string ErrorMessage, int ErrorCode, int Choices, ref ErrorAction Action)
         {
             //This is vital and I believe means that the dang thing will no longer throw
@@ -228,7 +222,6 @@ namespace VictorRemoteServer
         {
             this.InternalDispose();
         }      
-
 
         //Method run and monitoring
         private void PulseObject()
