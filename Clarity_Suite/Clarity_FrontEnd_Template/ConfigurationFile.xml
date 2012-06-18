@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Clarity>
+  <!-- These are settings for the GUI interface, customize your GUI for local installations using this section
+  The pattern in this file is that all XML nodes inside represent a field in the class that can be set.
+  -->
   <InterfaceSettings>
     <WELL48_PLATE_PROTOCOL_ID Type="System.Int32">2000106</WELL48_PLATE_PROTOCOL_ID>
     <GBO_PLATE_PROTOCOL_ID Type="System.Int32">2000103</GBO_PLATE_PROTOCOL_ID>
     <NSFErrorEmails Type="System.String">ndelaney@fas.harvard.edu;4158234767@vtext.com;marshki87@gmail.com</NSFErrorEmails>
 
   </InterfaceSettings>
+  <!--These are local variables for the Back End Engine Settings-->
   <EngineSettings>
+    <!--Should we try to load all instruments on different threads?  Loads faster but if they are dependent on each other
+    might cause a crash, if so specify the load order using the nodes.-->
     <LoadInstrumentsInParallel Type="System.Boolean">True</LoadInstrumentsInParallel>
     <RequireProtocolValidation Type="System.Boolean">True</RequireProtocolValidation>
+    <!-- This will be where we output a file with the current state, allows for recovery after the program reloads-->
     <AppDataDirectory Type="System.String">C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\</AppDataDirectory>
-    <UseAlarm Type="System.Boolean">True</UseAlarm>
+    <!-- Use an alarm server?  Set this to false if not installed-->
+    <UseAlarm Type="System.Boolean">False</UseAlarm>
   </EngineSettings>
+  <!-- This node specifies local settings for each instrument -->
   <Instruments>
     <NSFExperiment>
       <OD600ProtocolID Type="System.Int32">2000103</OD600ProtocolID>

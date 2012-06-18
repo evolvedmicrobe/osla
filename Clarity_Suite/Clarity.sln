@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clarity_BackEnd_Engine", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clarity_WPF_Front_End_Template", "Clarity_WPF_Front_End_Template\Clarity_WPF_Front_End_Template.csproj", "{6A95A6AB-CEBE-434E-BA13-43DECA11A002}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ClarityInstaller", "ClarityInstaller\ClarityInstaller.vdproj", "{E7A64ADE-888C-44BC-85EB-E32E1FEC57AF}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -159,6 +161,12 @@ Global
 		{6A95A6AB-CEBE-434E-BA13-43DECA11A002}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{6A95A6AB-CEBE-434E-BA13-43DECA11A002}.Release|x86.ActiveCfg = Release|x86
 		{6A95A6AB-CEBE-434E-BA13-43DECA11A002}.Release|x86.Build.0 = Release|x86
+		{E7A64ADE-888C-44BC-85EB-E32E1FEC57AF}.Debug|Any CPU.ActiveCfg = Debug
+		{E7A64ADE-888C-44BC-85EB-E32E1FEC57AF}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{E7A64ADE-888C-44BC-85EB-E32E1FEC57AF}.Debug|x86.ActiveCfg = Debug
+		{E7A64ADE-888C-44BC-85EB-E32E1FEC57AF}.Release|Any CPU.ActiveCfg = Release
+		{E7A64ADE-888C-44BC-85EB-E32E1FEC57AF}.Release|Mixed Platforms.ActiveCfg = Release
+		{E7A64ADE-888C-44BC-85EB-E32E1FEC57AF}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
