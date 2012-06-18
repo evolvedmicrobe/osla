@@ -80,7 +80,7 @@ namespace Clarity
         public override void InitializeFromParsedXML(System.Xml.XmlNode instrumentNode)
         {
             base.InitializeFromParsedXML(instrumentNode);
-            this.Initialize(STARTING_SPEED);
+            this.InitializeShaker(STARTING_SPEED);
         }
         private List<string> CreateAdditionalInitializationCommands()
         {
@@ -104,7 +104,7 @@ namespace Clarity
             return toReturn;
         }
         [UserCallableMethod()]
-        public override void Initialize(int ShakerSpeed)
+        public void InitializeShaker(int ShakerSpeed)
         {
             if (ShakerSpeed > 1200 | ShakerSpeed < 0)
             {
@@ -409,7 +409,7 @@ namespace Clarity
                     throw new InstrumentError("Your Shaking Speed Was Not Appropriate Using A Default of 600 RPMs", true, this);
                 }
                
-                Initialize(ShakerSpeed);
+                InitializeShaker(ShakerSpeed);
                 //ShakerSpeed = ShakerSpeed / 10;//RPMS to goofy liconic notation
                 //old method below
                 //PerformCommand("WR DM39 " + ShakerSpeed.ToString());
@@ -764,7 +764,7 @@ namespace Clarity
             try
             {
                 ResetIncubator();
-                Initialize(this.STARTING_SPEED);
+                InitializeShaker(this.STARTING_SPEED);
                 return true;
             }
             catch { }

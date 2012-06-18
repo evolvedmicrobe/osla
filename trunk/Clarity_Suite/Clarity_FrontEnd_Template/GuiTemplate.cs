@@ -672,7 +672,7 @@ namespace Clarity
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-                Incubator.Initialize(Incubator.STARTING_SPEED);
+                Incubator.InitializeShaker(Incubator.STARTING_SPEED);
                 MessageBox.Show("Incubator is now initialized");
             }
             catch (Exception thrown)
@@ -1423,8 +1423,6 @@ namespace Clarity
        
        
         
-        public delegate void StringDel(string firstArg);
-        public delegate void StringErrorDel(string arg1, Exception arg2);
         private void versionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Version : 1.0");
