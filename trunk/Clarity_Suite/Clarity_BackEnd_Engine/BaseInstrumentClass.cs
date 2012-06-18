@@ -127,27 +127,38 @@ namespace Clarity
                         throw new Exception("XML node is being used to set a null variable, the node is \n" + childNode.ToString());
 
                     }
-
-                    string propertyName = childNode.Name;
-                    Type thisType = toSet.GetType();
-                    //get the variable type info
-                    XmlNode typeNode = childNode.Attributes.RemoveNamedItem("Type");
-                    if (typeNode == null)
+                    if (childNode.NodeType == XmlNodeType.Comment)
                     {
-                        throw new Exception("Variable Type not set in xml, please declare the variable type for all "
-                            + " variables used for " + toSet.ToString());
+                        continue;
                     }
-
-                    Type VariableType = System.Type.GetType(typeNode.Value);
-                    var Value = Convert.ChangeType(childNode.InnerText, VariableType);
-                    //now get the property and change it
-                    var prop = thisType.GetProperty(propertyName);
-                    if (prop == null)
-                    {
-                        throw new Exception(toSet.ToString() + " does not have a property called " + propertyName
-                            + "\n so the xml file needs to be fixed");
-                    }
-                    prop.SetValue(toSet, Value, null);
+                    
+                        string propertyName = childNode.Name;
+                        try
+                        {
+                            Type thisType = toSet.GetType();
+                            //get the variable type info
+                            XmlNode typeNode = childNode.Attributes.RemoveNamedItem("Type");
+                            if (typeNode == null)
+                            {
+                                throw new Exception("Variable Type not set in xml, please declare the variable type for all "
+                                    + " variables used for " + toSet.ToString());
+                            }
+                            Type VariableType = System.Type.GetType(typeNode.Value);
+                            var Value = Convert.ChangeType(childNode.InnerText, VariableType);
+                            //now get the property and change it
+                            var prop = thisType.GetProperty(propertyName);
+                            if (prop == null)
+                            {
+                                throw new Exception(toSet.ToString() + " does not have a property called " + propertyName
+                                    + "\n so the xml file needs to be fixed");
+                            }
+                            prop.SetValue(toSet, Value, null);
+                        }
+                        catch (Exception thrown)
+                        {
+                            throw new Exception("Could not parse XML Node: " + propertyName + "\n" + thrown.Message); 
+                        }
+                
                 }
             }
             catch (Exception thrown)
