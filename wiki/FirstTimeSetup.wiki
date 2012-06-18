@@ -12,8 +12,62 @@ If you do not have an instrument available on your local machine, simply change 
  <Incubator SkipLoad="False">
 </code>
 
+To learn more, read the comments for the example file given elow.
 <code language="xml">
 {{{
+<?xml version="1.0" encoding="utf-8"?>
+<Clarity>
+  <!-- These are settings for the GUI interface, customize your GUI for local installations using this section
+  The pattern in this file is that all XML nodes inside represent a field in the class that can be set.
+  -->
+  <InterfaceSettings>
+    <WELL48_PLATE_PROTOCOL_ID Type="System.Int32">2000106</WELL48_PLATE_PROTOCOL_ID>
+    <GBO_PLATE_PROTOCOL_ID Type="System.Int32">2000103</GBO_PLATE_PROTOCOL_ID>
+    <NSFErrorEmails Type="System.String">ndelaney@fas.harvard.edu;4158234767@vtext.com;marshki87@gmail.com</NSFErrorEmails>
 
+  </InterfaceSettings>
+  <!--These are local variables for the Back End Engine Settings-->
+  <EngineSettings>
+    <!--Should we try to load all instruments on different threads?  Loads faster but if they are dependent on each other
+    might cause a crash, if so specify the load order using the nodes.-->
+    <LoadInstrumentsInParallel Type="System.Boolean">True</LoadInstrumentsInParallel>
+    <RequireProtocolValidation Type="System.Boolean">True</RequireProtocolValidation>
+    <!-- This will be where we output a file with the current state, allows for recovery after the program reloads-->
+    <AppDataDirectory Type="System.String">C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\</AppDataDirectory>
+    <!-- Use an alarm server?  Set this to false if not installed-->
+    <UseAlarm Type="System.Boolean">False</UseAlarm>
+  </EngineSettings>
+
+  <!-- This node specifies local settings for each instrument 
+When an instrument is initialized, it is passed the XML node for that instrument.
+-->
+  <Instruments>
+    <NSFExperiment>
+      <OD600ProtocolID Type="System.Int32">2000103</OD600ProtocolID>
+      <MinBetweenReads Type="System.Int32">50</MinBetweenReads>
+      <VenusProtocolID Type="System.Int32">2000105</VenusProtocolID>
+      <MedianODToStartMeasurement Type="System.Double">.2</MedianODToStartMeasurement>
+    </NSFExperiment>
+    <Incubator SkipLoad="False">
+      <STARTING_SPEED Type="System.Int32">650</STARTING_SPEED>
+      <COM_PORT Type="System.String">COM3</COM_PORT>
+      <InitCommands Type="System.String">
+        WR DM21 400;pitch
+      </InitCommands>
+    </Incubator>
+    <!--The skipload attribute can either be used or the instrument can simply be deleted from the xml, either prevents loading-->
+    <Sciclone SkipLoad="TRUE">
+      <ConfigurationFile Type="System.String">C:\Program Files\Zymark\Instruments\Sciclone\ICP\Configurations\ScicloneALH3000_renmaed.txt</ConfigurationFile>
+    </Sciclone>
+    <TransferStation SkipLoad="False" />
+    <Twister SkipLoad="False">
+      <IncubatorPositionsFile Type="System.String">C:\Clarity\TwistPos.nfd</IncubatorPositionsFile>
+      <MinutesRequiredForVerticalMotorShutdown Type="System.Int32">1</MinutesRequiredForVerticalMotorShutdown>
+    </Twister>
+    <PlateReader SkipLoad="False">
+    </PlateReader>
+    <Macros />
+  </Instruments>
+</Clarity>
 }}}
 </code>
