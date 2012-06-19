@@ -17,6 +17,8 @@ Those who want to remain completely open source can use Mono.
 
 http://monodevelop.com/
 
+Regardless, please remember that Clarity is an open source project and so even if you understandably find that the most expedient solution to implementing an interface is to co-op closed source code, this is a situation we are trying to move away from with this project.
+
 = Downloading the Code =
 
 If you are using the visual studio IDE, the easiest way to get the code is to install the open source ankhsvn plugin.
