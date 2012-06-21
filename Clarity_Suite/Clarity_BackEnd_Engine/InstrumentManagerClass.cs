@@ -126,6 +126,7 @@ namespace Clarity
             {
                 OnErrorDuringProtocolExecution(this, thrown);
             }
+            //Turn on alarm after notification, so that if something goes wrong above it will run here.  
             try
             {
                 if (UseAlarm)
