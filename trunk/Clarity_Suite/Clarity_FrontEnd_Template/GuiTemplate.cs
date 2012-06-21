@@ -420,7 +420,8 @@ namespace Clarity
                 {
                     this.AddErrorLogText(((ProtcolExcecutionError)thrown).MakeErrorReport());
                 }
-                ShowError("Failed To Run Protocol", thrown);
+                Action<string,Exception> v= ShowError;
+                v.BeginInvoke("Failed To Run Protocol", thrown,null,null);
                 
             }
         }
@@ -933,7 +934,7 @@ namespace Clarity
                     ShowError("You did not select any slots");
                 }
                 // For SkypeAlarm
-                else if (!ClarityEngine.Clarity_Alarm.ValidNumbers(textbox_number.Text))
+                else if (ClarityEngine.UseAlarm && ClarityEngine.Clarity_Alarm!=null && ClarityEngine.Clarity_Alarm.Connected && !ClarityEngine.Clarity_Alarm.ValidNumbers(textbox_number.Text))
                 {
                     ShowError("Your number is not valid!");
                 }
