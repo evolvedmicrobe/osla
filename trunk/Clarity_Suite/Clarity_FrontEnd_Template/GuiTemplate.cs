@@ -379,7 +379,8 @@ namespace Clarity
                         UpdateForm();
                         try
                         {
-                            StatusLabel.Text = "Performing operation: " + Source.LoadedProtocols.CurrentProtocolInUse.Instructions[Source.LoadedProtocols.CurrentProtocolInUse.NextItemToRun - 1].ToString();
+                            string toUse = Source.LoadedProtocols.CurrentProtocolInUse.Instructions[Source.LoadedProtocols.CurrentProtocolInUse.NextItemToRun - 1].ToString();
+                            StatusLabel.Text = "Performing operation: " +toUse;
                         }
                         catch { }
                     }
@@ -400,7 +401,6 @@ namespace Clarity
                 StatusLabel.Text = "Procedure ended with errors";
                 UpdateInstrumentStatus();
                 btnRetryLastInstruction.Enabled = true;
-                ShowError("Failed To Run Protocol", thrown);
                 pnlFailure.Visible = true;
                 lblFailure.Text = "The Last Instruction Failed To Run, Please recover the machines and retry or delete the protocol, Do not reattempt a macro instruction";
                 if (Source.GetLastFailedInstruction() != null)
@@ -420,6 +420,8 @@ namespace Clarity
                 {
                     this.AddErrorLogText(((ProtcolExcecutionError)thrown).MakeErrorReport());
                 }
+                ShowError("Failed To Run Protocol", thrown);
+                
             }
         }
 
