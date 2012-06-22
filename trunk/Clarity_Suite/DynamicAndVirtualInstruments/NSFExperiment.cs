@@ -137,13 +137,13 @@ namespace Clarity
                     throw new Exception("Could not detemine median reading. " + thrown.Message);
                 }
                 //move from incubator to platereader           
-                //if (medVal > pMedianODToStartMeasurement)
-                //{
-                //    toModify.Instructions.Add(VenusReadInstruction);
-                //}
-                //else { 
+                if (medVal > pMedianODToStartMeasurement)
+                {
+                    toModify.Instructions.Add(VenusReadInstruction);
+                }
+                else { 
                     toModify.Instructions.Add(ODReadInstruction);
-                //}
+                }
                 toModify.Instructions.Add(awayFromVictorInstruction);
                 toModify.Instructions.Add(ReturnInstruction);
                 toModify.NextItemToRun = 0;
