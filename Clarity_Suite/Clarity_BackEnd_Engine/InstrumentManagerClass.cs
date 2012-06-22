@@ -500,7 +500,7 @@ namespace Clarity
         {
             try {
                 if(pLoadedProtocols!=null)
-                pLoadedProtocols.ReportToAllUsersAsynchronously("The Robot Software Has Been Closed");
+                pLoadedProtocols.ReportToAllUsers("The Robot Software Has Been Closed");
             }
             catch { }
             try { if (UseAlarm &&pClarity_Alarm!=null) { pClarity_Alarm.TurnOnAlarmAsynchronously("The software was closed"); } }
