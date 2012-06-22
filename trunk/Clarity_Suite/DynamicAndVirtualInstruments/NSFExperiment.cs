@@ -86,6 +86,11 @@ namespace Clarity
             Thread.Sleep(5000);
             return true;
         }
+        [UserCallableMethod()]
+        public bool FakeThrowError()
+        {
+            throw new InstrumentError("Fake error Test to be sure this is seen");
+        }
         [UserCallableMethod(RequiresCurrentProtocol=true)]
         public bool CreateProtocol(string ExpName, int Slot,AdditionalMethodArguments eargs)
         {
@@ -132,11 +137,13 @@ namespace Clarity
                     throw new Exception("Could not detemine median reading. " + thrown.Message);
                 }
                 //move from incubator to platereader           
-                if (medVal > pMedianODToStartMeasurement)
-                {
-                    toModify.Instructions.Add(VenusReadInstruction);
-                }
-                else { toModify.Instructions.Add(ODReadInstruction); }
+                //if (medVal > pMedianODToStartMeasurement)
+                //{
+                //    toModify.Instructions.Add(VenusReadInstruction);
+                //}
+                //else { 
+                    toModify.Instructions.Add(ODReadInstruction);
+                //}
                 toModify.Instructions.Add(awayFromVictorInstruction);
                 toModify.Instructions.Add(ReturnInstruction);
                 toModify.NextItemToRun = 0;
