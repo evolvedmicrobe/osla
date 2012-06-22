@@ -310,8 +310,23 @@ namespace Clarity
         {
             ErrorMessage = "\nNew Error at " + DateTime.Now.ToString() + " \n" + ErrorMessage;
             AddErrorLogText(ErrorMessage);
-            MessageBox.Show(ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //Not sure why, but I am showing this error box on a separate thread, may change this later, 
+            //I worry that Clarity will hang somehow if I am not careful about keeping the main thread free,
+            //not sure where that would be yet though...
+            ShowMessage sm = MessageBox.Show;
+            ThreadStart TS = new ThreadStart(() => { sm(ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); });
+            Thread t = new Thread(TS);
+            t.IsBackground=true;
+            t.Start();
+            //MessageBox.Show(ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+        public  delegate DialogResult ShowMessage(string s,string s2,MessageBoxButtons b ,MessageBoxIcon i);
+        /// <summary>
+        /// Do not call asynchronously, shows a dialog and adds the error to a textbox so
+        /// must be called from main thread.
+        /// </summary>
+        /// <param name="ErrorMessage"></param>
+        /// <param name="Error"></param>
         private void ShowError(string ErrorMessage, Exception Error)
         {
             if (Error != null && Error.InnerException != null && Error.InnerException.Message != null)
@@ -420,9 +435,8 @@ namespace Clarity
                 {
                     this.AddErrorLogText(((ProtcolExcecutionError)thrown).MakeErrorReport());
                 }
-                Action<string,Exception> v= ShowError;
-                v.BeginInvoke("Failed To Run Protocol", thrown,null,null);
-                
+               
+                ShowError("Failed To Run Protocol", thrown); 
             }
         }
 
@@ -438,7 +452,6 @@ namespace Clarity
                 btnCancelProtocolExecution.Enabled = false;
                 btnExecuteProtocols.Enabled = true;
                 StatusLabel.Text = "Cancelled Protocol";
-                TimeToGo.Text = "Nothing Running";
                 UpdateForm();
             }
         }
@@ -452,7 +465,6 @@ namespace Clarity
             }
             else
             {
-                TimeToGo.Text = "Nothing Running";
                 btnExecuteProtocols.Enabled = true;
                 btnCancelProtocolExecution.Enabled = false;
                 ShowError("Unspecified Error", thrown);
@@ -473,7 +485,7 @@ namespace Clarity
             else
             {
                 StatusLabel.Text = "Finished Running Protocols";
-                TimeToGo.Text = "";
+                UpdateForm();
             }
         }
 

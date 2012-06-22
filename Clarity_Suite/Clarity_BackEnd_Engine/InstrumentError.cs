@@ -68,9 +68,17 @@ namespace Clarity
 
             this.ErrorDescription = errorDescription;
             if (innerException != null)
+            {
                 this.InstrumentInError = innerException.InstrumentInError;
-            this.TimeThrown = innerException.TimeThrown;
-            this.CanRecover = innerException.CanRecover;
+                this.CanRecover = innerException.CanRecover;
+                this.TimeThrown = innerException.TimeThrown;
+            }
+            else
+            {
+                this.CanRecover = false;
+                this.TimeThrown = DateTime.Now;
+            }
+            
         }
         /// <summary>
         /// Generic constructor, assumes error is recoverable

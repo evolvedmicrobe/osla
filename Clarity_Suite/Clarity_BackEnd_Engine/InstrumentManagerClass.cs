@@ -218,8 +218,17 @@ namespace Clarity
             WorkerToRunRobots.ProgressChanged += new ProgressChangedEventHandler(WorkerToRunRobots_ProgressChanged);
             WorkerToRunRobots.RunWorkerCompleted += new RunWorkerCompletedEventHandler(WorkerToRunRobots_RunWorkerCompleted);
         }
-
-        public bool RunInstrumentMethod(string InstrumentName, string MethodName, object[] Parameters, bool RequireStatusOK, Protocol curProtocol = null)
+/// <summary>
+/// Complex method which takes an instrument name, method name and parameters and runs the instruction,
+/// </summary>
+/// <param name="InstrumentName"></param>
+/// <param name="MethodName"></param>
+/// <param name="Parameters"></param>
+/// <param name="RequireStatusOK">Should we check the status flag of the instrument before attempting instruction?</param>
+/// <param name="FireErrorsInsideMethod">Should this method fire the error, or return it to the caller who can add more information and fire it then.</param>
+/// <param name="curProtocol">The current protocol that called the method.</param>
+/// <returns></returns>
+        public Exception RunInstrumentMethod(string InstrumentName, string MethodName, object[] Parameters, bool RequireStatusOK, bool FireErrorsInsideMethod=true, Protocol curProtocol = null)
         {
             //flips through the instruments, until it finds the appropriate method/name, then invokes it
             //all failed instrument methods should throw an instrument error
@@ -228,73 +237,82 @@ namespace Clarity
             {
                 object[] ParametersToPass = Parameters;
                 Type T = typeof(UserCallableMethod);
-                foreach (object c in InstrumentCollection)
+                if (!this.NamesToBICs.ContainsKey(InstrumentName))
                 {
-                    BaseInstrumentClass Instr = (BaseInstrumentClass)c;
-                    if (Instr.Name == InstrumentName)
+                    throw new Exception("Instrument "+InstrumentName+" not found or not loaded in collection.  Was it initalized? (Check ConfigurationFile.xml?)");
+                }
+                BaseInstrumentClass Instr = this.NamesToBICs[InstrumentName];
+                if (!Instr.StatusOK && RequireStatusOK)
+                {
+                    throw new Exception("Tried to run method with instrument " + InstrumentName + " but it's status flag indicates it can't run methods now.  You must recover the instrument first");
+                }
+                if ((Instr.StatusOK == true | !RequireStatusOK) || MethodName == "Initialize")
+                {
+                    Type InstType = Instr.GetType();
+                    var namedMethods = from x in InstType.GetMethods() where x.Name == MethodName select x;
+                    foreach (MethodInfo MI in namedMethods)
                     {
-                        if ((Instr.StatusOK == true | !RequireStatusOK) || MethodName == "Initialize")
+                        //TODO: FIX REFLECTION METHOD FINDER TO VALIDATE THAT PARAMETERS ARE THE SAME
+                        //CURRENTLY METHODS WITH THE SAME NAME AND PARAMETER NUMBERS CAN'T BE DISTINGUISHED
+                        //need to worry more about overloaded methods here
+                        
+                        //Some methods might need access to other instruments
+                        //or to the protocol that is calling them
+                        //we check the attributes and add another argument to the last item in the object array if this is the 
+                        //case
+                        object[] attrs = MI.GetCustomAttributes(T, false);
+                        if (attrs.Length > 0)
                         {
-                            Type InstType = c.GetType();
-                            //var q = InstType.GetMethods();
-                            foreach (MethodInfo MI in InstType.GetMethods())
+                            UserCallableMethod attr = (UserCallableMethod)attrs[0];
+                            AdditionalMethodArguments extraArgs = new AdditionalMethodArguments();
+                            if (attr.RequiresCurrentProtocol || attr.RequiresInstrumentManager)
                             {
-                                if (MI.Name == MethodName)
+                                if (attr.RequiresCurrentProtocol)
                                 {
-                                    //need to worry more about overloaded methods here
-
-                                    //Some methods might need access to other instruments
-                                    //or to the protocol that is calling them
-                                    //we check the attributes and add another argument to the object array if this is the 
-                                    //case
-                                    object[] attrs = MI.GetCustomAttributes(T, false);
-
-                                    if (attrs.Length > 0)
-                                    {
-                                        UserCallableMethod attr = (UserCallableMethod)attrs[0];
-                                        AdditionalMethodArguments extraArgs = new AdditionalMethodArguments();
-                                        if (attr.RequiresCurrentProtocol || attr.RequiresInstrumentManager)
-                                        {
-                                            if (attr.RequiresCurrentProtocol)
-                                            {
-                                                //Protocol curProtocol = LoadedProtocols.CurrentProtocolInUse;
-                                                if (curProtocol == null)
-                                                { throw new ArgumentNullException("Method requires a protocol but one isn't set as the current one"); }
-                                                extraArgs.CallingProtocol = curProtocol;
-                                            }
-                                            if (attr.RequiresInstrumentManager)
-                                            {
-                                                extraArgs.InstrumentCollection = this;
-                                            }
-                                            //Add addtional arguments
-                                            int currentLength = ParametersToPass == null ? 0 : ParametersToPass.Length;
-                                            ParametersToPass = new object[currentLength + 1];
-                                            if (ParametersToPass != null) Parameters.CopyTo(ParametersToPass, 0);
-                                            ParametersToPass[ParametersToPass.Length - 1] = extraArgs;
-                                        }
-                                    }
-                                    if (MI.GetParameters().Length == 0 && ParametersToPass == null)
-                                    { MI.Invoke(c, null); return true; }
-                                    else if (ParametersToPass != null && MI.GetParameters().Length == ParametersToPass.Length)
-                                    {
-                                        MI.Invoke(c, ParametersToPass); return true;
-                                    }
+                                    if (curProtocol == null)
+                                    { throw new ArgumentNullException("Method requires a protocol but one isn't set as the current one"); }
+                                    extraArgs.CallingProtocol = curProtocol;
                                 }
+                                if (attr.RequiresInstrumentManager)
+                                {
+                                    extraArgs.InstrumentCollection = this;
+                                }
+                                //Add addtional arguments
+                                int currentLength = ParametersToPass == null ? 0 : ParametersToPass.Length;
+                                ParametersToPass = new object[currentLength + 1];
+                                if (ParametersToPass != null) Parameters.CopyTo(ParametersToPass, 0);
+                                ParametersToPass[ParametersToPass.Length - 1] = extraArgs;
                             }
                         }
+                        if (MI.GetParameters().Length == 0 && ParametersToPass == null)
+                        { MI.Invoke(Instr, null); return null; }
+                        else if (ParametersToPass != null && MI.GetParameters().Length == ParametersToPass.Length)
+                        {
+                            MI.Invoke(Instr, ParametersToPass); return null;
+                        }
                     }
+                    throw new Exception("Could not find method named "+MethodName+" for instrument "+InstrumentName);
                 }
+                throw new Exception("Could not find instrument "+InstrumentName+" or execute instruction "+MethodName);
+                
             }
             catch (Exception thrown)
             {
                 //thrown should always be of type System.Reflection.TargetInvocationException
                 //the inner exception can be the instrument error if this was the cause
-                FireErrorDuringProtocolExecution(thrown);
-
-            }
-            return false;
+                if (FireErrorsInsideMethod)
+                {
+                    FireErrorDuringProtocolExecution(thrown);
+                }
+                return thrown;
+            }            
         }
-        
+        /// <summary>
+        /// Note that this method will is handled not by the background thread, but by the thread that created it.
+        /// Usually, this will be the main thread for the GUI.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void WorkerToRunRobots_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
        {
            try
@@ -307,12 +325,6 @@ namespace Clarity
                {
                    FireErrorDuringProtocolExecution(e.Error);
                }
-               else if (e.Result is StaticProtocolItem)
-               {
-                   StaticProtocolItem SP = e.Result as StaticProtocolItem;
-                   Exception Excep = new Exception("Failed to run instruction " + SP.ToString() + " for instrument " + SP.InstrumentName);
-                   FireErrorDuringProtocolExecution(Excep);
-               }
                else if (e.Result == null)
                {
                    FireAllProtocolsCompleted();
@@ -322,6 +334,14 @@ namespace Clarity
                    //then is the milliseconds until the next instruction occurs
                    DateTime delay = (DateTime)e.Result;
                    FireProtocolDelayEvent(delay);
+               }
+               else if (e.Result is string && ((string)e.Result) == ERROR_THROWN)
+               {
+                   //don't do any anything, an error was already thrown inside the background worker
+               }
+               else
+               {
+                   throw new Exception("Type " + e.Result.GetType().ToString() + " can't be interpretted as a valid return state from the end of a protocol execution.");
                }
            }
            catch (Exception thrown)
@@ -340,6 +360,8 @@ namespace Clarity
             BackgroundWorker bw = sender as BackgroundWorker;
             RunThroughProtocols(bw, e);//don't try and return anything but an integers
         }
+        //An object for the completion of the background worker to check that an error was thrown.
+        private const string ERROR_THROWN = "Error thrown in protcol runner, don't throw after completion";
         private void RunThroughProtocols(BackgroundWorker Worker, DoWorkEventArgs e)
         {
             //okay this will loop through all the instructions and finish them off one by one
@@ -347,6 +369,7 @@ namespace Clarity
             {
                 while (!Worker.CancellationPending && pLoadedProtocols != null)
                 {
+                    LastFailedInstruction = null;
                     object NextInstruction = pLoadedProtocols.GetNextProtocolObject();
                     {
                         if (NextInstruction is StaticProtocolItem)
@@ -354,11 +377,14 @@ namespace Clarity
                             Worker.ReportProgress(0);
                             StaticProtocolItem Instruction = (StaticProtocolItem)NextInstruction;
                             //then we run the protocol item
-                            bool result = RunInstrumentMethod(Instruction.InstrumentName, Instruction.MethodName, Instruction.Parameters, true, Instruction.ContainingProtocol);
-                            if (result == false)
+                            Exception result = RunInstrumentMethod(Instruction.InstrumentName, Instruction.MethodName, Instruction.Parameters, true,false, Instruction.ContainingProtocol);
+                            //Buble up the exception if it failed
+                            if (result != null)
                             {
                                 LastFailedInstruction = Instruction;
-                                e.Result = Instruction;
+                                Exception Excep = new Exception("Failed to run instruction " + Instruction.ToString() + " for instrument " + Instruction.InstrumentName, result);
+                                FireErrorDuringProtocolExecution(Excep);
+                                e.Result=ERROR_THROWN;
                                 return;
                             }
                             else
@@ -382,8 +408,9 @@ namespace Clarity
                         }
                         else 
                         {
-                            
-                            FireErrorDuringProtocolExecution(new Exception("Protocol item was not an instruction, datetime or null")); 
+                            FireErrorDuringProtocolExecution(new Exception("Protocol item was not an instruction, datetime or null"));
+                            e.Result=ERROR_THROWN;
+                            return;
                         }
                     }
                 }
@@ -393,7 +420,8 @@ namespace Clarity
             catch (Exception thrown)
             {
                 FireErrorDuringProtocolExecution(thrown);
-                //throw thrown;
+                e.Result = ERROR_THROWN;
+                return;
             }
         }
 
@@ -561,14 +589,13 @@ namespace Clarity
                 else
                 {
                     CurrentRunningState = RunningStates.Running;
-                    RunInstrumentMethod(LastFailedInstruction.InstrumentName, LastFailedInstruction.MethodName, LastFailedInstruction.Parameters, true, LastFailedInstruction.ContainingProtocol);
+                    RunInstrumentMethod(LastFailedInstruction.InstrumentName, LastFailedInstruction.MethodName, LastFailedInstruction.Parameters,true,true,LastFailedInstruction.ContainingProtocol);
                     CurrentRunningState = RunningStates.Idle;
                 }
             }
             catch (Exception thrown)
             {
                 FireGenericError(thrown);
-
 
             }
         }
