@@ -131,7 +131,7 @@ namespace Clarity
             {
                 if (UseAlarm)
                 {
-                    pClarity_Alarm.ChangeStatusAsynchronously("Nothing Running");
+                    //pClarity_Alarm.ChangeStatusAsynchronously("Nothing Running");
                     pClarity_Alarm.TurnOnAlarmAsynchronously("Procedure ended with errors");
                 }
             }
