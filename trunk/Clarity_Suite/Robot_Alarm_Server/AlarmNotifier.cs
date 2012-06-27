@@ -70,6 +70,7 @@ namespace Robot_Alarm
         public void TurnOnAlarm()
         {
             CurrentAlarmState = new AlarmState(true);
+            if (ShouldCall()) {CallAllUsers(); }
             Console.WriteLine(DateTime.Now.ToString() + " Alarm Turned On");
         }
         public void TurnOffAlarm()
@@ -158,6 +159,15 @@ namespace Robot_Alarm
             if (!m.Success) { return false; }
             return true;
         }
+        static int CallHourStart = 23;
+        static int CallHourEnd = 8;
+        public static bool ShouldCall()
+        {
+            DateTime now = System.DateTime.Now;
+            int nd = now.Day;
+            int nt = now.Hour;
+            return nt >= CallHourStart || nt <= CallHourEnd;
+        }
         public bool CallConnects(string number)
         {
             bool callSuccessful = false;
@@ -194,6 +204,17 @@ namespace Robot_Alarm
             finally { }
             return callSuccessful;
 
+        }
+        public void CallAllUsers()
+        {
+            foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
+            {
+                foreach (string number in p.phones.Split(';'))
+                {
+                    // Todo use boolean return to implement multiple call attempts
+                    CallConnects(number);
+                }
+            }
         }
         #endregion
     }
