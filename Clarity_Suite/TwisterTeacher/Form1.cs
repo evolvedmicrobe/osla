@@ -229,7 +229,7 @@ namespace Clarity
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            float target = -800;
+            float target = -700;
             RobotServ.Grip.set_TargetPosition(ref target);
             RobotServ.TriggerMoveAndWait(20000);
    

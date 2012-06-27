@@ -33,9 +33,12 @@ namespace Robot_Alarm
             //     netsh http add urlacl url=`URL` user=`DOMAIN\user`
             //Uri httpAddress = new Uri("http://localhost:8001/AlarmNotifier");
             Uri httpAddress = new Uri("http://140.247.90.36:8001/AlarmNotifier");
-            ServiceHost selfHost = new ServiceHost(typeof(AlarmNotifier), httpAddress);
+            ThisAlarm = new AlarmNotifier();
+            //Going to pass an instance instead of a type
+            //ServiceHost selfHost = new ServiceHost(typeof(AlarmNotifier), httpAddress);
+            ServiceHost selfHost = new ServiceHost(ThisAlarm, httpAddress);
             BasicHttpBinding myBinding = new BasicHttpBinding();
-
+            
             //giant value to allow large transfers
             int LargeValue = (int)Math.Pow(2.0, 26);
             myBinding.ReaderQuotas.MaxArrayLength = LargeValue;
@@ -64,7 +67,7 @@ namespace Robot_Alarm
                 Console.WriteLine();
 
 
-                ThisAlarm = new AlarmNotifier();
+                
                 Console.WriteLine("Alarm Status: " + ThisAlarm.GetAlarmStatus().AlarmOn.ToString());
                 Thread test = new Thread(Test);
                 test.Start();
@@ -104,6 +107,7 @@ namespace Robot_Alarm
                         {
                             ReportToAllUsers("The robot software has not reported anything for a time longer than "
                                 + (p.maxdelay + EXTRATIME) + " minutes");
+                            if (AlarmNotifier.ShouldCall()) { ThisAlarm.CallAllUsers(); }
                             break;
                         }
                     }
@@ -132,7 +136,7 @@ namespace Robot_Alarm
         {
             Console.WriteLine(DateTime.Now.ToString() + " Reported to all users: " + message);
             EmailErrorMessageToAllUsers(message);
-            if (ShouldCall()) { CallAllUsers(); }
+            if (AlarmNotifier.ShouldCall()) { ThisAlarm.CallAllUsers(); }
         }
         static void EmailErrorMessageToAllUsers(string ErrorMessage = "The robot has an error, and has stopped working")
         {
@@ -154,26 +158,8 @@ namespace Robot_Alarm
                 }
             }
         }
-        static void CallAllUsers()
-        {
-            foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
-            {
-                foreach (string number in p.phones.Split(';'))
-                {
-                    // Todo use boolean return to implement multiple call attempts
-                    ThisAlarm.CallConnects(number);
-                }
-            }
-        }
-        static int CallHourStart = 23;
-        static int CallHourEnd = 8;
-        static bool ShouldCall()
-        {
-            DateTime now = System.DateTime.Now;
-            int nd = now.Day;
-            int nt = now.Hour;
-            return nt >= CallHourStart || nt <= CallHourEnd;
-        }
+
+ 
         #endregion
     }
 }
