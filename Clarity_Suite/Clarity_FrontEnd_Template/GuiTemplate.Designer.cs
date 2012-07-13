@@ -739,7 +739,7 @@
             this.wBrowGrowthRate.Location = new System.Drawing.Point(3, 3);
             this.wBrowGrowthRate.MinimumSize = new System.Drawing.Size(20, 20);
             this.wBrowGrowthRate.Name = "wBrowGrowthRate";
-            this.wBrowGrowthRate.Size = new System.Drawing.Size(364, 643);
+            this.wBrowGrowthRate.Size = new System.Drawing.Size(364, 645);
             this.wBrowGrowthRate.TabIndex = 0;
             // 
             // tabNSFExperiment

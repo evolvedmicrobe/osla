@@ -66,7 +66,7 @@ namespace Clarity
         public const string PASSWORD = "PASSWORD";
         //This region should not part be a part of the final release, can be ignored.
         #region ToRemove
-        private string pErrorEmails = "ndelaney@fas.harvard.edu;4158234767@vtext.com";
+        private string pErrorEmails = "ndelaney@fas.harvard.edu;3039210411@vtext.com";
         public string NSFErrorEmails
         {
             get { return pErrorEmails; }
@@ -108,7 +108,7 @@ namespace Clarity
                     }
                     Protocol Watcher = new Protocol();
                     Watcher.ProtocolName = "NSF-Error-" + txtNSFTransferNumber.Text.ToString();
-                    Watcher.ErrorPhoneNumber = "4158234767";
+                    Watcher.ErrorPhoneNumber = "3039210411";
                     Watcher.MaxIdleTimeBeforeAlarm = 50;
                     Watcher.ErrorEmailAddress = this.NSFErrorEmails;
                     DelayTime DT = new DelayTime();
@@ -195,7 +195,7 @@ namespace Clarity
             catch (Exception thrown)
             {
                 WF.StayAlive = false;
-                ShowError("Could not load settings for interface from XML.\nError is:" + thrown.Message);
+                ShowErrorSameThread("Could not load settings for interface from XML.\nError is:" + thrown.Message);
                 this.Close();
                 Application.Exit();
             }
@@ -303,7 +303,7 @@ namespace Clarity
             
         }
         /// <summary>
-        /// Displays an error message to the user
+        /// Displays an error message to the user on a separate thread
         /// </summary>
         /// <param name="ErrorMessage"></param>
         private void ShowError(string ErrorMessage)
@@ -320,6 +320,13 @@ namespace Clarity
             t.Start();
             //MessageBox.Show(ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+        private void ShowErrorSameThread(string ErrorMessage)
+        {
+            ErrorMessage = "\nNew Error at " + DateTime.Now.ToString() + " \n" + ErrorMessage;
+            AddErrorLogText(ErrorMessage);
+            MessageBox.Show(ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         public  delegate DialogResult ShowMessage(string s,string s2,MessageBoxButtons b ,MessageBoxIcon i);
         /// <summary>
         /// Do not call asynchronously, shows a dialog and adds the error to a textbox so
@@ -630,7 +637,7 @@ namespace Clarity
                 if (CheckPassword())
                 {
                     this.Cursor = Cursors.WaitCursor;
-                    txtResponse.Text = Incubator.PerformCommandUnsafe(txtCommand.Text, "donkey");
+                    txtResponse.Text = Incubator.PerformCommandUnsafe(txtCommand.Text, IncubatorServ.Password);
                 }
             }
             catch (Exception thrown)
@@ -764,7 +771,7 @@ namespace Clarity
                 NewButton.AutoSize = true;
                 NewButton.Text = "Release Resources: " + Instr.Name;
                 NewButton.Location = new Point(StartPoint.X, StartPoint.Y);
-                NewButton.Click += new EventHandler(RecoveryButton_Click);
+                NewButton.Click += new EventHandler(FreeResourceButton_Click);
                 tabRecovery.Controls.Add(NewButton);
                 this.Refresh();
                 StartPoint.Y += DefaultButtonSize.Height + 10;
