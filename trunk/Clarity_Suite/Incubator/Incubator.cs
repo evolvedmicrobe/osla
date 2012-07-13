@@ -54,7 +54,7 @@ namespace Clarity
 
 
        // public const int STARTING_SPEED = 650;
-        const string Password = "PASSWORD";
+        public const string Password = "PASSWORD";
         
        
         
