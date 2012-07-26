@@ -169,7 +169,8 @@ namespace Clarity
             
             TimeSpan ts = NextExecutionTime.Subtract(DateTime.Now);
             //Perhaps I should throw an error here instead
-            if (ts.TotalMilliseconds <= 0)
+            //Using 2 because 0 still through an error, yowza
+            if (ts.TotalMilliseconds <= 2)
             {
                 StartProtocolExecution();
                 //throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
@@ -181,6 +182,7 @@ namespace Clarity
                 {
                     pClarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
                 }
+                
                 NextInstructionTimer.Interval = (int)ts.TotalMilliseconds;
                 NextInstructionTimer.Start();
                 ProtocolEvents.FirePauseEvent(this, ts);
