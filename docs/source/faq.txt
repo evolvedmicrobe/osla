@@ -1,0 +1,7 @@
+FAQ
+====
+
+Ask us anything at the clarity-dev_ google group.
+
+.. _clarity-dev: https://groups.google.com/group/clarity-dev
+

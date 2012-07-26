@@ -1,25 +1,227 @@
 An Overview Clarity
 ===================
 
+.. highlight:: c#
 
+.. figure:: figures/components.svg
+	:width: 600px
+	
+	A diagram of Clarity’s important components and their organization. The
+	arrow from the Alarm Server to the Protocol Scheduler indicates that the
+	Alarm Server depends on the Protocol Scheduler. Solid errors indicate
+	direct communication; dashed arrows indicate connections over internet
+	protocols.
 
 Instrument Management
 +++++++++++++++++++++
 
+Clarity runs protocols by performing operations using different instruments. Any
+available automation hardware can be made available to Clarity's framework by
+writing a simple interface for it. Once compiled into a .dll file and placed
+into the folder containing the runtime engine, these interfaces are
+automatically found and made accessible to all the other Clarity tools through
+reflection.
 
+Interfaces are simple to write. Clarity defines an abstract class, the
+``BaseDeviceInterface`` that all interface classes derives from. This abstract
+class contains generic methods to initialize a resource and recover or reboot it
+in case of a hardware failure. These interfaces should define methods that
+Clarity can call on (such as a ``MovePlate`` method for a liquid handler).
+Developers can make the methods in an interface available to users who create
+protocols using the Clarity GUI tool to create XML protocols simply by
+specifying the ``UserCallableMethod`` attribute above the method, as shown in the
+example below::
+
+  [UserCallableMethod()]
+  public void MovePlateFromPlateReaderToIncubator()
+  { ... }
+ 
+After this, Clarity takes care of the rest of the work to integrate
+this method into the GUI tools! To get more help started writing your
+own interface, simply open the template interface project available in
+the repository and follow the tutorial in the
+documentation. Currently, interfaces exist for a Perkin-Elmer Victor
+plate reader, a Caliper Life Sciences Twister robotic arm, and a
+Liconic shaking incubator.
+
+Although instrument interfaces are typically written to control
+specific hardware resources, one can also create "virtual instruments"
+to expose complex operations or analysis methods to users. For
+example, after a plate reader takes one reading, a method in a virtual
+instrument might analyze that data, and alter the protocol based on
+what it finds, to say schedule another reading at some future point,
+or it might add the results to a database. Clarity defines a subclass
+of the ``BaseDeviceInterface`` called the ``VirtualDevice`` class that
+developers can derive from to create such virtual instruments that
+execute specific instructions. Additionally, any instruments interface
+can programmatically access another instrument's interface simply by
+declaring a reference to that interface's class as a public field in
+their own class file. A reference to the other instrument is then
+created when it is loaded by the engine.
+
+Instrument interfaces are compiled into .dll files, but changing
+interface settings for a locally specific environment does not require
+recompiling. When loading, the Clarity software uses an XML file,
+``ConfigurationFile.xml`` to set any local settings and any field in
+an interface class can be set based on this file. For example, the
+Incubator instrument class has a ``COMPORT`` string field that is
+dynamically set using the following XML and C# combination::
+
+  //An instrument interface class
+  public class IncubatorServ : BaseInstrumentClass {
+      private string pComPort = "COM5";
+      ///A Field we can set at startup using the XML
+      public string COM_PORT
+      {
+          get { return pComPort; }
+	  set { pComPort = value; }
+      }
+
+Now to set this field for the local environment at startup simply add
+the following to the ``ConfigurationFile.xml``:
+
+.. code-block:: xml
+
+  <Instruments> <Incubator> 
+  <COM_PORT Type="System.String">COM3</COM_PORT> </Incubator> <Instruments> 
+
+Clarity will then automatically set the fields with no further coding
+required by the user.
 
 Protocol execution
 ++++++++++++++++++
 
+The engine of Clarity is responsible for loading all the instrument interfaces available. The engine then runs protocols using these interfaces. The engine is currently implemented as the InstrumentManagerClass. However, this class is just an implementation of the InstrumentManager interface. The other tools in the suite interact with the engine only through this interface, and so its internal implementation can be readily changed (e.g. so that it is implemented on a remote machine) without breaking the rest of the code.
 
+Protocols
+*********
+
+A protocol is simply a list of instructions. There are two types of instructions. The first type are commands that specify a method to call, which instrument interface to call the method with, and any parameters that the method requires. The second type are instructions for the engine itself, these might indicate normal programming concepts like for loops asking that the instructions should be repeated, or a delay time indicating that the process should be put on hold for a period of time before the next event occurs.
+
+Such files are easily created with the GUI available in Clarity, and an example file is shown below. This simple protocol defines some instructions to move a plate from an incubator to a plate reader, take a reading, return the plate, and repeat this process every 50 minutes. Protocols can contain static or dynamic parameters for their methods, and can be extended to handle any desired execution scheme or logic. In practice, they are generated by the included GUI, or if a lab frequently performs the same operation, they can write code to generate them directly:
+
+.. code-block:: xml
+
+	<!-- A protocol node defines one protocol -->
+	<Protocol>
+	  <!-- Settings for the protocol, the name to display for the protocol and who to email when something goes wrong -->
+	  <ProtocolName>Example Protocol</ProtocolName>
+	  <ErrorEmailAddress>me@letmeknow.com</ErrorEmailAddress>
+	  <Variables />
+	<!-- The instructions node contains the list of commands to execute -->
+	  <Instructions>
+	   <!-- Each instruction defines an instrument, a method on that instrument, and any parameters to use when calling the method -->
+	   <Instruction InstType="Clarity.StaticProtocolItem">
+	      <InstrumentName Type="System.String">Macros</InstrumentName>
+	      <MethodName Type="System.String">MovePlateFromIncubatorToVictor</MethodName>
+	      <Parameters>
+		<Parameter Type="System.Int32">13</Parameter>
+	      </Parameters>
+	    </Instruction>
+	    <Instruction InstType="Clarity.StaticProtocolItem">
+	      <InstrumentName Type="System.String">PlateReader</InstrumentName>
+	      <MethodName Type="System.String">ReadPlate2</MethodName>
+	      <Parameters>
+		<Parameter Type="System.String">MyPlate</Parameter>
+		<Parameter Type="System.Int32">192</Parameter>
+	      </Parameters>
+	    </Instruction>
+	    <Instruction InstType="Clarity.StaticProtocolItem">
+	      <InstrumentName Type="System.String">Macros</InstrumentName>
+	      <MethodName Type="System.String">MovePlateFromVictorToIncubatorWithLidOnTransferStation</MethodName>
+	      <Parameters>
+		<Parameter Type="System.Int32">13</Parameter>
+	      </Parameters>
+	    </Instruction>
+	    <!-- These are instructions for the engine itself, telling it to pause and then repeat -->
+	    <Instruction InstType="Clarity.DelayTime">
+	      <minutes Type="System.Int32">50</minutes>
+	    </Instruction>
+	    <Instruction InstType="Clarity.LoopInstruction">
+	      <StartInstruction Type="System.Int32">1</StartInstruction>
+	      <TimesToRepeat Type="System.Int32">20</TimesToRepeat>
+	    </Instruction>
+	  </Instructions>
+	</Protocol>
+
+Multiple Protocols and Context Switching
+****************************************
+
+The Clarity engine is designed to run multiple protocols at once, allowing many
+users to take advantage of automation resources. However, with multiple
+protocols running simultaneously, scheduling when they run can be difficult.
+
+Clarity’s solution to this is to by default implement a very simple scheduling
+mechanism, while allowing for any arbitrarily complex scheme. By default, a
+protocol in Clarity will execute until it indicates to the engine that it no
+longer immediately needs the shared resources. For example, if it must wait for
+cells to grow or a process to finish before continuing. The protocol will then
+indicate to the engine that it either has completed all its instructions, or
+will indicate at what time it needs to be revisited to resume execution. When
+this occurs, the engine will look through the other loaded protocols to
+determine if any of them are ready to execute, if so, it will begin executing
+the protocol immediately. If not, it will determine which protocol will run
+next, and set a timer to resume running that protocol at the specified time.
+
+Clarity, being open source, can readily implement more complex scheduling
+schemes. One method to do so is simply to rewrite the engine to schedule things
+differently. Alternatively, Clarity allows instruments and virtual instruments
+direct access to the engine and all the loaded protocols. A user can simply
+write a virtual instrument which examines the entire system state, and adjust
+the protocols and their execution order accordingly. Any instrument with the
+UserCallableMethod attribute can specify in this attribute that it wants access
+to the engine and/or its calling protocol as shown below::
+
+ 
+
+	[UserCallableMethod(RequiresCurrentProtocol = true, RequiresInstrumentManager = true)]
+	public bool ModifyGrowthProtocol(string ExpName, int Slot, AdditionalMethodArguments eargs)
+	{…}
+
+Then when the method is called, the engine automatically adds references to the
+requested engine and/or protocol objects in the eargs argument. This allows one
+to easily and in a modular fashion customize clarity simply by writing one
+instrument interface (likely a virtual instrument). To see an example of this
+approach to dynamic scheduling, one can look at the full code for the method
+shown above in the ``NSFExperiment.cs`` file in the source code.
+
+Dynamic variables and Error Recovery
+************************************
+
+
+After every instruction in a protocol completes, the entire state of the engine
+is saved to disk, and can be reloaded immediately in the event of a power
+failure, etc. The engine also has support for dynamic variables in the
+protocols.
 
 Graphical interface
 +++++++++++++++++++
 
-
+Clarity contains front end GUIs that allow users to create XML files to specify
+protocols that contain instructions from any of the available instruments or
+resources. It also has a GUI to act as an interface to the runtime engine which
+displays the currently running protocols, allows users to change or alter their
+execution order, and recover any instruments that have failed. Rather than go
+through all the GUIs here, one can check out the well commented code for the
+GUIs in the ``Clarity_FrontEnd_Template`` project in the source code. This is a
+great walk through of how the system works and this GUI is designed to be a
+template that can either be easily extended and customized, or used right away
+to start controlling automation.
 
 Alarm server and monitors
 +++++++++++++++++++++++++
 
-
+An unfortunate aspect of laboratory automation is that there are a lot of moving
+parts which occasionally don’t work, and the faster the user knows about this
+the better it usually is. Whenever an error occurs, the engine sends out
+messages to anyone running a protocol. However, this ‘opt-in’ strategy can mean
+in the event of a catastrophic error (such as a power outage), the user will not
+know that the program has stopped running. To circumvent this, Clarity is
+designed to report to a separate monitoring computer with its status at regular
+intervals, in the event that it stops reporting, this second computer will then
+send out alerts by text, email or calling with Skype. Additionally, client
+monitoring programs are part of the suite which allows remote users to receive
+status updates from Clarity at all times, and which can sound alarms at the
+first hint of trouble. This allows Clarity users to very quickly recover from
+instrument faults.
 

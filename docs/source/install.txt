@@ -1,22 +1,15 @@
-FAQ
-====
-
-Ask us anything at the clarity-dev_ google group.
-
-.. _clarity-dev: https://groups.google.com/group/clarity-dev
-
 Installing Clarity
 ==================
 
 
 
 From an executable
-~~~~~~~~~~~~~~~~~~
+++++++++++++++++++
 
 - Download the `latest stable build`_
 
 From the sources
-~~~~~~~~~~~~~~~~
+++++++++++++++++
 
 - Checkout the sources_ ::
 
@@ -25,17 +18,12 @@ From the sources
 .. _sources: https://code.google.com/p/osla/source/checkout
 
 Building with VisualStudio
---------------------------
+**************************
 
 
 
 Building with Mono
-------------------
+******************
 
 .. _latest stable build: https://code.google.com/p/osla/downloads/list
-
-Using Clarity
-=============
-
-
 
