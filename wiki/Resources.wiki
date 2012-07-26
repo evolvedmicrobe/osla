@@ -1,9 +1,0 @@
-#summary Links to Clarity resources
-
-* [http://code.google.com/p/osla Source Code]
-* [http://www.people.fas.harvard.edu/~rojasechenique/claritydocs/ Documentation]
-* [https://groups.google.com/forum/?fromgroups#!forum/clarity-dev Mail List]
-
-= Acknowledgements  =
-
-Clarity's authors are [http://www.evolvedmicrobe.com Nigel Delaney] and [http://www.jireva.org José Rojas Echenique]
