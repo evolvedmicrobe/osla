@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.ServiceModel;
 using System.Threading;
 using System.ServiceModel.Description;
+using System.IO;
 
 namespace Robot_Alarm
 {
@@ -32,7 +33,13 @@ namespace Robot_Alarm
             // To get this to work you need to:
             //     netsh http add urlacl url=`URL` user=`DOMAIN\user`
             //Uri httpAddress = new Uri("http://localhost:8001/AlarmNotifier");
-            Uri httpAddress = new Uri("http://140.247.90.36:8001/AlarmNotifier");
+            StreamReader SR = new StreamReader(System.Environment.CurrentDirectory + "\\" + "HostAddress.clarity");
+            SR.ReadLine();
+            string strhttpAddress = SR.ReadLine().Trim();
+            SR.Close();
+            //Uri httpAddress = new Uri("http://140.247.90.36:8001/AlarmNotifier");
+            Uri httpAddress = new Uri(strhttpAddress);
+            
             ThisAlarm = new AlarmNotifier();
             //Going to pass an instance instead of a type
             //ServiceHost selfHost = new ServiceHost(typeof(AlarmNotifier), httpAddress);
