@@ -1,11 +1,6 @@
 Creating a Custom Device
 ========================
 
-
-
-Introduction
-++++++++++++
-
 .. highlight:: c#
 
 We create a virtual device with a single user callable activity, ``HelloWorld``,
@@ -17,35 +12,94 @@ language could be used (https://en.wikipedia.org/wiki/List_of_CLI_languages).
 Preliminaries
 +++++++++++++
 
-All devices interfaces have to be members of ``BaseDeviceInterface``::
+::
 
   using System;
+  using System.Net;
+  using System.Net.Mail;
+
+``BaseVirtualDeviceInterface``
+++++++++++++++++++++++++++++++
+
+All virtual devices interfaces have to be members of ``BaseVirtualDeviceInterface``::
+
   namespace Clarity {  
-    public class HelloDevice : BaseDeviceInterface
+    public class HelloDevice : BaseVirtualDeviceInterface
     {
 
 SMTP Client
 +++++++++++
 
-We need a function to
+Our instrument will need to connect to an SMTP_ server to send email, here we'll
+use gmail::
+
+      var smtp = new SmtpClient
+      {
+        Host = "smtp.gmail.com",
+	Port = 587,
+	EnableSsl = true,
+	DeliveryMethod = SmtpDeliveryMethod.Network,
+	UseDefaultCredentials = false,
+	Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+      };
+
+.. _SMTP: https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol
+
+Mail Details
+++++++++++++
 
 ::
 
-        private SmtpClient createSmtpClient()
-        {
-            SmtpClient client = new SmtpClient("smtp.gmail.com");
-            //client.UseDefaultCredentials = false;
-            client.Port = 587;
-            client.EnableSsl = true;
-            client.Credentials = new NetworkCredential("clarity.lab.automation@gmail.com", "icontrolrobots");
-            return client;
-        }
+     var fromAddress = new MailAddress("from@gmail.com", "From Name");
+     var toAddress = new MailAddress("to@example.com", "To Name");
+     const string fromPassword = "fromPassword";
+     const string subject = "Saying Hello	";
+     const string body = "Hello World!";
 
-Closing Brackets
-++++++++++++++++
+Sending a Message
++++++++++++++++++
 
-::
+Now we create a method to define the activity of sending the email.
+
+It needs to be tagged with the ``UserCallableMethod`` attribute, so that
+protocols can use it::
+
+      [UserCallableMethod()]
+      public void HelloWorld()
+      using
+      (
+        var message = new MailMessage(fromAddress, toAddress)
+          {
+	    Subject = subject,
+	    Body = body
+	  }
+      )
+      {
+        smtp.Send(message);
+      }
+
+Finally, we close some brackets::
 
     }
   }
+
+Conclusion
+++++++++++
+
+To finish we just compile the class:
+
+.. code-block:: bat
+
+	csc /target:library HelloDevice.cs
+
+or
+
+.. code-block:: sh
+
+	mcs -target:library HelloDevice.cs
+	
+And place the resulting executable, ``HelloDevice.dll``, into the directory
+containing Clarity's instrument manager.
+
+The activity ``HelloWorld`` can then be included in protocols.
 

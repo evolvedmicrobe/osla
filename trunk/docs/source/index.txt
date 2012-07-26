@@ -8,7 +8,7 @@ Clarity's Documentation
 
 Clarity is...
 
-- a software manager for lab automating robots.
+- a robot manager for laboratory automation.
 - free and open source.
 - actively developed.
 
@@ -22,7 +22,10 @@ For users:
 .. toctree::
     :maxdepth: 2
     
-    getting_started
+    faq
+    install
+    intro
+    usage
     
 For developers:
 
@@ -31,7 +34,9 @@ For developers:
     :maxdepth: 2
     
     overview
+    config
     device_tutorial.cs
+    gui_tutorial
 
 
 Reference:

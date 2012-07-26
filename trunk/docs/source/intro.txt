@@ -1,37 +1,34 @@
-An Introduction To Clarity
-==========================
+Introduction
+============
 
+Clarity is a suite of software designed to run automation equipment (robots) in
+scientific labs. With Clarity one or many users can simultaneously run protocols
+using any instrumentation setup, given a set of instruments or resources
+available for lab automation (such as plate readers, or liquid handlers).
+Clarity automates processes with these machines by running protocols, or list of
+instructions, specified by users. Such instructions might be a list of commands
+for each instrument (such as using a robot arm to move a plate to an instrument,
+and then taking a measurement of that plate with another robot). Clarity uses
+XML to specify these protocols (and includes a GUI to create them).
 
+In contrast to closed source automation programs, Clarity is exceptionally
+flexible and stable. Protocol instructions can be dynamically altered using
+complex flow control, allowing for data generated in real time to determine what
+procedures happen next. Similarly, multiple users can run protocols
+simultaneously, adding them to and from the common pool of protocols. The
+program is designed to rapidly recover from and alert the user of virtually any
+error, and it isolates instruments so that recovering one does not require a
+complete restart of the entire system.
 
-Instrument Management
-+++++++++++++++++++++
-
-
-The most basic job of automation software is to handle the particular details of each robot or device. Clarity’s interface to hardware devices is a collection of dynamically loaded libraries called instruments. Each device is associated with an instrument that exposes meaningful activities which the device can perform during the course of an experiment. An instrument’s defined activities depend on its associated device. A robotic arm instrument, for example, might have a function to move a plate from an incubator to a spectrometer.
-
-Another class of instruments does not correspond to physical devices at all. Some of these virtual instruments write log or data files.  Others, organize several instruments to expose activities that involve the coordination of multiple devices. Some virtual instruments can monitor data output and make decisions about the course of an experiment.
-
-Protocol execution
-++++++++++++++++++
-
-
-Protocols are algorithms that describe the activities that make up the course of an experiment (5). A simple protocol will consist of a list of activities and times during which they should be performed.  More complex protocols include loops and conditional statements.  Clarity is equipped with a graphical protocol editor which generates an interactive list of available activities which the user can arrange to specify a new protocol. Alternatively, protocols can be written from scratch using a simple protocol description language based on XML, the eXtensible Markup Language (Bray, 2008).
-
-A scheduler keeps track of running protocols and tells each instrument to perform the right activity at the right time. When an activity finishes it activates the scheduler. The scheduler inspects the running protocols, identifies the next activity that needs to be run, and depending on the time, it either runs that activity or waits until the proper time. This algorithm is not ideal for procedures that are extremely time sensitive, but it is easy to run dynamically, meaning that new protocols can be added at any time without stopping the execution of running protocols.
-
-Clarity is designed to handle hardware software errors gracefully, and to report problems as soon as possible so that they can be fixed with minimum loss of data. An important component of this design is the ability to save and reload the program’s state: the list of running protocols and the list of activities which have already been performed. As it runs, Clarity keeps a backup of its current state. In the event of an error, a user can fix the problem and reload the backup to continue running as before.
-
-Graphical interface
-+++++++++++++++++++
-
-Clarity’s interface is simple and customizable. The main menu lets users load protocols, load and save program states, and manage the remote alarm server. The interface is organized into tabs, making it easy for users to add lab specific features.  The main tab displays running protocols, instrument statuses, a log of errors, and controls to start and stop protocol execution.  There are several instrument specific or lab specific tabs, as well as an error recovery tab.
-
-Clarity’s graphical interface is designed to scale with new instruments. For example, the graphical protocol editor is designed to automatically include activities from new or custom instruments.  When it starts, it inspects all available instruments and generates its list of activities dynamically. The error recovery tab is also generated at run-time. Each non-virtual instrument defines a method to recover its associated device.  The error recovery tab collects these methods and lets users activate them when errors occur.
-
-Alarm server and monitors
-+++++++++++++++++++++++++
-
-Remote monitoring and error reporting are handled by a remote alarm server. The alarm server runs on a separate computer and connects to Clarity over the internet. This ensures that that users get error reports even if the computer running Clarity crashes. The alarm server can send emails or call users: addresses and phone numbers can be specified during protocol creation.
-
-It is also possible to install a monitoring program on a home computer.  The monitor connects to the alarm server over the internet and reports on the currently running protocols and activities. If an the alarm server detects an error, the monitor will ring an alarm. Finally, the monitor can be configured to display video from cameras.
+Clarity is written completely in C# and is compatible with the Mono .NET
+framework implementation so can run on any operating system. It is composed of
+essentially four parts. The first is a set of classes that provide an interface
+between the Clarity software and hardware resources. The second is a runtime
+engine that manages these resources and runs protocols using them. The third
+part is a set of graphical user interfaces that allow users to observe the
+runtime engine, add or alter protocols, create new XML protocols using a GUI and
+interface directly with the instruments. Finally, the fourth is a set of tools
+involved in error reporting. This includes a client application that allows
+users to watch video feeds and a remote monitor that uses Skype to call users in
+the event of a failure.
 
