@@ -48,8 +48,7 @@ namespace Robot_Alarm
         {
             pictureBox1.Image = Image1;
             lblTime1.Text = updateTime1;
-            pictureBox2.Image = Image2;
-            lblTime2.Text = updateTime2;
+
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -284,26 +283,7 @@ namespace Robot_Alarm
             }
         }
 
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            lstProtocols.Items.Clear();
-            foreach (string str in InstrumentMonitor.GetCurrentlyLoadedProtocolNames())
-            {
-                lstProtocols.Items.Add(str);
-            }
-        }
 
-        private void btnValidateProtocols_Click(object sender, EventArgs e)
-        {
-            if (lstProtocols.SelectedIndex > -1)
-            {
-                foreach (object o in lstProtocols.SelectedItems)
-                {
-                    string os = (string)o;
-                    InstrumentMonitor.ValidateProtocol(os);
-                }
-            }
-        }
 
        
 
