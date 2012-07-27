@@ -18,7 +18,7 @@
     <!-- This will be where we output a file with the current state, allows for recovery after the program reloads-->
     <AppDataDirectory Type="System.String">C:\Clarity\Clarity_Release_Version\ProtocolRecovery\\</AppDataDirectory>
     <!-- Use an alarm server?  Set this to false if not installed-->
-    <UseAlarm Type="System.Boolean">False</UseAlarm>
+    <UseAlarm Type="System.Boolean">True</UseAlarm>
   </EngineSettings>
   <!-- This node specifies local settings for each instrument -->
   <Instruments>

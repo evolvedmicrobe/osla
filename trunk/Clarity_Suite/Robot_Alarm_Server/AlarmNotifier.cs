@@ -70,7 +70,14 @@ namespace Robot_Alarm
         public void TurnOnAlarm()
         {
             CurrentAlarmState = new AlarmState(true);
-            if (ShouldCall()) {CallAllUsers(); }
+            try
+            {
+                if (ShouldCall()) { CallAllUsers(); }
+            }
+            catch (Exception thrown)
+            {
+                Console.WriteLine("Problem Calling Users: "+thrown.Message);
+            }
             Console.WriteLine(DateTime.Now.ToString() + " Alarm Turned On");
         }
         public void TurnOffAlarm()
@@ -163,6 +170,7 @@ namespace Robot_Alarm
         static int CallHourEnd = 8;
         public static bool ShouldCall()
         {
+            
             DateTime now = System.DateTime.Now;
             int nd = now.Day;
             int nt = now.Hour;
@@ -209,10 +217,17 @@ namespace Robot_Alarm
         {
             foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
             {
-                foreach (string number in p.phones.Split(';'))
+                try
                 {
-                    // Todo use boolean return to implement multiple call attempts
-                    CallConnects(number);
+                    foreach (string number in p.phones.Split(';'))
+                    {
+                        // Todo use boolean return to implement multiple call attempts
+                        CallConnects(number);
+                    }
+                }
+                catch (Exception thrown)
+                {
+                    Console.WriteLine("Skype Problem: " + thrown.Message);
                 }
             }
         }
