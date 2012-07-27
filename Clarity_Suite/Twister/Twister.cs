@@ -334,10 +334,13 @@ namespace Clarity
         {
             try
             {
-                MoveToPosition(RestSafe);
-                MoveToPosition(RestLocation);
-                bool disabled = false;
-                RobotServ.Vertical.set_MotorEnabled(ref disabled);
+                if (StatusOK)
+                {
+                    MoveToPosition(RestSafe);
+                    MoveToPosition(RestLocation);
+                    bool disabled = false;
+                    RobotServ.Vertical.set_MotorEnabled(ref disabled);
+                }
             }
             catch (Exception thrown)
             {

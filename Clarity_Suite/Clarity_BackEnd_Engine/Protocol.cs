@@ -646,7 +646,7 @@ namespace Clarity
             XmlNode ProtocolXML = XmlDoc.SelectSingleNode("/Protocol");
             XmlNode name=ProtocolXML.SelectSingleNode("/ProtocolName");
             NewProtocol.ProtocolName = ProtocolXML.SelectSingleNode("ProtocolName").InnerText;
-            
+            NewProtocol.ErrorPhoneNumber = ProtocolXML.SelectSingleNode("ErrorPhoneNumber").InnerText;
             NewProtocol.ErrorEmailAddress = ProtocolXML.SelectSingleNode("ErrorEmailAddress").InnerText;
             Assembly assembly = Assembly.GetExecutingAssembly();
 

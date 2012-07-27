@@ -24,7 +24,7 @@ namespace Robot_Alarm
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static int EXTRATIME = 20; //In Minutes
+        static int EXTRATIME = 5; //In Minutes
         public static AlarmNotifier ThisAlarm;
         [STAThread]
         static void Main()
@@ -104,16 +104,19 @@ namespace Robot_Alarm
             int CHECK_INTERVAL = 60000; // 1 minutes
             while (true)
             {
-                foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
+                if (AlarmNotifier.CurrentlyLoadedProtocolData.Count > 0)
                 {
+                    int MinimumDelay = (from p in AlarmNotifier.CurrentlyLoadedProtocolData select p.maxdelay).Min();
+                    //foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
+                    //{
                     try
                     {
-                        TimeSpan maxdelay = new TimeSpan(0, p.maxdelay + EXTRATIME, 0);
+                        TimeSpan maxdelay = new TimeSpan(0, MinimumDelay + EXTRATIME, 0);
                         DateTime lastcheck = ThisAlarm.GetInstrumentStatus().TimeCreated;
                         if (maxdelay.CompareTo(DateTime.Now.Subtract(lastcheck)) < 0)
                         {
                             ReportToAllUsers("The robot software has not reported anything for a time longer than "
-                                + (p.maxdelay + EXTRATIME) + " minutes");
+                                + (MinimumDelay + EXTRATIME) + " minutes");
                             if (AlarmNotifier.ShouldCall()) { ThisAlarm.CallAllUsers(); }
                             break;
                         }
@@ -122,6 +125,7 @@ namespace Robot_Alarm
                     {
                         Console.WriteLine(thrown.Message);
                     }
+                    //}
                 }
                 Thread.Sleep(CHECK_INTERVAL);
             }
