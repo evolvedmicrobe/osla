@@ -636,31 +636,37 @@ namespace Clarity
         public static Protocol XMLFileToProtocol(string Filename)
         {
             //Starting to approach the point where I need to break this up....
-
+            //7-27-2012 now trying to select nodes.
             Protocol NewProtocol = new Protocol();
             XmlDocument XmlDoc = new XmlDocument();
             XmlTextReader XReader = new XmlTextReader(Filename);//http://dn.codegear.com/article/32384
             XmlDoc.Load(XReader);
             //first node is xml, second is the protocol, this is assumed and should be the case
-            XmlNode ProtocolXML = XmlDoc.ChildNodes[1];
-            NewProtocol.ProtocolName = ProtocolXML.ChildNodes[0].InnerText;
-            NewProtocol.ErrorEmailAddress = ProtocolXML.ChildNodes[1].InnerText;
+            //XmlNode ProtocolXML = XmlDoc.ChildNodes[1];
+            XmlNode ProtocolXML = XmlDoc.SelectSingleNode("/Protocol");
+            XmlNode name=ProtocolXML.SelectSingleNode("/ProtocolName");
+            NewProtocol.ProtocolName = ProtocolXML.SelectSingleNode("ProtocolName").InnerText;
+            
+            NewProtocol.ErrorEmailAddress = ProtocolXML.SelectSingleNode("ErrorEmailAddress").InnerText;
             Assembly assembly = Assembly.GetExecutingAssembly();
 
-            XmlNode VariablesNode = ProtocolXML.ChildNodes[2];
-            foreach (XmlNode variable in VariablesNode.ChildNodes)
+            XmlNode VariablesNode = ProtocolXML.SelectSingleNode("Variables");
+            if (VariablesNode != null)
             {
-                string Name = variable.ChildNodes[0].InnerText;
-                string variableTypeString = variable.ChildNodes[1].Attributes[0].Value;
-                Type VariableType = System.Type.GetType(variableTypeString);
-                object valueAsString = variable.ChildNodes[1].InnerText;
-                var Value = Convert.ChangeType(valueAsString, VariableType);
-                ProtocolVariable PV = new ProtocolVariable(Name, VariableType, Value);
-                NewProtocol.Variables.Add(PV.ToString(), PV);
+                foreach (XmlNode variable in VariablesNode.ChildNodes)
+                {
+                    string Name = variable.ChildNodes[0].InnerText;
+                    string variableTypeString = variable.ChildNodes[1].Attributes[0].Value;
+                    Type VariableType = System.Type.GetType(variableTypeString);
+                    object valueAsString = variable.ChildNodes[1].InnerText;
+                    var Value = Convert.ChangeType(valueAsString, VariableType);
+                    ProtocolVariable PV = new ProtocolVariable(Name, VariableType, Value);
+                    NewProtocol.Variables.Add(PV.ToString(), PV);
 
+                }
             }
 
-            XmlNode instructionsNode = ProtocolXML.ChildNodes[3];
+            XmlNode instructionsNode = ProtocolXML.SelectSingleNode("Instructions");
             foreach (XmlNode instruct in instructionsNode.ChildNodes)
             {
                 string DataType = instruct.Attributes[0].Value;
@@ -704,6 +710,8 @@ namespace Clarity
             XReader.Close();
             return NewProtocol;
         }
+        //TODO: Convert so that htis uses XML serialization instead
+        //http://support.microsoft.com/kb/815813
         public static void ProtocolToXMLFile(Protocol curProtocol, string Filename)
         {
 
@@ -720,6 +728,12 @@ namespace Clarity
             XWriter.WriteStartElement("ErrorEmailAddress");
             XWriter.WriteValue(curProtocol.ErrorEmailAddress);
             XWriter.WriteEndElement();
+            //now the phone number
+            XWriter.WriteStartElement("ErrorPhoneNumber");
+            XWriter.WriteValue(curProtocol.ErrorPhoneNumber);
+            XWriter.WriteEndElement();
+
+
 
             //Here we have code to loop through and drop the variables in
             XWriter.WriteStartElement("Variables");

@@ -274,7 +274,7 @@
             this.label2.Size = new System.Drawing.Size(254, 54);
             this.label2.TabIndex = 10;
             this.label2.Text = "List of Machines and Possible Tasks \r\nSelect one to customize it so you \r\ncan add" +
-                " it to your protocol";
+    " it to your protocol";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel2
@@ -356,7 +356,7 @@
             this.label1.Size = new System.Drawing.Size(754, 48);
             this.label1.TabIndex = 12;
             this.label1.Text = "To Create A Protocol, Add Methods And Fill Out The Required Information Here\r\nThe" +
-                "n Save it to a File And Load That File In Clarity";
+    "n Save it to a File And Load That File In Clarity";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // panel3
@@ -458,7 +458,7 @@
             this.label11.Size = new System.Drawing.Size(288, 45);
             this.label11.TabIndex = 5;
             this.label11.Text = "Email Address of User(s):\r\n(to have error messages sent to multiple addresses \r\ni" +
-                "nsert a semicolon between them)";
+    "nsert a semicolon between them)";
             // 
             // txtProtocolName
             // 
