@@ -173,6 +173,7 @@
             this.btnSilenceAlarm.TabIndex = 34;
             this.btnSilenceAlarm.Text = "Silence Most Recent Alarm";
             this.btnSilenceAlarm.UseVisualStyleBackColor = true;
+            this.btnSilenceAlarm.Click += new System.EventHandler(this.btnSilenceAlarm_Click);
             // 
             // Form1
             // 
