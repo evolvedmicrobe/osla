@@ -1,12 +1,14 @@
-Creating a Custom Device
-========================
+.. _instrument-tutorial:
+
+Creating a Custom Instrument
+============================
 
 .. highlight:: c#
 
-We create a virtual device with a single user callable activity, ``HelloWorld``,
+We create a virtual instrument with a single user callable activity, ``HelloWorld``,
 that sends an email to a prespecified address.
 
-This device is written in ``C#``, but any Common Language Infrastructure
+This instrument is written in ``C#``, but any Common Language Infrastructure
 language could be used (https://en.wikipedia.org/wiki/List_of_CLI_languages).
 
 Preliminaries
@@ -19,12 +21,12 @@ Preliminaries
   using System.Net.Mail;
 
 ``BaseInstrumentClass``
-++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++
 
-All virtual devices interfaces have to be members of ``BaseInstrumentClass``::
+All virtual instrument interfaces have to be members of ``BaseInstrumentClass``::
 
   namespace Clarity {  
-    public class HelloDevice : BaseInstrumentClass
+    public class HelloInstrument : BaseInstrumentClass
     {
 
 SMTP Client
@@ -90,15 +92,15 @@ To finish we just compile the class:
 
 .. code-block:: bat
 
-	csc /target:library HelloDevice.cs
+	csc /target:library HelloInstrument.cs
 
 or
 
 .. code-block:: sh
 
-	mcs -target:library HelloDevice.cs
+	mcs -target:library HelloInstrument.cs
 	
-And place the resulting executable, ``HelloDevice.dll``, into the directory
+And place the resulting executable, ``HelloInstrument.dll``, into the directory
 containing Clarity's instrument manager.
 
 The activity ``HelloWorld`` can then be included in protocols.

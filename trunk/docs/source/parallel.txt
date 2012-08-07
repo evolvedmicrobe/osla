@@ -1,0 +1,105 @@
+===============================
+ Parallel Execution in Clarity
+===============================
+
+The default Clarity task scheduler runs programs in parallel by
+switching between which protocol is running serially at any time.
+Protocols are a list of instructions for instruments, which
+occasionally contain a pause instruction (technically an instance of
+the ‘’DelayTime’’ class which is derived from the
+‘’ProtocolInstruction’’ class).  When such an instruction is reached
+in a protocol (or when the protocol finishes), Clarity assumes all the
+instruments are in a ready state, and begins executing the next
+protocol in the queue.  Conceptually, this makes the use of automation
+equipment by different protocols in Clarity similar to a first in
+first out queue that runs serially.  A user can load a protocol, and
+it will run with exclusive control of the instruments as soon as it is
+next in the queue and ready to be scheduled.
+
+Although conceptually very simple and robust, by requiring that only
+one protocol be executing at a time this scheduler may be inefficient.
+For example, while one instrument is running one task, it might be
+useful to concurrently use another instrument to perform a task for a
+different protocol.
+
+However, it is possible to extend Clarity to provide for true parallel
+execution of protocols, though this is not generally implemented.
+Clarity’s design assumes that the parallel execution problem for any
+specific usage scenario will be easier to solve by writing code for an
+idiosyncratic implementation than specifying that problem for a
+general framework will be. Clarity provides the tools for a user to
+relatively easily code a more truly concurrent scheduler and we go
+over two approaches to implementing truly parallel schedulers here.
+
+Both techniques depend heavily on the ability of virtual instruments
+to be able to not only modify the instructions of the protocol that
+called them, but also the entire instrument state.  Instructions that
+do this need only to include the following attributes above the line
+with the method.
+
+.. code-block:: csharp
+	[UserCallableMethod(RequiresCurrentProtocol = true, RequiresInstrumentManager = true)]
+
+With this ability, it is reasonably easy to implement truly parallel
+schedulers, and we discuss one design patter, the “Parallelism by
+Dictator” approach that can allow one to do this.  However, we
+emphasize that it will be the responsibility of anyone implementing
+such custom scheduling operations to ensure that the problems that can
+arise in parallel computing, such as deadlocks and race conditions, do
+not occur.
+
+Parallelism by a Dictatorial Virtual Instrument
++++++++++++++++++++++++++++++++++++++++++++++++
+
+This approach allows for parallel execution by defining a virtual
+instrument, the dictator, that acts as a meta-scheduler.  It assumes
+that a lab’s protocols will consist of subsets of instructions that
+usually perform one of a small number of different task types.  For
+example, a robotic system might be exclusively used to prepare PCR
+reactions in a liquid handler, or run a bacterial growth curve
+analysis, or move cells in to new media, but it is not used for other
+arbitrary activities.  Such a small set of tasks might minimally
+overlap in which instruments they use, and so one can presumably write
+a quick scheduler that if given a list of protocols could
+appropriately interweave the PCR reaction tasks with the growth curve
+analysis tasks.
+
+This could be accomplished relatively easily by having the first
+instruction in a protocol be to call a virtual instrument and also
+requests the current instrument manager.  This virtual instrument
+could then examine the system state and decide how to interweave this
+protocol with the rest.  Adjusting the protocols accordingly so that
+the interwoven events more effectively make use of the instruments.
+
+Clarity by default when running protocol instructions executes atomic
+instructions and waits for the completion of any one instruction
+before it resumes execution.  To truly implement parallel execution,
+it is likely best if multiple instruments are simultaneously
+performing operations.  This is relatively easy to do by using the
+support for Task Parallelism in C#.  For example, the code below is a
+template of a method inside a virtual instrument that can examine the
+current state and run instructions concurrently.
+
+.. code-block:: csharp
+        [UserCallableMethod(RequiresCurrentProtocol=true,RequiresInstrumentManager=true)]
+        public bool ExampleParallelRunner(AdditionalMethodArguments eargs)
+        {
+            //First get the instrument manager
+            InstrumentManager IM = eargs.InstrumentCollection;
+            //Now we can get all the loaded protocols to look at the system state, perhaps decide what to do
+            ProtocolManager pm = Prots = IM.LoadedProtocols;
+            //After this we could decide to run two tasks directly with the instruments in parallel
+            //First, Grab two instruments, either by asking for it by name or by type
+            Twister t = IM.ReturnInstrument("Twister") as Twister;
+            TransferStation ts = IM.ReturnInstrumentType<TransferStation>();
+            //Now simply perform two methods
+            //Remember to add using System.Threading.Tasks to top of the file to use Parallel.Invoke
+            //Now we can do two totally random tasks
+            Parallel.Invoke(()=>t.MovePlateFromPlateReaderToIncubator());
+            Parallel.Invoke(() => ts.CheckIfStationIn());
+            return true;
+        }
+
+By implementing a virtual instrument with such methods, it can
+essentially take complete control away from the default scheduler,
+allowing for the full implementation of a separate parallel machine.

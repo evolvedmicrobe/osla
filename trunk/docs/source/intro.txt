@@ -1,15 +1,20 @@
-Introduction
-============
+A tour of Clarity
+=================
+
+    
+.. _screen:
+
+.. figure:: figures/screen.png
+	:width: 650px
 
 Clarity is a suite of software designed to run automation equipment (robots) in
 scientific labs. With Clarity one or many users can simultaneously run protocols
-using any instrumentation setup, given a set of instruments or resources
-available for lab automation (such as plate readers, or liquid handlers).
-Clarity automates processes with these machines by running protocols, or list of
+using any hardware setup (such as plate readers or liquid handlers). Clarity
+automates processes with these machines by running protocols, or list of
 instructions, specified by users. Such instructions might be a list of commands
 for each instrument (such as using a robot arm to move a plate to an instrument,
 and then taking a measurement of that plate with another robot). Clarity uses
-XML to specify these protocols (and includes a GUI to create them).
+XML files to specify these protocols (and includes a GUI to create them).
 
 In contrast to closed source automation programs, Clarity is exceptionally
 flexible and stable. Protocol instructions can be dynamically altered using
@@ -22,13 +27,10 @@ complete restart of the entire system.
 
 Clarity is written completely in C# and is compatible with the Mono .NET
 framework implementation so can run on any operating system. It is composed of
-essentially four parts. The first is a set of classes that provide an interface
-between the Clarity software and hardware resources. The second is a runtime
-engine that manages these resources and runs protocols using them. The third
-part is a set of graphical user interfaces that allow users to observe the
-runtime engine, add or alter protocols, create new XML protocols using a GUI and
-interface directly with the instruments. Finally, the fourth is a set of tools
-involved in error reporting. This includes a client application that allows
-users to watch video feeds and a remote monitor that uses Skype to call users in
-the event of a failure.
+essentially four parts:
+
+    * A set of classes that provide an interface between the Clarity software and hardware resources.
+    * A runtime engine that manages these resources and runs protocols using them.
+    * A set of graphical user interfaces that allow users to observe the runtime engine, add or alter protocols, create new XML protocols using a GUI and interface directly with the instruments.
+    * A set of tools involved in error reporting. This includes a client application that allows users to watch video feeds and a remote monitor that uses Skype to call users in the event of a failure.
 

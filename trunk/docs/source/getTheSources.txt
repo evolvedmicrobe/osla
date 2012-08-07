@@ -1,0 +1,59 @@
+.. _getTheSources:
+
+Getting Started
+===============
+
+How to download, edit, and run the code
+
+Getting an IDE
+++++++++++++++
+
+Clarity is written in C#, to get started with Clarity we recommend you
+first download an IDE to work with.  Clarity's code is organized into
+project files recognized by MonoDevelop and Visual Studio.
+
+Although Clarity is Open Source and can run on any operating system,
+many instruments have interfaces or COM objects that are built
+specifically for the Windows environment.  For this reason, it might
+be easier to use a Windows OS and use the Visual Studio IDE.  A free
+version of Visual Studio is available here.
+
+http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-csharp-express
+
+And students and academics can get a free version of the full version
+here (The full version is better as it makes it easier to debug
+multiple running threads, but the express version should work well
+to).
+
+https://www.dreamspark.com/
+
+Those who want to remain completely open source can use Mono.
+
+http://monodevelop.com/
+
+Regardless, please remember that Clarity is an open source project and
+so even if you understandably find that the most expedient solution to
+implementing an interface is to co-op closed source code, this is a
+situation we are trying to move away from with this project.
+
+Downloading the Code
+++++++++++++++++++++
+
+If you are using the visual studio IDE, the easiest way to get the
+code is to install the open source ankhsvn plugin.
+
+http://ankhsvn.open.collab.net/ 
+
+Once installed, and initialized, you can then go to
+File>Subversion>Open From Subversion.  Go to this URL:
+
+https://osla.googlecode.com/svn/trunk/Clarity_Suite
+
+and select the ``Clarity.sln`` solution, everything else should download.
+
+.. note::
+
+   before running clarity, you should change the settings in
+   ``ConfigurationFile.xml`` so that it only loads the available
+   instruments.
+

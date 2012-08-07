@@ -23,7 +23,7 @@ automatically found and made accessible to all the other Clarity tools through
 reflection.
 
 Interfaces are simple to write. Clarity defines an abstract class, the
-``BaseDeviceInterface`` that all interface classes derives from. This abstract
+``BaseInstrumentClass`` that all interface classes derives from. This abstract
 class contains generic methods to initialize a resource and recover or reboot it
 in case of a hardware failure. These interfaces should define methods that
 Clarity can call on (such as a ``MovePlate`` method for a liquid handler).
@@ -51,7 +51,7 @@ example, after a plate reader takes one reading, a method in a virtual
 instrument might analyze that data, and alter the protocol based on
 what it finds, to say schedule another reading at some future point,
 or it might add the results to a database. Clarity defines a subclass
-of the ``BaseDeviceInterface`` called the ``VirtualDevice`` class that
+of the ``BaseInstrumentInterface`` called the ``VirtualInstrument`` class that
 developers can derive from to create such virtual instruments that
 execute specific instructions. Additionally, any instruments interface
 can programmatically access another instrument's interface simply by
@@ -170,16 +170,16 @@ direct access to the engine and all the loaded protocols. A user can simply
 write a virtual instrument which examines the entire system state, and adjust
 the protocols and their execution order accordingly. Any instrument with the
 UserCallableMethod attribute can specify in this attribute that it wants access
-to the engine and/or its calling protocol as shown below::
+to the engine and/or its calling protocol:
 
- 
+ .. code-block:: csharp
 
 	[UserCallableMethod(RequiresCurrentProtocol = true, RequiresInstrumentManager = true)]
 	public bool ModifyGrowthProtocol(string ExpName, int Slot, AdditionalMethodArguments eargs)
 	{…}
 
 Then when the method is called, the engine automatically adds references to the
-requested engine and/or protocol objects in the eargs argument. This allows one
+requested engine and/or protocol objects in the args argument. This allows one
 to easily and in a modular fashion customize clarity simply by writing one
 instrument interface (likely a virtual instrument). To see an example of this
 approach to dynamic scheduling, one can look at the full code for the method
@@ -187,7 +187,6 @@ shown above in the ``NSFExperiment.cs`` file in the source code.
 
 Dynamic variables and Error Recovery
 ************************************
-
 
 After every instruction in a protocol completes, the entire state of the engine
 is saved to disk, and can be reloaded immediately in the event of a power
