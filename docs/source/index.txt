@@ -16,28 +16,19 @@ Questions? We're available at the clarity-dev_ google group.
 
 .. _clarity-dev: https://groups.google.com/group/clarity-dev
 
-
-For users:
+Contents:
 
 .. toctree::
     :maxdepth: 2
-    
-    faq
-    install
+
     intro
-    usage
-    
-For developers:
-
-
-.. toctree::
-    :maxdepth: 2
-    
     overview
+    faq
+    getTheSources
     config
-    device_tutorial.cs
+    instrument_tutorial.cs
     gui_tutorial
-
+    parallel
 
 Reference:
 

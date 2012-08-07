@@ -1,7 +1,5 @@
 Using Clarity
 =============
 
-.. figure:: figures/screen.png
 
-	Clarity's user interface
 

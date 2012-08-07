@@ -5,3 +5,37 @@ Ask us anything at the clarity-dev_ google group.
 
 .. _clarity-dev: https://groups.google.com/group/clarity-dev
 
+How can I add an interface to my instrument?
+++++++++++++++++++++++++++++++++++++++++++++
+
+A simple tutorial is available here: :ref:`instrument-tutorial`
+
+Then again, you might not need to. We're working on integrating `Standardisation
+in Lab Automation`_ interfaces into Clarity.
+
+.. _Standardisation in Lab Automation: http://www.sila.coop
+
+Can Clarity run on Windows, GNU/Linux, OS X?
+++++++++++++++++++++++++++++++++++++++++++++
+
+Yes, using the mono_ .NET development framework.
+
+For more information see :ref:`getTheSources`
+
+.. _mono: http://www.mono-project.com
+
+What are the recovery mechanisms for errors within Clarity?
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Since error recovery will be different for different instruments, each
+instrument interface defines its own recovery mechanisms. These mechanisms can
+be accessed through Clarity's GUI.
+
+If human intervention is necessary, Clarity's scheduling engine makes it easy to
+re-run past instructions and restart protocol execution.
+
+What does Clarity look like when it is running?
++++++++++++++++++++++++++++++++++++++++++++++++
+
+We have a screenshot :ref:`here<screen>`.
+

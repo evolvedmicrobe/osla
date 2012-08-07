@@ -13,27 +13,19 @@
 <v t="jireva.20120611181326.5582" a="E"><vh>Clarity's User Guide</vh>
 <v t="jireva.20120614212404.1464"><vh>@edit conf.py</vh></v>
 <v t="jireva.20120612171755.1390" a="E"><vh>@auto-rst index.txt</vh></v>
-<v t="jireva.20120613121621.7505"><vh>users</vh>
-<v t="jireva.20120613121621.7502"><vh>@auto-rst getting_started.txt</vh></v>
-</v>
-<v t="jireva.20120613121621.7512" a="E"><vh>developers</vh>
-<v t="jireva.20120612171755.1395" a="E"><vh>@auto-rst overview.txt</vh></v>
-<v t="jireva.20120614212404.1406" a="E"><vh>Customizing Clarity</vh>
-<v t="jireva.20120614212404.1407"><vh>Configuration File</vh></v>
-<v t="jireva.20120614212404.1409"><vh>Adding GUI Elements</vh></v>
-<v t="jireva.20120614212404.1465" a="E"><vh>@auto-rst device_tutorial.cs.txt</vh></v>
-</v>
-</v>
+<v t="jireva.20120617153227.1445" a="E"><vh>@auto-rst intro.txt</vh></v>
+<v t="jireva.20120612171755.1395"><vh>@auto-rst overview.txt</vh></v>
+<v t="jireva.20120617153227.1408" a="E"><vh>@auto-rst faq.txt</vh></v>
+<v t="jireva.20120726154819.1437" a="E"><vh>@auto-rst getTheSources.txt</vh></v>
+<v t="jireva.20120617153227.1458"><vh>@auto-rst config.txt</vh></v>
+<v t="jireva.20120614212404.1465"><vh>@auto-rst instrument_tutorial.cs.txt</vh></v>
+<v t="jireva.20120617153227.1457"><vh>@auto-rst gui_tutorial.txt</vh></v>
+<v t="jireva.20120726154819.1453"><vh>@auto-rst parallel.txt</vh></v>
 <v t="jireva.20120613121621.7522"><vh>reference</vh></v>
 </v>
 </vnodes>
 <tnodes>
 <t tx="jireva.20120611181326.5582"></t>
-<t tx="jireva.20120613121621.7505"></t>
-<t tx="jireva.20120613121621.7512"></t>
 <t tx="jireva.20120613121621.7522"></t>
-<t tx="jireva.20120614212404.1406"></t>
-<t tx="jireva.20120614212404.1407"></t>
-<t tx="jireva.20120614212404.1409"></t>
 </tnodes>
 </leo_file>
