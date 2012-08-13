@@ -548,7 +548,7 @@ namespace Clarity
                             return toReturn;
                         }
                     }
-                    if (LoadedProtocols.CurrentProtocolInUse == toRemove)
+                    if (LoadedProtocols.CurrentProtocolInUse == toRemove && NextInstructionTimer.Enabled)
                     {
                         ResetTimerAfterwards = true;
                     }
