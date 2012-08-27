@@ -171,7 +171,7 @@ namespace Clarity
             //Perhaps I should throw an error here instead
             //Using 500 because 0 still throws an error, yowza looks like something was off by half a millisecond
             int intMSdelay = (int)ts.TotalMilliseconds;
-            if (intMSdelay <= 500)
+            if (intMSdelay <= DELAY_TO_IGNORE)
             {
                 StartProtocolExecution();
                 //throw new ArgumentOutOfRangeException("Can't place a 0 or negative delay between protocols.");
@@ -183,7 +183,8 @@ namespace Clarity
                 {
                     pClarity_Alarm.ChangeStatus("Waiting Until It Is Time To Run The Next Protocol Instruction");
                 }
-
+                if (intMSdelay < 1)
+                { intMSdelay = 1; }
                 NextInstructionTimer.Interval = intMSdelay;
                 NextInstructionTimer.Start();
                 ProtocolEvents.FirePauseEvent(this, ts);
@@ -428,7 +429,7 @@ namespace Clarity
             }
         }
 
-
+        private const double DELAY_TO_IGNORE = 500;
         /// <summary>
         /// Starts running the loaded protocols
         /// </summary>
@@ -445,7 +446,7 @@ namespace Clarity
                 //First to check if a protocol is running
                 double Delay = LoadedProtocols.GetMilliSecondsTillNextRunTime();
                 //Run now
-                if (Delay < 0)
+                if (Delay < DELAY_TO_IGNORE+1)
                 {
                     if (WorkerToRunRobots != null && WorkerToRunRobots.IsBusy)
                     { FireGenericError("Tried to start a protocol when one was already running"); }
