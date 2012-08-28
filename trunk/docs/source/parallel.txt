@@ -38,6 +38,7 @@ do this need only to include the following attributes above the line
 with the method.
 
 .. code-block:: csharp
+
 	[UserCallableMethod(RequiresCurrentProtocol = true, RequiresInstrumentManager = true)]
 
 With this ability, it is reasonably easy to implement truly parallel
@@ -81,6 +82,7 @@ template of a method inside a virtual instrument that can examine the
 current state and run instructions concurrently.
 
 .. code-block:: csharp
+
         [UserCallableMethod(RequiresCurrentProtocol=true,RequiresInstrumentManager=true)]
         public bool ExampleParallelRunner(AdditionalMethodArguments eargs)
         {
