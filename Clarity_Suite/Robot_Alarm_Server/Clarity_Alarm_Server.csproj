@@ -136,7 +136,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="RequiredDLLs\Skype4COM.dll" />
+    <Resource Include="RequiredDLLs\Skype4COM.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="RequiredDLLs\README.txt" />
     <Content Include="test.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
