@@ -6,9 +6,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VictorStandAloneForm", "VictorStandAloneForm\VictorStandAloneForm.csproj", "{BD582F22-A96C-49B0-9769-E601F12FFD09}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BB62F034-B942-442E-919D-694E6E5C160E}"
-	ProjectSection(SolutionItems) = preProject
-		README.rst = README.rst
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clarity_Alarm_Server", "Robot_Alarm_Server\Clarity_Alarm_Server.csproj", "{B078B637-5509-4D64-9831-5761BD235513}"
 EndProject
