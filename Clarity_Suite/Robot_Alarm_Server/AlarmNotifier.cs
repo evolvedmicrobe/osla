@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.IO;
 using SKYPE4COMLib;
 using System.Text.RegularExpressions;
+using System.Net.Mail;
+using System.Net;
 
 namespace Robot_Alarm
 {
@@ -31,6 +33,7 @@ namespace Robot_Alarm
     {
         public const int IMAGE_HEIGHT = 225;
         public const int IMAGE_WIDTH = 300;
+        public const int MAX_CALLS = 3;
         public static Bitmap Image1;
         public static Bitmap Image2;
         public string Image1UpdateTime;
@@ -70,14 +73,7 @@ namespace Robot_Alarm
         public void TurnOnAlarm()
         {
             CurrentAlarmState = new AlarmState(true);
-            try
-            {
-                if (ShouldCall()) { CallAllUsers(); }
-            }
-            catch (Exception thrown)
-            {
-                Console.WriteLine("Problem Calling Users: "+thrown.Message);
-            }
+            ReportToAllUsers("The robot alarm has been activated!");
             Console.WriteLine(DateTime.Now.ToString() + " Alarm Turned On");
         }
         public void TurnOffAlarm()
@@ -155,11 +151,26 @@ namespace Robot_Alarm
         {
             CurrentlyLoadedProtocolData = Data.Select(x => new ProtocolData(x)).ToList();
             Console.WriteLine(DateTime.Now.ToString() + " Set Protocol Data");
-        }   
+        }
 
         #region SkypeAlarm
-        private static Skype skype = new Skype();
-        private static string number_re = @"^([0-9]{10};? *)+$";
+        public SmtpClient createSmtpClient()
+        {
+            //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
+            //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
+            SmtpClient ToSend = new SmtpClient("smtp.gmail.com");//need to fill this in
+            ToSend.UseDefaultCredentials = false;
+            ToSend.Port = 587;
+            ToSend.EnableSsl = true;
+            ToSend.Credentials = new NetworkCredential("clarity.lab.automation@gmail.com", "icontrolrobots");
+            return ToSend;
+
+        }
+        public Skype createSkypeClient()
+        {
+            return new Skype();
+        }
+        static string number_re = @"^([0-9]{10};? *)+$";
         public bool ValidNumbers(string numbers)
         {
             Match m = Regex.Match(numbers, number_re);
@@ -170,7 +181,7 @@ namespace Robot_Alarm
         static int CallHourEnd = 8;
         public static bool ShouldCall()
         {
-            
+
             DateTime now = System.DateTime.Now;
             int nd = now.Day;
             int nt = now.Hour;
@@ -181,6 +192,7 @@ namespace Robot_Alarm
             bool callSuccessful = false;
             try
             {
+                Skype skype = createSkypeClient();
                 Call c;
                 c = skype.PlaceCall(number);
                 int waits = 1;
@@ -208,28 +220,64 @@ namespace Robot_Alarm
                 if (c.Status != TCallStatus.clsFinished)
                     c.Finish();
             }
-            catch (Exception thrown) { Console.WriteLine(thrown.Message); }
-            finally { }
+            catch (Exception thrown)
+            {
+                Console.WriteLine("Could not access skype!\n\n" + thrown.Message);
+            }
             return callSuccessful;
+        }
+        public void EmailUser(string address, string message)
+        {
+            //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
+            //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
+            String senderAddress = "clarity.lab.automation@gmail.com";
+            try
+            {
+                MailMessage email = new MailMessage(senderAddress, address, "Robot Alert", message);
+                SmtpClient ToSend = createSmtpClient();
+                ToSend.Send(email);
+            }
+            catch (Exception thrown)
+            {
+                Console.WriteLine(thrown.Message);
 
+            }
+            catch { }
         }
         public void CallAllUsers()
         {
             foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
             {
-                try
+                foreach (string number in p.phones.Split(';'))
                 {
-                    foreach (string number in p.phones.Split(';'))
+                    int tries = 0;
+                    while (!CallConnects(number))
                     {
-                        // Todo use boolean return to implement multiple call attempts
-                        CallConnects(number);
+                        tries += 1;
+                        if (tries >= MAX_CALLS)
+                        {
+                            break;
+                        }
                     }
                 }
-                catch (Exception thrown)
+            }
+        }
+        public void EmailAllUsers(string ErrorMessage = "The robot has an error, and has stopped working")
+        {
+            foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
+            {
+                string[] emails = p.emails.Split(';');
+                foreach (string emailaddress in emails)
                 {
-                    Console.WriteLine("Skype Problem: " + thrown.Message);
+                    EmailUser(emailaddress, ErrorMessage);
                 }
             }
+        }
+        public void ReportToAllUsers(string message = "The robot has an error, and has stopped working")
+        {
+            Console.WriteLine(DateTime.Now.ToString() + " Reported to all users: " + message);
+            EmailAllUsers(message);
+            if (AlarmNotifier.ShouldCall()) { CallAllUsers(); }
         }
         #endregion
     }

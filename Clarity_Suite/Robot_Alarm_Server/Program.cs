@@ -39,13 +39,13 @@ namespace Robot_Alarm
             SR.Close();
             //Uri httpAddress = new Uri("http://140.247.90.36:8001/AlarmNotifier");
             Uri httpAddress = new Uri(strhttpAddress);
-            
+
             ThisAlarm = new AlarmNotifier();
             //Going to pass an instance instead of a type
             //ServiceHost selfHost = new ServiceHost(typeof(AlarmNotifier), httpAddress);
             ServiceHost selfHost = new ServiceHost(ThisAlarm, httpAddress);
             BasicHttpBinding myBinding = new BasicHttpBinding();
-            
+
             //giant value to allow large transfers
             int LargeValue = (int)Math.Pow(2.0, 26);
             myBinding.ReaderQuotas.MaxArrayLength = LargeValue;
@@ -74,7 +74,7 @@ namespace Robot_Alarm
                 Console.WriteLine();
 
 
-                
+
                 Console.WriteLine("Alarm Status: " + ThisAlarm.GetAlarmStatus().AlarmOn.ToString());
                 Thread test = new Thread(Test);
                 test.Start();
@@ -93,6 +93,7 @@ namespace Robot_Alarm
         {
             Console.WriteLine(DateTime.Now.ToString() + " Testing... ");
             Thread.Sleep(1000);
+            ThisAlarm.EmailUser("jose.i.rojas@gmail.com", "Test email");
             if (ThisAlarm.CallConnects("9712228263"))
             {
                 Console.WriteLine(DateTime.Now.ToString() + " Test succeeded");
@@ -107,70 +108,16 @@ namespace Robot_Alarm
                 if (AlarmNotifier.CurrentlyLoadedProtocolData.Count > 0)
                 {
                     int MinimumDelay = (from p in AlarmNotifier.CurrentlyLoadedProtocolData select p.maxdelay).Min();
-                    //foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
-                    //{
-                    try
+                    TimeSpan maxdelay = new TimeSpan(0, MinimumDelay + EXTRATIME, 0);
+                    DateTime lastcheck = ThisAlarm.GetInstrumentStatus().TimeCreated;
+                    if (maxdelay.CompareTo(DateTime.Now.Subtract(lastcheck)) < 0)
                     {
-                        TimeSpan maxdelay = new TimeSpan(0, MinimumDelay + EXTRATIME, 0);
-                        DateTime lastcheck = ThisAlarm.GetInstrumentStatus().TimeCreated;
-                        if (maxdelay.CompareTo(DateTime.Now.Subtract(lastcheck)) < 0)
-                        {
-                            ReportToAllUsers("The robot software has not reported anything for a time longer than "
-                                + (MinimumDelay + EXTRATIME) + " minutes");
-                            if (AlarmNotifier.ShouldCall()) { ThisAlarm.CallAllUsers(); }
-                            break;
-                        }
+                        ThisAlarm.ReportToAllUsers("The robot software has not reported anything for a time longer than "
+                            + (MinimumDelay + EXTRATIME) + " minutes");
                     }
-                    catch (Exception thrown)
-                    {
-                        Console.WriteLine(thrown.Message);
-                    }
-                    //}
                 }
                 Thread.Sleep(CHECK_INTERVAL);
             }
         }
-        #region Alarm Stuff
-        static SmtpClient createSmtpClient()
-        {
-            //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
-            //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
-            SmtpClient ToSend = new SmtpClient("smtp.gmail.com");//need to fill this in
-            ToSend.UseDefaultCredentials = false;
-            ToSend.Port = 587;
-            ToSend.EnableSsl = true;
-            ToSend.Credentials = new NetworkCredential("clarity.lab.automation@gmail.com", "icontrolrobots");
-            return ToSend;
-
-        }
-        static void ReportToAllUsers(string message = "The robot has an error, and has stopped working")
-        {
-            Console.WriteLine(DateTime.Now.ToString() + " Reported to all users: " + message);
-            EmailErrorMessageToAllUsers(message);
-            if (AlarmNotifier.ShouldCall()) { ThisAlarm.CallAllUsers(); }
-        }
-        static void EmailErrorMessageToAllUsers(string ErrorMessage = "The robot has an error, and has stopped working")
-        {
-            foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
-            {
-                string[] emails = p.emails.Split(';');
-                foreach (string emailaddress in emails)
-                {
-                    //IF THIS FAILS, IT IS LIKELY DUE TO THE MCAFEE VIRUS SCANNER
-                    //CHANGE THE ACCESS PROTECTION TO ALLOW AN EXCEPTION FOR THE PROGRAM
-                    String senderAddress = "clarity.lab.automation@gmail.com";
-                    try
-                    {
-                        MailMessage email = new MailMessage(senderAddress, emailaddress, "Robot Alert", ErrorMessage);
-                        SmtpClient ToSend = createSmtpClient();
-                        ToSend.Send(email);
-                    }
-                    catch { }
-                }
-            }
-        }
-
- 
-        #endregion
     }
 }
