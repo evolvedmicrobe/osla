@@ -49,17 +49,6 @@ namespace Robot_Alarm
             Image2 = new Bitmap(@"test.bmp");
             Image1UpdateTime = DateTime.Now.ToString();
             Image2UpdateTime = DateTime.Now.ToString();
-            try
-            {
-                if (!skype.Client.IsRunning)
-                {
-                    skype.Client.Start(true, true);
-                }
-            }
-            catch (Exception thrown)
-            {
-                Console.WriteLine(DateTime.Now.ToString() + " Could not start skype or create DTMF event. " + thrown.Message);
-            }
         }
 
         public InstrumentStatus GetInstrumentStatus()
@@ -168,7 +157,19 @@ namespace Robot_Alarm
         }
         public Skype createSkypeClient()
         {
-            return new Skype();
+            Skype skype = new Skype();
+            try
+            {
+                if (!skype.Client.IsRunning)
+                {
+                    skype.Client.Start(true, true);
+                }
+            }
+            catch (Exception thrown)
+            {
+                Console.WriteLine(DateTime.Now.ToString() + " Could not start skype or create DTMF event. " + thrown.Message);
+            }
+            return skype;
         }
         static string number_re = @"^([0-9]{10};? *)+$";
         public bool ValidNumbers(string numbers)
@@ -242,7 +243,6 @@ namespace Robot_Alarm
                 Console.WriteLine(thrown.Message);
 
             }
-            catch { }
         }
         public void CallAllUsers()
         {
