@@ -15,8 +15,8 @@ namespace Clarity
 {
 
 
-    //This class formerly was used to control the victor when it wasn't automated, now that it is, we are changing it to 
-    //by creating a new class,this one is outdated and so will be renamed....
+    //This class formerly was used to control the victor when it wasn't automated, now that it is, we are 
+    //creating a new class, this one is outdated and so will be renamed....
         public class VictorManager : BaseInstrumentClass
         {            
 
