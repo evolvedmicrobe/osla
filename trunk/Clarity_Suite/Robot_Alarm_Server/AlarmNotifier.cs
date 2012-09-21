@@ -49,6 +49,18 @@ namespace Robot_Alarm
             Image2 = new Bitmap(@"test.bmp");
             Image1UpdateTime = DateTime.Now.ToString();
             Image2UpdateTime = DateTime.Now.ToString();
+            try
+            {
+                Skype skype = createSkypeClient();
+                if (!skype.Client.IsRunning)
+                {
+                    skype.Client.Start(true, true);
+                }
+            }
+            catch (Exception thrown)
+            {
+                Console.WriteLine(DateTime.Now.ToString() + " Could not start skype or create DTMF event. " + thrown.Message);
+            }
         }
 
         public InstrumentStatus GetInstrumentStatus()
@@ -182,7 +194,7 @@ namespace Robot_Alarm
         static int CallHourEnd = 8;
         public static bool ShouldCall()
         {
-
+            return true;
             DateTime now = System.DateTime.Now;
             int nd = now.Day;
             int nt = now.Hour;
@@ -248,15 +260,18 @@ namespace Robot_Alarm
         {
             foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
             {
-                foreach (string number in p.phones.Split(';'))
+                if (!String.IsNullOrEmpty(p.phones))
                 {
-                    int tries = 0;
-                    while (!CallConnects(number))
+                    foreach (string number in p.phones.Split(';'))
                     {
-                        tries += 1;
-                        if (tries >= MAX_CALLS)
+                        int tries = 0;
+                        while (!CallConnects(number))
                         {
-                            break;
+                            tries += 1;
+                            if (tries >= MAX_CALLS)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
@@ -266,10 +281,13 @@ namespace Robot_Alarm
         {
             foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
             {
-                string[] emails = p.emails.Split(';');
-                foreach (string emailaddress in emails)
+                if (!String.IsNullOrEmpty(p.emails))
                 {
-                    EmailUser(emailaddress, ErrorMessage);
+                    string[] emails = p.emails.Split(';');
+                    foreach (string emailaddress in emails)
+                    {
+                        EmailUser(emailaddress, ErrorMessage);
+                    }
                 }
             }
         }
