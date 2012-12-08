@@ -190,16 +190,6 @@ namespace Robot_Alarm
             if (!m.Success) { return false; }
             return true;
         }
-        static int CallHourStart = 23;
-        static int CallHourEnd = 8;
-        public static bool ShouldCall()
-        {
-            return true;
-            DateTime now = System.DateTime.Now;
-            int nd = now.Day;
-            int nt = now.Hour;
-            return nt >= CallHourStart || nt <= CallHourEnd;
-        }
         public bool CallConnects(string number)
         {
             bool callSuccessful = false;
@@ -258,27 +248,34 @@ namespace Robot_Alarm
         }
         public void CallAllUsers()
         {
+            HashSet<string> unique_numbers = new HashSet<string>();
             foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
             {
                 if (!String.IsNullOrEmpty(p.phones))
                 {
                     foreach (string number in p.phones.Split(';'))
                     {
-                        int tries = 0;
-                        while (!CallConnects(number))
-                        {
-                            tries += 1;
-                            if (tries >= MAX_CALLS)
-                            {
-                                break;
-                            }
-                        }
+                        unique_numbers.Add(number);
                     }
+                }
+            }
+            foreach (string n in unique_numbers)
+            {
+                int tries = 0;
+                while (!CallConnects(n))
+                {
+                    tries += 1;
+                    if (tries >= MAX_CALLS)
+                    {
+                        break;
+                    }
+
                 }
             }
         }
         public void EmailAllUsers(string ErrorMessage = "The robot has an error, and has stopped working")
         {
+            HashSet<string> unique_emails = new HashSet<string>();
             foreach (ProtocolData p in AlarmNotifier.CurrentlyLoadedProtocolData)
             {
                 if (!String.IsNullOrEmpty(p.emails))
@@ -286,16 +283,17 @@ namespace Robot_Alarm
                     string[] emails = p.emails.Split(';');
                     foreach (string emailaddress in emails)
                     {
-                        EmailUser(emailaddress, ErrorMessage);
+                        unique_emails.Add(emailaddress);
                     }
                 }
             }
+            foreach (string e in unique_emails) EmailUser(e, ErrorMessage);
         }
         public void ReportToAllUsers(string message = "The robot has an error, and has stopped working")
         {
             Console.WriteLine(DateTime.Now.ToString() + " Reported to all users: " + message);
             EmailAllUsers(message);
-            if (AlarmNotifier.ShouldCall()) { CallAllUsers(); }
+            CallAllUsers(); 
         }
         #endregion
     }

@@ -37,7 +37,6 @@ namespace Robot_Alarm
             SR.ReadLine();
             string strhttpAddress = SR.ReadLine().Trim();
             SR.Close();
-            //Uri httpAddress = new Uri("http://140.247.90.36:8001/AlarmNotifier");
             Uri httpAddress = new Uri(strhttpAddress);
 
             ThisAlarm = new AlarmNotifier();
