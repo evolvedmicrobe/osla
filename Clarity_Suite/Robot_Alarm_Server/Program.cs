@@ -29,6 +29,7 @@ namespace Robot_Alarm
         [STAThread]
         static void Main()
         {
+            Console.WriteLine("Clarity Alarm Server Build Time 10/26/2012");
             #region Set up selfHost
             // To get this to work you need to:
             //     netsh http add urlacl url=`URL` user=`DOMAIN\user`
@@ -99,6 +100,9 @@ namespace Robot_Alarm
             }
             else { Console.WriteLine(DateTime.Now.ToString() + " Test failed"); }
         }
+        //set to an arbitrary and meaningless value, just one that doesn't match un instrument update
+        //is the only requirement
+        public static DateTime LastUpdateThatTriggeredAlarmTime = DateTime.Now;
         static void Monitor()
         {
             int CHECK_INTERVAL = 60000; // 1 minutes
@@ -109,8 +113,16 @@ namespace Robot_Alarm
                     int MinimumDelay = (from p in AlarmNotifier.CurrentlyLoadedProtocolData select p.maxdelay).Min();
                     TimeSpan maxdelay = new TimeSpan(0, MinimumDelay + EXTRATIME, 0);
                     DateTime lastcheck = ThisAlarm.GetInstrumentStatus().TimeCreated;
+                    //See if the update for an overflow of this time has already occurred
+                    //if so we don't want to keep calling people
+                    if (LastUpdateThatTriggeredAlarmTime == lastcheck)
+                    {
+                        continue;
+                    }
                     if (maxdelay.CompareTo(DateTime.Now.Subtract(lastcheck)) < 0)
                     {
+                        //set the value to the alarm time that made us report everything
+                        LastUpdateThatTriggeredAlarmTime = lastcheck;
                         ThisAlarm.ReportToAllUsers("The robot software has not reported anything for a time longer than "
                             + (MinimumDelay + EXTRATIME) + " minutes");
                     }
