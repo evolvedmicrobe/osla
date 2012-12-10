@@ -422,6 +422,7 @@ namespace Clarity
             {
                 StatusLabel.Text = "Procedure ended with errors";
                 UpdateInstrumentStatus();
+                
                 btnRetryLastInstruction.Enabled = true;
                 pnlFailure.Visible = true;
                 lblFailure.Text = "The Last Instruction Failed To Run, Please recover the machines and retry or delete the protocol, Do not reattempt a macro instruction";
@@ -437,7 +438,8 @@ namespace Clarity
                 }
                 btnExecuteProtocols.Enabled = true;
                 btnCancelProtocolExecution.Enabled = false;
-
+                TimeToGo.Stop();
+                TimeToGo.Text = "Error";
                 if (thrown is ProtcolExcecutionError)
                 {
                     this.AddErrorLogText(((ProtcolExcecutionError)thrown).MakeErrorReport());
