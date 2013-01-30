@@ -72,7 +72,7 @@ namespace Clarity
             get { return pErrorEmails; }
             set { pErrorEmails = value; }
         }
-        int[] ExcludedIncubatorPositions = { 19, 38 };
+        int[] ExcludedIncubatorPositions = { 9, 19, 27, 38 };
         private void btnGenerateNSFData_Click(object sender, EventArgs e)
         {
             try
@@ -1472,6 +1472,11 @@ namespace Clarity
         private void btnInstrumentRefresh_Click(object sender, EventArgs e)
         {
             UpdateInstrumentStatus();
+        }
+
+        private void lstIncubatorSlots_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
       
     }
