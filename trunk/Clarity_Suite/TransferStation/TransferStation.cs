@@ -104,7 +104,6 @@ namespace Clarity
             short answer = DCUServer.ReadPort((short)pSensorStationOut);
             if (answer == (short)1)
             { return true; }
-            else { System.Threading.Thread.Sleep(3000); }
             if (answer == (short)1) { return true; }
             else { return false; }
         }
