@@ -697,20 +697,20 @@ namespace Clarity
                 //}
                 ////now to make sure it made it too the transfer station
                 //counter = 0;
-                //while (true)
-                //{
-                //    if (!CheckIfSomethingOnTransferOutStation())
-                //    {
-                //        Thread.Sleep(200);
-                //    }
-                //    else { break; }
-                //    if (counter > 400)
-                //    {
-                //        StatusOK = false;
-                //        throw new InstrumentError("Plate does not seem too have made it to transfer out station", false, this);
-                //    }
-                //    counter++;
-                //}
+                while (true)
+                {
+                    if (!CheckIfSomethingOnTransferOutStation())
+                    {
+                        Thread.Sleep(200);
+                    }
+                    else { break; }
+                    if (counter > 200)
+                    {
+                        StatusOK = false;
+                        throw new InstrumentError("Plate does not seem too have made it to transfer out station", false, this);
+                    }
+                    counter++;
+                }
                 if (Shaking) { StartShaking(); }
 
             }

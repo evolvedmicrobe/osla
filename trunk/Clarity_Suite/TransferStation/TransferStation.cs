@@ -101,7 +101,7 @@ namespace Clarity
         }
         public bool CheckIfStationOut()
         {
-            return true; //This is a hack and should be fixed
+            return true; // This is a hack and should be fixed.  We made this change because we think that the sensor is broken.
             short answer = DCUServer.ReadPort((short)pSensorStationOut);
             if (answer == (short)1)
             { return true; }
