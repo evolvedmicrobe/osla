@@ -101,11 +101,10 @@ namespace Clarity
         }
         public bool CheckIfStationOut()
         {
+            return true; //This is a hack and should be fixed
             short answer = DCUServer.ReadPort((short)pSensorStationOut);
             if (answer == (short)1)
             { return true; }
-            if (answer == (short)1) { return true; }
-            else { return false; }
         }
         public bool CheckIfStationIn()
         {
