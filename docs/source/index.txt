@@ -1,7 +1,7 @@
 .. _Doxygen: http://www.stack.nl/~dimitri/doxygen/
 
-
 .. _Source Browser: http://www.people.fas.harvard.edu/~rojasechenique/claritydocs/sourcecode/html/
+
 
 Clarity's Documentation
 =======================
@@ -33,4 +33,18 @@ Contents:
 Reference:
 
 * `Source Browser`_
+
+News
+----
+
+The paper describing Clarity has been published by the Journal of Laboratory Automation:
+
+	Clarity: An Open-Source Manager for Laboratory Automation
+		Nigel F. Delaney, José I. Rojas Echenique, and
+		Christopher J. Marx.
+
+		Journal of Laboratory Automation 2211068212460237. First published
+		on October 2, 2012 [`doi:10.1177/2211068212460237`__]
+
+		__ http://jla.sagepub.com/content/early/2012/09/26/2211068212460237
 
