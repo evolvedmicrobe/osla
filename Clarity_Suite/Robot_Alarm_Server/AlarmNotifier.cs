@@ -258,25 +258,6 @@ namespace Robot_Alarm
         [OperationContract]
         void UpdateStatus(string Status);
         [OperationContract]
-        System.Drawing.Bitmap GetCameraImage1(out string UpdateTime);
-        [OperationContract]
-        //[KnownType(typeof(System.Drawing.Bitmap)]
-        System.Drawing.Bitmap GetCameraImage2(out string UpdateTime);
-        [OperationContract]
-        //[KnownType(typeof(System.Drawing.Bitmap)]
-        void SetCameraImage1(System.Drawing.Bitmap Image);
-        [OperationContract]
-        //[KnownType(typeof(System.Drawing.Bitmap)]
-        void SetCameraImage2(System.Drawing.Bitmap Image);
-        [OperationContract]
-        byte[] ReturnJPEGCamera1(out string updateTime);
-        [OperationContract]
-        byte[] ReturnJPEGCamera2(out string updateTime);
-        [OperationContract]
-        int GetImageHeight();
-        [OperationContract]
-        int GetImageWidth();
-        [OperationContract]
         List<string> GetCurrentlyLoadedProtocolNames();
         [OperationContract]
         void SetCurrentlyLoadedProtocolData(List<Tuple<string, string, string, int>> Data);
