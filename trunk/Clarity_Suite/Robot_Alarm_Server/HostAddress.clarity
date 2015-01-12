@@ -2,3 +2,6 @@
 http://localhost:8001/AlarmNotifier
 An example is given above, remember, nothing else on the second line!  
 Feel free to call Nigel or Jose with issues setting up an alarm.
+Make sure to run::
+    netsh http add urlacl url=http://+:8001/AlarmNotifier user=DOMAIN\user
+
